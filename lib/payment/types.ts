@@ -36,7 +36,7 @@ export interface PendingInvoiceItemParams {
   idempotencyKey?: string
 }
 
-export interface PendingInvoiceItemLookupParams {
+export interface InvoiceItemLookupParams {
   customerId: string
   metadataKey: string
   metadataValue: string
@@ -76,7 +76,8 @@ export interface PaymentProvider {
   // 保留中の請求項目を作成する（顧客の次回請求書に自動的に合算される。サブスク顧客専用）
   createPendingInvoiceItem(params: PendingInvoiceItemParams): Promise<{ invoiceItemId: string }>
   // DBへprovider IDを保存する前にプロセスが落ちた場合のrecovery用。
-  findPendingInvoiceItem(params: PendingInvoiceItemLookupParams): Promise<{ invoiceItemId: string } | null>
+  // pendingに限定しない。既にinvoiceへ取り込まれた後でもimmutable batch metadataから復元する。
+  findInvoiceItem(params: InvoiceItemLookupParams): Promise<{ invoiceItemId: string } | null>
   // Webhook の invoice.lines は全件を含むとは限らないため、provider API から
   // 対象 invoice に紐づく invoice item を全ページ取得する。
   listInvoiceItems(providerInvoiceId: string): Promise<ProviderInvoiceItem[]>
