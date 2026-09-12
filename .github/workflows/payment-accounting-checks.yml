@@ -1,0 +1,39 @@
+name: Payment accounting checks
+
+on:
+  pull_request:
+    paths:
+      - 'app/api/distribution/**'
+      - 'app/api/stripe/**'
+      - 'app/api/supports/**'
+      - 'lib/payment/**'
+      - 'supabase/migrations/**'
+      - '__tests__/payment/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'jest.config.ts'
+      - 'tsconfig.json'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: payment-accounting-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Support+ regression tests
+        run: npm test -- --runInBand __tests__/payment/support-plus.test.ts
+      - name: TypeScript check
+        run: npx tsc --noEmit
