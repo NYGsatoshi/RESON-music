@@ -8,7 +8,7 @@ import type {
   SubscriptionCheckoutParams,
   BillingPortalParams,
   PendingInvoiceItemParams,
-  PendingInvoiceItemLookupParams,
+  InvoiceItemLookupParams,
   ProviderInvoiceItem,
   NormalizedWebhookEvent,
 } from '../types'
@@ -70,12 +70,14 @@ export class StripeAdapter implements PaymentProvider {
     return { invoiceItemId: item.id }
   }
 
-  async findPendingInvoiceItem(
-    params: PendingInvoiceItemLookupParams
+  async findInvoiceItem(
+    params: InvoiceItemLookupParams
   ): Promise<{ invoiceItemId: string } | null> {
+    // Do not filter to pending=true. If the process crashed before persisting the ID,
+    // the item may already have been attached to an invoice by the time a retry runs.
+    // Listing without `pending` includes both pending and attached invoice items.
     for await (const item of stripe.invoiceItems.list({
       customer: params.customerId,
-      pending: true,
       limit: 100,
     })) {
       if (item.metadata?.[params.metadataKey] === params.metadataValue) {
