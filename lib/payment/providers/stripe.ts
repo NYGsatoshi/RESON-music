@@ -76,16 +76,24 @@ export class StripeAdapter implements PaymentProvider {
     // Do not filter to pending=true. If the process crashed before persisting the ID,
     // the item may already have been attached to an invoice by the time a retry runs.
     // Listing without `pending` includes both pending and attached invoice items.
+    let matchedInvoiceItemId: string | null = null
+
     for await (const item of stripe.invoiceItems.list({
       customer: params.customerId,
       limit: 100,
     })) {
-      if (item.metadata?.[params.metadataKey] === params.metadataValue) {
-        return { invoiceItemId: item.id }
+      if (item.metadata?.[params.metadataKey] !== params.metadataValue) continue
+
+      if (matchedInvoiceItemId && matchedInvoiceItemId !== item.id) {
+        // We cannot safely choose one item: this means the same immutable billing batch
+        // may have been invoiced twice. Stop before creating or crediting anything.
+        throw new Error(`Duplicate invoice items detected for ${params.metadataKey}=${params.metadataValue}`)
       }
+
+      matchedInvoiceItemId = item.id
     }
 
-    return null
+    return matchedInvoiceItemId ? { invoiceItemId: matchedInvoiceItemId } : null
   }
 
   async listInvoiceItems(providerInvoiceId: string): Promise<ProviderInvoiceItem[]> {
