@@ -1,5 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
-import { paymentProvider } from './index'
+import { paymentProvider } from '@/lib/payment'
 
 type PreparedBatch = {
   batch_id: string
