@@ -8,6 +8,8 @@ import type {
   SubscriptionCheckoutParams,
   BillingPortalParams,
   PendingInvoiceItemParams,
+  PendingInvoiceItemLookupParams,
+  ProviderInvoiceItem,
   NormalizedWebhookEvent,
 } from '../types'
 import { WebhookVerificationError } from '../types'
@@ -68,8 +70,24 @@ export class StripeAdapter implements PaymentProvider {
     return { invoiceItemId: item.id }
   }
 
-  async listInvoiceItemMetadata(providerInvoiceId: string): Promise<Record<string, string>[]> {
-    const metadata: Record<string, string>[] = []
+  async findPendingInvoiceItem(
+    params: PendingInvoiceItemLookupParams
+  ): Promise<{ invoiceItemId: string } | null> {
+    for await (const item of stripe.invoiceItems.list({
+      customer: params.customerId,
+      pending: true,
+      limit: 100,
+    })) {
+      if (item.metadata?.[params.metadataKey] === params.metadataValue) {
+        return { invoiceItemId: item.id }
+      }
+    }
+
+    return null
+  }
+
+  async listInvoiceItems(providerInvoiceId: string): Promise<ProviderInvoiceItem[]> {
+    const result: ProviderInvoiceItem[] = []
 
     // Stripe's list object is auto-pagination aware. Using for-await avoids depending
     // on the truncated invoice.lines collection embedded in webhook payloads.
@@ -77,10 +95,13 @@ export class StripeAdapter implements PaymentProvider {
       invoice: providerInvoiceId,
       limit: 100,
     })) {
-      metadata.push(item.metadata ?? {})
+      result.push({
+        providerInvoiceItemId: item.id,
+        metadata: item.metadata ?? {},
+      })
     }
 
-    return metadata
+    return result
   }
 
   verifyAndNormalizeWebhook(rawBody: string, signature: string | null): NormalizedWebhookEvent {
