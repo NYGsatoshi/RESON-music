@@ -42,11 +42,12 @@ function asSafePositiveYen(value: number | string): number {
  * Stripe pending invoice item per batch.
  *
  * Recovery has two layers:
- *   1. look up a still-pending invoice item by immutable batch metadata;
+ *   1. look up any existing invoice item by immutable batch metadata, including an
+ *      item that has already been attached to an invoice;
  *   2. use the same Stripe idempotency key when a create is still required.
  *
  * This covers a crash after Stripe accepted the item but before the provider ID was
- * persisted locally, including retries that happen after the normal idempotency window.
+ * persisted locally, including retries beyond Stripe API v1's normal idempotency window.
  */
 export async function prepareSupportPlusBilling(
   supabase: SupabaseClient,
@@ -93,7 +94,7 @@ export async function prepareSupportPlusBilling(
     }
 
     const amountYen = asSafePositiveYen(batch.gross_tips_yen)
-    const recovered = await paymentProvider.findPendingInvoiceItem({
+    const recovered = await paymentProvider.findInvoiceItem({
       customerId,
       metadataKey: 'support_plus_batch_id',
       metadataValue: batch.batch_id,
