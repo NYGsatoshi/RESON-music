@@ -97,13 +97,6 @@ async function handleSubscriptionDeleted(
     .eq('id', userId)
 }
 
-type PersistedSupport = {
-  id: string
-  track_id: string
-  amount_yen: number
-  plan_at_support?: string | null
-}
-
 async function handleTipSucceeded(
   supabase: Awaited<ReturnType<typeof createServiceClient>>,
   providerChargeId: string,
@@ -112,92 +105,75 @@ async function handleTipSucceeded(
   const { track_id, user_id, net_yen, track_plays_at_support } = metadata
   if (!track_id || !user_id || !net_yen) return
 
-  const planAtSupport = metadata.plan && KNOWN_PLANS.has(metadata.plan) ? metadata.plan : null
-  let persistedSupport: PersistedSupport | null = null
-
-  const { data: insertedSupport, error: insertError } = await supabase
+  // 今回のPRでは既存の単発投げ銭をledger移行しない。
+  // 過去に既に残高反映済みのPaymentIntentが再送された場合、ledger未登録を理由に
+  // 再加算すると二重計上になるため、従来どおりpayment_idの存在で終了する。
+  const { data: existing } = await supabase
     .from('supports')
-    .insert({
-      track_id,
-      user_id,
-      amount_yen: Number(net_yen),
-      payment_id: providerChargeId,
-      track_plays_at_support: track_plays_at_support ? Number(track_plays_at_support) : null,
-      plan_at_support: planAtSupport,
-      funding_status: 'confirmed',
-      confirmed_at: new Date().toISOString(),
-    })
-    .select('id, track_id, amount_yen, plan_at_support')
+    .select('id')
+    .eq('payment_id', providerChargeId)
     .single()
+  if (existing) return
 
-  if (insertError?.code === '23505') {
-    // The support row may have committed while the previous webhook attempt failed
-    // before the artist ledger write. Recover the persisted source and retry the
-    // idempotent ledger credit instead of returning early.
-    const { data: existingSupport, error: existingError } = await supabase
-      .from('supports')
-      .select('id, track_id, amount_yen, plan_at_support')
-      .eq('payment_id', providerChargeId)
-      .single()
-    if (existingError) throw existingError
-    persistedSupport = existingSupport as PersistedSupport | null
-  } else if (insertError) {
-    throw insertError
-  } else {
-    persistedSupport = insertedSupport as PersistedSupport | null
-  }
+  const planAtSupport = metadata.plan && KNOWN_PLANS.has(metadata.plan) ? metadata.plan : null
+  const { error: insertError } = await supabase.from('supports').insert({
+    track_id,
+    user_id,
+    amount_yen: Number(net_yen),
+    payment_id: providerChargeId,
+    track_plays_at_support: track_plays_at_support ? Number(track_plays_at_support) : null,
+    plan_at_support: planAtSupport,
+    funding_status: 'confirmed',
+    confirmed_at: new Date().toISOString(),
+  })
+  if (insertError?.code === '23505') return
+  if (insertError) throw insertError
 
-  if (!persistedSupport) return
+  // Support+のdeferred tipは通常PaymentIntentを作らない。既存互換用にsnapshotで判定する。
+  if (planAtSupport === 'support_plus') return
 
-  // Support+ deferred tips normally do not create PaymentIntents. Keep the snapshot
-  // check here for compatibility with any already-created legacy payment intent.
-  if (persistedSupport.plan_at_support === 'support_plus') return
-
-  const { data: track } = await supabase
-    .from('tracks')
-    .select('artist_id')
-    .eq('id', persistedSupport.track_id)
-    .single()
+  const { data: track } = await supabase.from('tracks').select('artist_id').eq('id', track_id).single()
   if (!track) return
 
-  // New one-time tip credits also go through the append-only ledger so future balance
-  // changes remain traceable and retry-safe. Replaying the webhook reuses support.id,
-  // so credit_artist_once becomes a no-op after the first successful credit.
-  const { error: creditError } = await supabase.rpc('credit_artist_once', {
+  await supabase.rpc('add_artist_balance', {
     p_artist_id: track.artist_id,
-    p_entry_type: 'tip_credit',
-    p_source_type: 'support',
-    p_source_id: persistedSupport.id,
-    p_amount_yen: Number(persistedSupport.amount_yen),
-    p_currency: 'JPY',
+    p_amount: Number(net_yen),
   })
-  if (creditError) throw creditError
 }
 
 type SupportPlusInvoiceRef = {
   batchId: string
   invoiceItemId: string
+  amountYen: number
+  currency: string
+  customerId: string | null
 }
 
-function supportPlusBatchRefs(invoiceItems: ProviderInvoiceItem[]): SupportPlusInvoiceRef[] {
-  const byBatch = new Map<string, string>()
+export function supportPlusBatchRefs(invoiceItems: ProviderInvoiceItem[]): SupportPlusInvoiceRef[] {
+  const byBatch = new Map<string, SupportPlusInvoiceRef>()
 
   for (const item of invoiceItems) {
     if (item.metadata.type !== 'support_plus_batch') continue
     const batchId = item.metadata.support_plus_batch_id
     if (!batchId) continue
 
-    const existingInvoiceItemId = byBatch.get(batchId)
-    if (existingInvoiceItemId && existingInvoiceItemId !== item.providerInvoiceItemId) {
-      // Two provider invoice items for one immutable batch means the customer may have
-      // been billed twice. Do not guess which one is authoritative or credit artists.
+    const existing = byBatch.get(batchId)
+    if (existing && existing.invoiceItemId !== item.providerInvoiceItemId) {
+      // 同じ不変batchに複数の請求項目が存在する場合は二重請求の可能性があるため、
+      // どちらかを推測せずfail-closedにする。
       throw new Error(`Duplicate Support+ invoice items detected for batch ${batchId}`)
     }
 
-    byBatch.set(batchId, item.providerInvoiceItemId)
+    byBatch.set(batchId, {
+      batchId,
+      invoiceItemId: item.providerInvoiceItemId,
+      amountYen: item.amountYen,
+      currency: item.currency,
+      customerId: item.customerId,
+    })
   }
 
-  return [...byBatch.entries()].map(([batchId, invoiceItemId]) => ({ batchId, invoiceItemId }))
+  return [...byBatch.values()]
 }
 
 async function handleSupportPlusInvoicePaid(
@@ -205,19 +181,20 @@ async function handleSupportPlusInvoicePaid(
   providerEventId: string,
   providerInvoiceId: string
 ) {
-  // invoice.lines embedded in a webhook can be truncated. Resolve all invoice items
-  // from the provider before deciding which Support+ batches this payment confirms.
+  // Webhook内のinvoice.linesは省略される場合があるため、provider APIから全件取得する。
   const invoiceItems = await paymentProvider.listInvoiceItems(providerInvoiceId)
 
   for (const ref of supportPlusBatchRefs(invoiceItems)) {
-    // One RPC transaction records payment evidence, binds the actual provider invoice
-    // item, marks all batch items confirmed, settles, appends ledger credits, and
-    // updates the balance cache.
+    // 1回のRPC transactionで、決済証跡・provider請求項目・金額・通貨・顧客を検証し、
+    // confirmed -> settlement -> ledger credit -> balance cache更新まで処理する。
     const { error } = await supabase.rpc('confirm_support_plus_billing', {
       p_batch_id: ref.batchId,
       p_stripe_invoice_item_id: ref.invoiceItemId,
       p_stripe_invoice_id: providerInvoiceId,
       p_provider_event_id: providerEventId,
+      p_provider_amount_yen: ref.amountYen,
+      p_provider_currency: ref.currency,
+      p_stripe_customer_id: ref.customerId,
     })
     if (error) throw error
   }
@@ -236,6 +213,9 @@ async function handleSupportPlusInvoicePaymentFailed(
       p_stripe_invoice_item_id: ref.invoiceItemId,
       p_stripe_invoice_id: providerInvoiceId,
       p_provider_event_id: providerEventId,
+      p_provider_amount_yen: ref.amountYen,
+      p_provider_currency: ref.currency,
+      p_stripe_customer_id: ref.customerId,
     })
     if (error) throw error
   }
