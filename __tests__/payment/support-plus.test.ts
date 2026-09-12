@@ -3,7 +3,7 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 jest.mock('@/lib/payment', () => ({
   paymentProvider: {
     createPendingInvoiceItem: jest.fn(),
-    findPendingInvoiceItem: jest.fn(),
+    findInvoiceItem: jest.fn(),
     listInvoiceItems: jest.fn(),
   },
 }))
@@ -17,14 +17,14 @@ import {
 const createPendingInvoiceItem = paymentProvider.createPendingInvoiceItem as jest.MockedFunction<
   typeof paymentProvider.createPendingInvoiceItem
 >
-const findPendingInvoiceItem = paymentProvider.findPendingInvoiceItem as jest.MockedFunction<
-  typeof paymentProvider.findPendingInvoiceItem
+const findInvoiceItem = paymentProvider.findInvoiceItem as jest.MockedFunction<
+  typeof paymentProvider.findInvoiceItem
 >
 
 describe('Support+ monthly billing', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-    findPendingInvoiceItem.mockResolvedValue(null)
+    findInvoiceItem.mockResolvedValue(null)
   })
 
   test('only closed UTC billing periods can be frozen', () => {
@@ -72,8 +72,8 @@ describe('Support+ monthly billing', () => {
       '2020-01'
     )
 
-    expect(findPendingInvoiceItem).toHaveBeenCalledTimes(1)
-    expect(findPendingInvoiceItem).toHaveBeenCalledWith({
+    expect(findInvoiceItem).toHaveBeenCalledTimes(1)
+    expect(findInvoiceItem).toHaveBeenCalledWith({
       customerId: 'cus_support_plus',
       metadataKey: 'support_plus_batch_id',
       metadataValue: '11111111-1111-1111-1111-111111111111',
@@ -101,7 +101,7 @@ describe('Support+ monthly billing', () => {
     })
   })
 
-  test('recovers an existing pending invoice item instead of creating a duplicate', async () => {
+  test('recovers an existing pending or attached invoice item instead of creating a duplicate', async () => {
     const rpc = jest
       .fn()
       .mockResolvedValueOnce({
@@ -129,7 +129,7 @@ describe('Support+ monthly billing', () => {
     const select = jest.fn().mockReturnValue({ in: inQuery })
     const from = jest.fn().mockReturnValue({ select })
 
-    findPendingInvoiceItem.mockResolvedValue({ invoiceItemId: 'ii_recovered' })
+    findInvoiceItem.mockResolvedValue({ invoiceItemId: 'ii_recovered' })
 
     const result = await prepareSupportPlusBilling(
       { rpc, from } as unknown as SupabaseClient,
@@ -156,7 +156,7 @@ describe('Support+ monthly billing', () => {
       '2020-01'
     )
 
-    expect(findPendingInvoiceItem).not.toHaveBeenCalled()
+    expect(findInvoiceItem).not.toHaveBeenCalled()
     expect(createPendingInvoiceItem).not.toHaveBeenCalled()
     expect(result).toEqual({
       prepared: 0,
@@ -188,7 +188,7 @@ describe('Support+ monthly billing', () => {
       prepareSupportPlusBilling({ rpc, from } as unknown as SupabaseClient, '2020-01')
     ).rejects.toThrow('has no Stripe customer')
 
-    expect(findPendingInvoiceItem).not.toHaveBeenCalled()
+    expect(findInvoiceItem).not.toHaveBeenCalled()
     expect(createPendingInvoiceItem).not.toHaveBeenCalled()
   })
 })
