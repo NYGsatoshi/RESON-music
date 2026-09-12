@@ -1,6 +1,6 @@
--- Do not automatically rebill/recredit Support+ tips from periods that were already
--- touched by the pre-ledger settlement function. The legacy table cannot prove Stripe
--- collection and does not contain artist_id, so those rows require reconciliation.
+-- 旧台帳の月次精算処理が既に触れたSupport+投げ銭を、自動で再請求・再加算しない。
+-- 旧support_plus_tip_batchesだけではStripe回収済みかどうか、またartist_id別の
+-- 正確な加算履歴を証明できないため、対象行は手動照合へ隔離する。
 
 alter table supports
   drop constraint supports_funding_status_check;
@@ -30,9 +30,9 @@ where s.plan_at_support = 'support_plus'
       and legacy.year_month = s.billing_period
   );
 
--- Server-only audit surface for deciding whether a legacy period was actually charged
--- and what balance correction (if any) is required. A repeated legacy batch count > 1
--- is also a strong signal that the old non-idempotent settlement may have been retried.
+-- service_role専用の照合用view。
+-- legacy_batch_rowsは「旧テーブルに存在する行数」を示すだけで、旧実装が
+-- ユーザー×アーティスト単位で複数行を作り得たため、行数だけで重複精算とは断定しない。
 create or replace view support_plus_legacy_reconciliation
 with (security_invoker = true)
 as
