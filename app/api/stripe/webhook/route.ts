@@ -2,6 +2,8 @@ import { paymentProvider, WebhookVerificationError } from '@/lib/payment'
 import { createServiceClient } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
 
+const KNOWN_PLANS = new Set(['free', 'standard', 'student', 'support_plus'])
+
 // Webhook は冪等に実装（同一イベントが複数回届く前提）。プロバイダ依存の検証/正規化はlib/payment層に集約
 export async function POST(req: NextRequest) {
   const body = await req.text()
@@ -35,6 +37,22 @@ export async function POST(req: NextRequest) {
       } else {
         await handleTipSucceeded(supabase, normalized.providerChargeId, normalized.metadata)
       }
+      break
+    case 'invoice_paid':
+      await handleSupportPlusInvoicePaid(
+        supabase,
+        normalized.providerEventId,
+        normalized.providerInvoiceId,
+        normalized.lineMetadata
+      )
+      break
+    case 'invoice_payment_failed':
+      await handleSupportPlusInvoicePaymentFailed(
+        supabase,
+        normalized.providerEventId,
+        normalized.providerInvoiceId,
+        normalized.lineMetadata
+      )
       break
     case 'ignored':
     default:
@@ -97,27 +115,88 @@ async function handleTipSucceeded(
     .single()
   if (existing) return
 
-  const { error: insertError } = await supabase.from('supports').insert({
-    track_id,
-    user_id,
-    amount_yen: Number(net_yen),
-    payment_id: providerChargeId,
-    track_plays_at_support: track_plays_at_support ? Number(track_plays_at_support) : null,
-  })
+  const planAtSupport = metadata.plan && KNOWN_PLANS.has(metadata.plan) ? metadata.plan : null
+  const { data: support, error: insertError } = await supabase
+    .from('supports')
+    .insert({
+      track_id,
+      user_id,
+      amount_yen: Number(net_yen),
+      payment_id: providerChargeId,
+      track_plays_at_support: track_plays_at_support ? Number(track_plays_at_support) : null,
+      plan_at_support: planAtSupport,
+      funding_status: 'confirmed',
+      confirmed_at: new Date().toISOString(),
+    })
+    .select('id')
+    .single()
   if (insertError?.code === '23505') return
   if (insertError) throw insertError
+  if (!support) return
 
-  // Support+ は月末の settle_support_plus_tips で精算するため、ここでは即時加算しない
-  const { data: userData } = await supabase.from('users').select('plan').eq('id', user_id).single()
-  if ((userData as { plan?: string })?.plan === 'support_plus') return
+  // Support+ deferred tips normally do not create PaymentIntents. Keep the snapshot
+  // check here for compatibility with any already-created legacy payment intent.
+  if (planAtSupport === 'support_plus') return
 
   const { data: track } = await supabase.from('tracks').select('artist_id').eq('id', track_id).single()
   if (!track) return
 
-  await supabase.rpc('add_artist_balance', {
+  // New one-time tip credits also go through the append-only ledger so future balance
+  // changes remain traceable and retry-safe.
+  const { error: creditError } = await supabase.rpc('credit_artist_once', {
     p_artist_id: track.artist_id,
-    p_amount: Number(net_yen),
+    p_entry_type: 'tip_credit',
+    p_source_type: 'support',
+    p_source_id: support.id,
+    p_amount_yen: Number(net_yen),
+    p_currency: 'JPY',
   })
+  if (creditError) throw creditError
+}
+
+function supportPlusBatchIds(lineMetadata: Record<string, string>[]): string[] {
+  return [
+    ...new Set(
+      lineMetadata
+        .filter((metadata) => metadata.type === 'support_plus_batch')
+        .map((metadata) => metadata.support_plus_batch_id)
+        .filter((batchId): batchId is string => Boolean(batchId))
+    ),
+  ]
+}
+
+async function handleSupportPlusInvoicePaid(
+  supabase: Awaited<ReturnType<typeof createServiceClient>>,
+  providerEventId: string,
+  providerInvoiceId: string,
+  lineMetadata: Record<string, string>[]
+) {
+  for (const batchId of supportPlusBatchIds(lineMetadata)) {
+    // One RPC transaction records payment evidence, marks all batch items confirmed,
+    // creates the settlement, appends artist ledger credits, and updates balance cache.
+    const { error } = await supabase.rpc('confirm_support_plus_billing', {
+      p_batch_id: batchId,
+      p_stripe_invoice_id: providerInvoiceId,
+      p_provider_event_id: providerEventId,
+    })
+    if (error) throw error
+  }
+}
+
+async function handleSupportPlusInvoicePaymentFailed(
+  supabase: Awaited<ReturnType<typeof createServiceClient>>,
+  providerEventId: string,
+  providerInvoiceId: string,
+  lineMetadata: Record<string, string>[]
+) {
+  for (const batchId of supportPlusBatchIds(lineMetadata)) {
+    const { error } = await supabase.rpc('mark_support_plus_billing_failed', {
+      p_batch_id: batchId,
+      p_stripe_invoice_id: providerInvoiceId,
+      p_provider_event_id: providerEventId,
+    })
+    if (error) throw error
+  }
 }
 
 const BOOST_ARTIST_SHARE = 0.7 // 21円（70%）。残り30%は運営取得（投げ銭より高め）
