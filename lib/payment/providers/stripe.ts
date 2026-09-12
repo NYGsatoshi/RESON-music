@@ -64,6 +64,7 @@ export class StripeAdapter implements PaymentProvider {
         currency: 'jpy',
         description: params.description,
         metadata: params.metadata,
+        ...(params.discountable !== undefined ? { discountable: params.discountable } : {}),
       },
       params.idempotencyKey ? { idempotencyKey: params.idempotencyKey } : undefined
     )
@@ -73,9 +74,8 @@ export class StripeAdapter implements PaymentProvider {
   async findInvoiceItem(
     params: InvoiceItemLookupParams
   ): Promise<{ invoiceItemId: string } | null> {
-    // Do not filter to pending=true. If the process crashed before persisting the ID,
-    // the item may already have been attached to an invoice by the time a retry runs.
-    // Listing without `pending` includes both pending and attached invoice items.
+    // pendingだけに限定すると、DB保存前の障害後に既にinvoiceへ取り込まれた項目を
+    // 復元できないため、顧客のinvoice item全体から不変なmetadataで探す。
     let matchedInvoiceItemId: string | null = null
 
     for await (const item of stripe.invoiceItems.list({
@@ -85,8 +85,8 @@ export class StripeAdapter implements PaymentProvider {
       if (item.metadata?.[params.metadataKey] !== params.metadataValue) continue
 
       if (matchedInvoiceItemId && matchedInvoiceItemId !== item.id) {
-        // We cannot safely choose one item: this means the same immutable billing batch
-        // may have been invoiced twice. Stop before creating or crediting anything.
+        // 同じ不変batchに複数の請求項目がある場合は二重請求の可能性があるため、
+        // どちらかを推測せずfail-closedにする。
         throw new Error(`Duplicate invoice items detected for ${params.metadataKey}=${params.metadataValue}`)
       }
 
@@ -99,14 +99,19 @@ export class StripeAdapter implements PaymentProvider {
   async listInvoiceItems(providerInvoiceId: string): Promise<ProviderInvoiceItem[]> {
     const result: ProviderInvoiceItem[] = []
 
-    // Stripe's list object is auto-pagination aware. Using for-await avoids depending
-    // on the truncated invoice.lines collection embedded in webhook payloads.
+    // Webhook内のinvoice.linesは省略される場合があるため、Stripe APIから全件取得する。
     for await (const item of stripe.invoiceItems.list({
       invoice: providerInvoiceId,
       limit: 100,
     })) {
+      const customerId =
+        typeof item.customer === 'string' ? item.customer : item.customer?.id ?? null
+
       result.push({
         providerInvoiceItemId: item.id,
+        amountYen: item.amount,
+        currency: item.currency.toUpperCase(),
+        customerId,
         metadata: item.metadata ?? {},
       })
     }
