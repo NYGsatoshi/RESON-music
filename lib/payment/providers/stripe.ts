@@ -55,13 +55,16 @@ export class StripeAdapter implements PaymentProvider {
   }
 
   async createPendingInvoiceItem(params: PendingInvoiceItemParams): Promise<{ invoiceItemId: string }> {
-    const item = await stripe.invoiceItems.create({
-      customer: params.customerId,
-      amount: params.amountYen,
-      currency: 'jpy',
-      description: params.description,
-      metadata: params.metadata,
-    })
+    const item = await stripe.invoiceItems.create(
+      {
+        customer: params.customerId,
+        amount: params.amountYen,
+        currency: 'jpy',
+        description: params.description,
+        metadata: params.metadata,
+      },
+      params.idempotencyKey ? { idempotencyKey: params.idempotencyKey } : undefined
+    )
     return { invoiceItemId: item.id }
   }
 
@@ -105,6 +108,24 @@ export class StripeAdapter implements PaymentProvider {
           kind: 'charge_succeeded',
           providerChargeId: pi.id,
           metadata: pi.metadata ?? {},
+        }
+      }
+      case 'invoice.paid': {
+        const invoice = event.data.object as Stripe.Invoice
+        return {
+          kind: 'invoice_paid',
+          providerEventId: event.id,
+          providerInvoiceId: invoice.id,
+          lineMetadata: invoice.lines.data.map((line) => line.metadata ?? {}),
+        }
+      }
+      case 'invoice.payment_failed': {
+        const invoice = event.data.object as Stripe.Invoice
+        return {
+          kind: 'invoice_payment_failed',
+          providerEventId: event.id,
+          providerInvoiceId: invoice.id,
+          lineMetadata: invoice.lines.data.map((line) => line.metadata ?? {}),
         }
       }
       default:
