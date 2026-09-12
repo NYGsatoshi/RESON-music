@@ -42,16 +42,14 @@ export async function POST(req: NextRequest) {
       await handleSupportPlusInvoicePaid(
         supabase,
         normalized.providerEventId,
-        normalized.providerInvoiceId,
-        normalized.lineMetadata
+        normalized.providerInvoiceId
       )
       break
     case 'invoice_payment_failed':
       await handleSupportPlusInvoicePaymentFailed(
         supabase,
         normalized.providerEventId,
-        normalized.providerInvoiceId,
-        normalized.lineMetadata
+        normalized.providerInvoiceId
       )
       break
     case 'ignored':
@@ -99,6 +97,13 @@ async function handleSubscriptionDeleted(
     .eq('id', userId)
 }
 
+type PersistedSupport = {
+  id: string
+  track_id: string
+  amount_yen: number
+  plan_at_support?: string | null
+}
+
 async function handleTipSucceeded(
   supabase: Awaited<ReturnType<typeof createServiceClient>>,
   providerChargeId: string,
@@ -107,16 +112,10 @@ async function handleTipSucceeded(
   const { track_id, user_id, net_yen, track_plays_at_support } = metadata
   if (!track_id || !user_id || !net_yen) return
 
-  // 冪等: payment_id で重複チェック
-  const { data: existing } = await supabase
-    .from('supports')
-    .select('id')
-    .eq('payment_id', providerChargeId)
-    .single()
-  if (existing) return
-
   const planAtSupport = metadata.plan && KNOWN_PLANS.has(metadata.plan) ? metadata.plan : null
-  const { data: support, error: insertError } = await supabase
+  let persistedSupport: PersistedSupport | null = null
+
+  const { data: insertedSupport, error: insertError } = await supabase
     .from('supports')
     .insert({
       track_id,
@@ -128,36 +127,57 @@ async function handleTipSucceeded(
       funding_status: 'confirmed',
       confirmed_at: new Date().toISOString(),
     })
-    .select('id')
+    .select('id, track_id, amount_yen, plan_at_support')
     .single()
-  if (insertError?.code === '23505') return
-  if (insertError) throw insertError
-  if (!support) return
+
+  if (insertError?.code === '23505') {
+    // The support row may have committed while the previous webhook attempt failed
+    // before the artist ledger write. Recover the persisted source and retry the
+    // idempotent ledger credit instead of returning early.
+    const { data: existingSupport, error: existingError } = await supabase
+      .from('supports')
+      .select('id, track_id, amount_yen, plan_at_support')
+      .eq('payment_id', providerChargeId)
+      .single()
+    if (existingError) throw existingError
+    persistedSupport = existingSupport as PersistedSupport | null
+  } else if (insertError) {
+    throw insertError
+  } else {
+    persistedSupport = insertedSupport as PersistedSupport | null
+  }
+
+  if (!persistedSupport) return
 
   // Support+ deferred tips normally do not create PaymentIntents. Keep the snapshot
   // check here for compatibility with any already-created legacy payment intent.
-  if (planAtSupport === 'support_plus') return
+  if (persistedSupport.plan_at_support === 'support_plus') return
 
-  const { data: track } = await supabase.from('tracks').select('artist_id').eq('id', track_id).single()
+  const { data: track } = await supabase
+    .from('tracks')
+    .select('artist_id')
+    .eq('id', persistedSupport.track_id)
+    .single()
   if (!track) return
 
   // New one-time tip credits also go through the append-only ledger so future balance
-  // changes remain traceable and retry-safe.
+  // changes remain traceable and retry-safe. Replaying the webhook reuses support.id,
+  // so credit_artist_once becomes a no-op after the first successful credit.
   const { error: creditError } = await supabase.rpc('credit_artist_once', {
     p_artist_id: track.artist_id,
     p_entry_type: 'tip_credit',
     p_source_type: 'support',
-    p_source_id: support.id,
-    p_amount_yen: Number(net_yen),
+    p_source_id: persistedSupport.id,
+    p_amount_yen: Number(persistedSupport.amount_yen),
     p_currency: 'JPY',
   })
   if (creditError) throw creditError
 }
 
-function supportPlusBatchIds(lineMetadata: Record<string, string>[]): string[] {
+function supportPlusBatchIds(invoiceItemMetadata: Record<string, string>[]): string[] {
   return [
     ...new Set(
-      lineMetadata
+      invoiceItemMetadata
         .filter((metadata) => metadata.type === 'support_plus_batch')
         .map((metadata) => metadata.support_plus_batch_id)
         .filter((batchId): batchId is string => Boolean(batchId))
@@ -168,10 +188,13 @@ function supportPlusBatchIds(lineMetadata: Record<string, string>[]): string[] {
 async function handleSupportPlusInvoicePaid(
   supabase: Awaited<ReturnType<typeof createServiceClient>>,
   providerEventId: string,
-  providerInvoiceId: string,
-  lineMetadata: Record<string, string>[]
+  providerInvoiceId: string
 ) {
-  for (const batchId of supportPlusBatchIds(lineMetadata)) {
+  // invoice.lines embedded in a webhook can be truncated. Resolve all invoice items
+  // from the provider before deciding which Support+ batches this payment confirms.
+  const invoiceItemMetadata = await paymentProvider.listInvoiceItemMetadata(providerInvoiceId)
+
+  for (const batchId of supportPlusBatchIds(invoiceItemMetadata)) {
     // One RPC transaction records payment evidence, marks all batch items confirmed,
     // creates the settlement, appends artist ledger credits, and updates balance cache.
     const { error } = await supabase.rpc('confirm_support_plus_billing', {
@@ -186,10 +209,11 @@ async function handleSupportPlusInvoicePaid(
 async function handleSupportPlusInvoicePaymentFailed(
   supabase: Awaited<ReturnType<typeof createServiceClient>>,
   providerEventId: string,
-  providerInvoiceId: string,
-  lineMetadata: Record<string, string>[]
+  providerInvoiceId: string
 ) {
-  for (const batchId of supportPlusBatchIds(lineMetadata)) {
+  const invoiceItemMetadata = await paymentProvider.listInvoiceItemMetadata(providerInvoiceId)
+
+  for (const batchId of supportPlusBatchIds(invoiceItemMetadata)) {
     const { error } = await supabase.rpc('mark_support_plus_billing_failed', {
       p_batch_id: batchId,
       p_stripe_invoice_id: providerInvoiceId,
