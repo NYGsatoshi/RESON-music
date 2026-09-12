@@ -11,6 +11,7 @@ type PreparedBatch = {
 export type SupportPlusBillingResult = {
   prepared: number
   invoiceItemsCreated: number
+  invoiceItemsRecovered: number
 }
 
 /**
@@ -40,10 +41,12 @@ function asSafePositiveYen(value: number | string): number {
  * Freeze pending Support+ tips into per-user monthly batches and create one
  * Stripe pending invoice item per batch.
  *
- * The database batch ID is also the Stripe idempotency key. Therefore a process
- * crash after Stripe accepts the request but before the DB records the invoice
- * item is safe to retry: Stripe returns the same operation instead of charging
- * the batch twice.
+ * Recovery has two layers:
+ *   1. look up a still-pending invoice item by immutable batch metadata;
+ *   2. use the same Stripe idempotency key when a create is still required.
+ *
+ * This covers a crash after Stripe accepted the item but before the provider ID was
+ * persisted locally, including retries that happen after the normal idempotency window.
  */
 export async function prepareSupportPlusBilling(
   supabase: SupabaseClient,
@@ -60,7 +63,7 @@ export async function prepareSupportPlusBilling(
 
   const batches = (data ?? []) as PreparedBatch[]
   if (batches.length === 0) {
-    return { prepared: 0, invoiceItemsCreated: 0 }
+    return { prepared: 0, invoiceItemsCreated: 0, invoiceItemsRecovered: 0 }
   }
 
   const userIds = [...new Set(batches.map((batch) => batch.user_id))]
@@ -81,6 +84,7 @@ export async function prepareSupportPlusBilling(
   )
 
   let invoiceItemsCreated = 0
+  let invoiceItemsRecovered = 0
 
   for (const batch of batches) {
     const customerId = customerByUser.get(batch.user_id)
@@ -89,17 +93,31 @@ export async function prepareSupportPlusBilling(
     }
 
     const amountYen = asSafePositiveYen(batch.gross_tips_yen)
-    const { invoiceItemId } = await paymentProvider.createPendingInvoiceItem({
+    const recovered = await paymentProvider.findPendingInvoiceItem({
       customerId,
-      amountYen,
-      description: `RESON Support+ tips ${yearMonth}`,
-      metadata: {
-        type: 'support_plus_batch',
-        support_plus_batch_id: batch.batch_id,
-        year_month: yearMonth,
-      },
-      idempotencyKey: `support-plus:${batch.batch_id}`,
+      metadataKey: 'support_plus_batch_id',
+      metadataValue: batch.batch_id,
     })
+
+    let invoiceItemId: string
+    if (recovered) {
+      invoiceItemId = recovered.invoiceItemId
+      invoiceItemsRecovered += 1
+    } else {
+      const created = await paymentProvider.createPendingInvoiceItem({
+        customerId,
+        amountYen,
+        description: `RESON Support+ tips ${yearMonth}`,
+        metadata: {
+          type: 'support_plus_batch',
+          support_plus_batch_id: batch.batch_id,
+          year_month: yearMonth,
+        },
+        idempotencyKey: `support-plus:${batch.batch_id}`,
+      })
+      invoiceItemId = created.invoiceItemId
+      invoiceItemsCreated += 1
+    }
 
     const { error: markError } = await supabase.rpc('mark_support_plus_batch_invoice_item', {
       p_batch_id: batch.batch_id,
@@ -108,9 +126,11 @@ export async function prepareSupportPlusBilling(
     if (markError) {
       throw new Error(`Support+ invoice item persistence failed: ${markError.message}`)
     }
-
-    invoiceItemsCreated += 1
   }
 
-  return { prepared: batches.length, invoiceItemsCreated }
+  return {
+    prepared: batches.length,
+    invoiceItemsCreated,
+    invoiceItemsRecovered,
+  }
 }
