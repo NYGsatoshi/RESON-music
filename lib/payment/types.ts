@@ -46,13 +46,11 @@ export type NormalizedWebhookEvent =
       kind: 'invoice_paid'
       providerEventId: string
       providerInvoiceId: string
-      lineMetadata: Record<string, string>[]
     }
   | {
       kind: 'invoice_payment_failed'
       providerEventId: string
       providerInvoiceId: string
-      lineMetadata: Record<string, string>[]
     }
   | { kind: 'ignored' }
 
@@ -66,6 +64,9 @@ export interface PaymentProvider {
   createBillingPortalSession(params: BillingPortalParams): Promise<{ url: string | null }>
   // 保留中の請求項目を作成する（顧客の次回請求書に自動的に合算される。サブスク顧客専用）
   createPendingInvoiceItem(params: PendingInvoiceItemParams): Promise<{ invoiceItemId: string }>
+  // Webhook の invoice.lines は全件を含むとは限らないため、provider API から
+  // 対象 invoice に紐づく invoice item metadata を全ページ取得する。
+  listInvoiceItemMetadata(providerInvoiceId: string): Promise<Record<string, string>[]>
   // 署名検証 + 共通フォーマットへの正規化（業者依存のWebhook検証ロジックをこの層に閉じ込める）
   verifyAndNormalizeWebhook(rawBody: string, signature: string | null): NormalizedWebhookEvent
 }
