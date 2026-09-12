@@ -1,4 +1,4 @@
-import { paymentProvider, WebhookVerificationError } from '@/lib/payment'
+import { paymentProvider, WebhookVerificationError, type ProviderInvoiceItem } from '@/lib/payment'
 import { createServiceClient } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -174,15 +174,30 @@ async function handleTipSucceeded(
   if (creditError) throw creditError
 }
 
-function supportPlusBatchIds(invoiceItemMetadata: Record<string, string>[]): string[] {
-  return [
-    ...new Set(
-      invoiceItemMetadata
-        .filter((metadata) => metadata.type === 'support_plus_batch')
-        .map((metadata) => metadata.support_plus_batch_id)
-        .filter((batchId): batchId is string => Boolean(batchId))
-    ),
-  ]
+type SupportPlusInvoiceRef = {
+  batchId: string
+  invoiceItemId: string
+}
+
+function supportPlusBatchRefs(invoiceItems: ProviderInvoiceItem[]): SupportPlusInvoiceRef[] {
+  const byBatch = new Map<string, string>()
+
+  for (const item of invoiceItems) {
+    if (item.metadata.type !== 'support_plus_batch') continue
+    const batchId = item.metadata.support_plus_batch_id
+    if (!batchId) continue
+
+    const existingInvoiceItemId = byBatch.get(batchId)
+    if (existingInvoiceItemId && existingInvoiceItemId !== item.providerInvoiceItemId) {
+      // Two provider invoice items for one immutable batch means the customer may have
+      // been billed twice. Do not guess which one is authoritative or credit artists.
+      throw new Error(`Duplicate Support+ invoice items detected for batch ${batchId}`)
+    }
+
+    byBatch.set(batchId, item.providerInvoiceItemId)
+  }
+
+  return [...byBatch.entries()].map(([batchId, invoiceItemId]) => ({ batchId, invoiceItemId }))
 }
 
 async function handleSupportPlusInvoicePaid(
@@ -192,13 +207,15 @@ async function handleSupportPlusInvoicePaid(
 ) {
   // invoice.lines embedded in a webhook can be truncated. Resolve all invoice items
   // from the provider before deciding which Support+ batches this payment confirms.
-  const invoiceItemMetadata = await paymentProvider.listInvoiceItemMetadata(providerInvoiceId)
+  const invoiceItems = await paymentProvider.listInvoiceItems(providerInvoiceId)
 
-  for (const batchId of supportPlusBatchIds(invoiceItemMetadata)) {
-    // One RPC transaction records payment evidence, marks all batch items confirmed,
-    // creates the settlement, appends artist ledger credits, and updates balance cache.
+  for (const ref of supportPlusBatchRefs(invoiceItems)) {
+    // One RPC transaction records payment evidence, binds the actual provider invoice
+    // item, marks all batch items confirmed, settles, appends ledger credits, and
+    // updates the balance cache.
     const { error } = await supabase.rpc('confirm_support_plus_billing', {
-      p_batch_id: batchId,
+      p_batch_id: ref.batchId,
+      p_stripe_invoice_item_id: ref.invoiceItemId,
       p_stripe_invoice_id: providerInvoiceId,
       p_provider_event_id: providerEventId,
     })
@@ -211,11 +228,12 @@ async function handleSupportPlusInvoicePaymentFailed(
   providerEventId: string,
   providerInvoiceId: string
 ) {
-  const invoiceItemMetadata = await paymentProvider.listInvoiceItemMetadata(providerInvoiceId)
+  const invoiceItems = await paymentProvider.listInvoiceItems(providerInvoiceId)
 
-  for (const batchId of supportPlusBatchIds(invoiceItemMetadata)) {
+  for (const ref of supportPlusBatchRefs(invoiceItems)) {
     const { error } = await supabase.rpc('mark_support_plus_billing_failed', {
-      p_batch_id: batchId,
+      p_batch_id: ref.batchId,
+      p_stripe_invoice_item_id: ref.invoiceItemId,
       p_stripe_invoice_id: providerInvoiceId,
       p_provider_event_id: providerEventId,
     })
