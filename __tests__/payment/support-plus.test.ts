@@ -21,13 +21,13 @@ const findInvoiceItem = paymentProvider.findInvoiceItem as jest.MockedFunction<
   typeof paymentProvider.findInvoiceItem
 >
 
-describe('Support+ monthly billing', () => {
+describe('Support+ 月次請求', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     findInvoiceItem.mockResolvedValue(null)
   })
 
-  test('only closed UTC billing periods can be frozen', () => {
+  test('UTCで終了済みの請求月だけ固定できる', () => {
     expect(
       isClosedSupportPlusBillingPeriod('2026-08', new Date('2026-09-01T00:00:00.000Z'))
     ).toBe(true)
@@ -37,7 +37,7 @@ describe('Support+ monthly billing', () => {
     expect(isClosedSupportPlusBillingPeriod('2026-13', new Date('2027-01-01T00:00:00.000Z'))).toBe(false)
   })
 
-  test('uses the immutable billing batch id for recovery and Stripe idempotency', async () => {
+  test('不変なbilling batch IDを復旧キーとStripe冪等キーに使い、割引対象外で作成する', async () => {
     const rpc = jest
       .fn()
       .mockResolvedValueOnce({
@@ -83,6 +83,7 @@ describe('Support+ monthly billing', () => {
       expect.objectContaining({
         amountYen: 1500,
         customerId: 'cus_support_plus',
+        discountable: false,
         idempotencyKey: 'support-plus:11111111-1111-1111-1111-111111111111',
         metadata: expect.objectContaining({
           type: 'support_plus_batch',
@@ -101,7 +102,7 @@ describe('Support+ monthly billing', () => {
     })
   })
 
-  test('recovers an existing pending or attached invoice item instead of creating a duplicate', async () => {
+  test('既存のpendingまたはinvoice取込済み項目を復旧し、重複作成しない', async () => {
     const rpc = jest
       .fn()
       .mockResolvedValueOnce({
@@ -148,7 +149,7 @@ describe('Support+ monthly billing', () => {
     })
   })
 
-  test('does not call Stripe when there are no pending Support+ batches', async () => {
+  test('未処理batchが無い場合はStripeを呼ばない', async () => {
     const rpc = jest.fn().mockResolvedValue({ data: [], error: null })
 
     const result = await prepareSupportPlusBilling(
@@ -165,7 +166,7 @@ describe('Support+ monthly billing', () => {
     })
   })
 
-  test('fails closed when a Support+ user has no Stripe customer', async () => {
+  test('Support+ユーザーにStripe customerが無い場合はfail-closedにする', async () => {
     const rpc = jest.fn().mockResolvedValue({
       data: [
         {
