@@ -31,6 +31,9 @@ export interface PendingInvoiceItemParams {
   amountYen: number
   description: string
   metadata: Record<string, string>
+  // Stable across retries. Required by Support+ monthly billing so a crash after the
+  // Stripe call cannot create a second invoice item when the job is retried.
+  idempotencyKey?: string
 }
 
 // 業者ごとに異なるWebhook形式を共通フォーマットへ変換した結果（第3章）
@@ -39,6 +42,18 @@ export type NormalizedWebhookEvent =
   | { kind: 'subscription_updated'; userId: string; plan: string; active: boolean }
   | { kind: 'subscription_deleted'; userId: string }
   | { kind: 'charge_succeeded'; providerChargeId: string; metadata: Record<string, string> }
+  | {
+      kind: 'invoice_paid'
+      providerEventId: string
+      providerInvoiceId: string
+      lineMetadata: Record<string, string>[]
+    }
+  | {
+      kind: 'invoice_payment_failed'
+      providerEventId: string
+      providerInvoiceId: string
+      lineMetadata: Record<string, string>[]
+    }
   | { kind: 'ignored' }
 
 export class WebhookVerificationError extends Error {}
