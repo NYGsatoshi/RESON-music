@@ -15,9 +15,8 @@ export type SupportPlusBillingResult = {
 }
 
 /**
- * Support+ billing_period is currently defined in UTC (matching the existing
- * created_at/month aggregation semantics). A batch must not be frozen while its
- * period is still accepting tips.
+ * Support+ の billing_period は既存の created_at 集計と合わせてUTC基準とする。
+ * 対象月がまだ終了していない間は請求batchを固定しない。
  */
 export function isClosedSupportPlusBillingPeriod(yearMonth: string, now = new Date()): boolean {
   const match = /^(\d{4})-(0[1-9]|1[0-2])$/.exec(yearMonth)
@@ -38,16 +37,13 @@ function asSafePositiveYen(value: number | string): number {
 }
 
 /**
- * Freeze pending Support+ tips into per-user monthly batches and create one
- * Stripe pending invoice item per batch.
+ * 未回収のSupport+投げ銭をユーザー単位の月次batchへ固定し、
+ * batchごとにStripeのpending invoice itemを1件作成する。
  *
- * Recovery has two layers:
- *   1. look up any existing invoice item by immutable batch metadata, including an
- *      item that has already been attached to an invoice;
- *   2. use the same Stripe idempotency key when a create is still required.
- *
- * This covers a crash after Stripe accepted the item but before the provider ID was
- * persisted locally, including retries beyond Stripe API v1's normal idempotency window.
+ * 障害復旧は2段階で行う。
+ * 1. 不変なbatch metadataから既存invoice itemを検索する。
+ *    既にinvoiceへ取り込まれた項目も対象にする。
+ * 2. 新規作成が必要な場合も同じStripe idempotency keyを使う。
  */
 export async function prepareSupportPlusBilling(
   supabase: SupabaseClient,
@@ -114,6 +110,9 @@ export async function prepareSupportPlusBilling(
           support_plus_batch_id: batch.batch_id,
           year_month: yearMonth,
         },
+        // Support+投げ銭はサブスク割引やクーポンの影響を受けてはならない。
+        // DB上の精算額とStripeで実際に請求するline amountを一致させる。
+        discountable: false,
         idempotencyKey: `support-plus:${batch.batch_id}`,
       })
       invoiceItemId = created.invoiceItemId
