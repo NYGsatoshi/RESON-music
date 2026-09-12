@@ -79,6 +79,7 @@ insert into support_plus_tip_batches (
 \ir ../../supabase/migrations/20260034_support_plus_legacy_quarantine.sql
 \ir ../../supabase/migrations/20260035_support_plus_webhook_recovery.sql
 \ir ../../supabase/migrations/20260036_support_plus_payment_binding.sql
+\ir ../../supabase/migrations/20260037_support_plus_prepare_function_fix.sql
 
 -- 旧月次精算に触れた可能性があるデータを自動再請求してはならない。
 do $$
