@@ -68,6 +68,21 @@ export class StripeAdapter implements PaymentProvider {
     return { invoiceItemId: item.id }
   }
 
+  async listInvoiceItemMetadata(providerInvoiceId: string): Promise<Record<string, string>[]> {
+    const metadata: Record<string, string>[] = []
+
+    // Stripe's list object is auto-pagination aware. Using for-await avoids depending
+    // on the truncated invoice.lines collection embedded in webhook payloads.
+    for await (const item of stripe.invoiceItems.list({
+      invoice: providerInvoiceId,
+      limit: 100,
+    })) {
+      metadata.push(item.metadata ?? {})
+    }
+
+    return metadata
+  }
+
   verifyAndNormalizeWebhook(rawBody: string, signature: string | null): NormalizedWebhookEvent {
     if (!signature) {
       throw new WebhookVerificationError('No signature')
@@ -116,7 +131,6 @@ export class StripeAdapter implements PaymentProvider {
           kind: 'invoice_paid',
           providerEventId: event.id,
           providerInvoiceId: invoice.id,
-          lineMetadata: invoice.lines.data.map((line) => line.metadata ?? {}),
         }
       }
       case 'invoice.payment_failed': {
@@ -125,7 +139,6 @@ export class StripeAdapter implements PaymentProvider {
           kind: 'invoice_payment_failed',
           providerEventId: event.id,
           providerInvoiceId: invoice.id,
-          lineMetadata: invoice.lines.data.map((line) => line.metadata ?? {}),
         }
       }
       default:
