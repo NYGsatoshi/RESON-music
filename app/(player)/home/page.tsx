@@ -157,6 +157,7 @@ export default function PlayerPage() {
           <div className="flex items-center gap-4">
             <input
               disabled
+              aria-label="アーティスト・楽曲・気分で探す"
               placeholder="アーティスト・楽曲・気分で探す"
               className="flex-1 rounded-full border border-[var(--line)] bg-[var(--surface)] px-4 py-2 text-sm text-[var(--faint)]"
             />
