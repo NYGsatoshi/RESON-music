@@ -93,7 +93,7 @@ export const SaveSuccess = {
     await userEvent.clear(displayName)
     await userEvent.type(displayName, 'Updated Listener')
     await userEvent.click(canvas.getByRole('button', { name: '保存する' }))
-    await expect(canvas.getByRole('status', { name: '' })).toHaveTextContent('保存しました')
+    await expect(canvas.getByRole('status')).toHaveTextContent('保存しました')
   },
 }
 
