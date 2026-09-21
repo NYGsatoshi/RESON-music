@@ -10,7 +10,7 @@ on:
   workflow_dispatch: {}
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: playwright-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -103,34 +103,3 @@ jobs:
         if: always()
         run: supabase stop --no-backup
 
-      # One-time bootstrap for PR #15. This is removed after the generated
-      # baselines are committed and the pixel-diff gate is enabled.
-      - name: Stage visual regression baselines
-        if: github.event_name == 'pull_request' && github.head_ref == 'test/visual-regression-gate'
-        shell: bash
-        run: |
-          rm -rf /tmp/reson-visual-baselines
-          mkdir -p /tmp/reson-visual-baselines
-          cp e2e/visual-artifacts/*-mobile.png /tmp/reson-visual-baselines/
-
-      - name: Checkout visual regression branch for baseline commit
-        if: github.event_name == 'pull_request' && github.head_ref == 'test/visual-regression-gate'
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref }}
-
-      - name: Commit visual regression baselines once
-        if: github.event_name == 'pull_request' && github.head_ref == 'test/visual-regression-gate'
-        shell: bash
-        run: |
-          if [ -f e2e/visual-baselines/home-mobile.png ]; then
-            echo "Visual baselines already exist; skipping bootstrap commit."
-            exit 0
-          fi
-          mkdir -p e2e/visual-baselines
-          cp /tmp/reson-visual-baselines/*-mobile.png e2e/visual-baselines/
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add e2e/visual-baselines
-          git commit -m "test(e2e): add visual regression baselines"
-          git push origin HEAD:${{ github.head_ref }}
