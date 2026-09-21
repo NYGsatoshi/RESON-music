@@ -40,6 +40,18 @@ test.describe('public pages', () => {
   })
 
 
+  test('language switcher moves between Japanese and English routes', async ({ page }) => {
+    await page.goto('/')
+
+    await page.getByRole('link', { name: '英語に切り替える' }).click()
+    await expect(page).toHaveURL(/\/en\/?$/)
+    await expect(page.getByRole('heading', { level: 1 })).toContainText('Listening should')
+
+    await page.getByRole('link', { name: 'Switch to Japanese' }).click()
+    await expect(page).toHaveURL(/\/$/)
+    await expect(page.getByRole('heading', { level: 1 })).toContainText('聴くことが、そのまま')
+  })
+
   test('English locale renders translated landing and auth navigation', async ({ page }) => {
     await page.goto('/en')
 
