@@ -3,7 +3,9 @@
     "appName": "RESON",
     "language": {
       "ja": "日本語",
-      "en": "英語"
+      "en": "英語",
+      "switchToEnglish": "英語に切り替える",
+      "switchToJapanese": "日本語に切り替える"
     }
   },
   "Landing": {
