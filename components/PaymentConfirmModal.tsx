@@ -60,7 +60,7 @@ export function PaymentConfirmModal({ clientSecret, title, onSuccess, onClose }:
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4"
-      onMouseDown={(event) => {
+      onClick={(event) => {
         if (event.target === event.currentTarget) onClose()
       }}
     >
