@@ -169,6 +169,8 @@ export default function AdminPage() {
     <main className="min-h-screen bg-black text-white px-4 py-10">
       <div className="max-w-3xl mx-auto space-y-6">
         <h1 className="text-2xl font-bold">審査ダッシュボード</h1>
+        {/* next-intl Link preserves the active locale; Next.js lint cannot identify the wrapper as next/link. */}
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
         <Link href="/admin/privacy-requests" className="inline-block text-sm text-zinc-300 underline hover:text-white">個人データ請求を確認する</Link>
 
         <div className="flex gap-2 overflow-x-auto pb-1">
