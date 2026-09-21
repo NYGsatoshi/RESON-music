@@ -325,5 +325,49 @@
     "failed": "Payment failed",
     "processing": "Processing…",
     "pay": "Pay"
+  },
+  "Search": {
+    "title": "Contextual search is coming soon",
+    "description": "We're building search that understands natural phrases such as “music for late at night.” Until then, please use track-name search.",
+    "backHome": "Back to Home",
+    "tryExplore": "Try Explore mode"
+  },
+  "Explore": {
+    "backHome": "Back to Home",
+    "title": "Explore mode",
+    "description": "Only tracks with 100–5,000 plays. Discover by compatibility rather than popularity, with tracks close to genres you've listened to prioritized.",
+    "loading": "Loading…",
+    "emptyTitle": "No tracks are eligible for Explore mode yet",
+    "emptyDescription": "Tracks will appear here once more titles reach 100–5,000 plays",
+    "unknownArtist": "Unknown",
+    "plays": "{count, plural, one {# play} other {# plays}}"
+  },
+  "Feed": {
+    "backHome": "Back to Home",
+    "title": "Feed",
+    "description": "Discover → talk → connect → support. Posts from listeners and artists appear here.",
+    "postContentLabel": "Post content",
+    "postPlaceholder": "Talk about what you're listening to…",
+    "removeAttachedTrack": "Remove attached track",
+    "attachSearchLabel": "Search for a track to attach",
+    "attachSearchPlaceholder": "Search for a track to attach…",
+    "unknownArtist": "Unknown",
+    "posting": "Posting…",
+    "post": "Post",
+    "loading": "Loading…",
+    "empty": "No posts yet",
+    "listener": "Listener",
+    "postMenu": "Open post menu",
+    "reportPrompt": "Enter a reason for the report (up to 500 characters)",
+    "reported": "Report submitted",
+    "blockConfirm": "Block this user?",
+    "report": "🚩 Report",
+    "block": "🚫 Block",
+    "liked": "❤️ Liked",
+    "like": "🤍 Like",
+    "comments": "💬 Comments",
+    "commentLabel": "Comment",
+    "commentPlaceholder": "Write a comment…",
+    "send": "Send"
   }
 }
