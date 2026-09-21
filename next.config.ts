@@ -1,6 +1,8 @@
+import createNextIntlPlugin from "next-intl/plugin";
 import type { NextConfig } from "next";
 
 const isStaticPreview = process.env.STATIC_PREVIEW === "true";
+const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
 const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
@@ -25,4 +27,4 @@ const nextConfig: NextConfig = isStaticPreview
       headers,
     };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);
