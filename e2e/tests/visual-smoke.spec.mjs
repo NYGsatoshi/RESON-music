@@ -36,7 +36,7 @@ const targets = [
 
 test.describe('mobile visual smoke', () => {
   for (const target of targets) {
-    test(`${target.name} has no horizontal overflow and emits a reference screenshot`, async ({ page }) => {
+    test(`${target.name} matches the mobile visual baseline`, async ({ page }) => {
       await page.goto(target.path)
       await expect(target.ready(page)).toBeVisible()
       await page.evaluate(() => document.fonts.ready)
@@ -88,6 +88,10 @@ test.describe('mobile visual smoke', () => {
         fullPage: false,
         animations: 'disabled',
         caret: 'hide',
+      })
+
+      await expect(page).toHaveScreenshot(`${target.name}-mobile.png`, {
+        fullPage: false,
       })
     })
   }
