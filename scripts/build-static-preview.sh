@@ -22,3 +22,10 @@ NEXT_PUBLIC_SUPABASE_URL="${NEXT_PUBLIC_SUPABASE_URL:-https://placeholder.supaba
 NEXT_PUBLIC_SUPABASE_ANON_KEY="${NEXT_PUBLIC_SUPABASE_ANON_KEY:-placeholder}" \
 SUPABASE_SERVICE_ROLE_KEY="${SUPABASE_SERVICE_ROLE_KEY:-placeholder}" \
 npx next build
+
+# next-intl renders /ja and /en during static export. Production middleware
+# removes the default-locale prefix; mirror that behavior for GitHub Pages.
+if [ -d out/ja ]; then
+  cp -a out/ja/. out/
+  rm -rf out/ja
+fi
