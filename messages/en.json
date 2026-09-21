@@ -1,0 +1,373 @@
+{
+  "Common": {
+    "appName": "RESON",
+    "language": {
+      "ja": "Japanese",
+      "en": "English",
+      "switchToEnglish": "Switch to English",
+      "switchToJapanese": "Switch to Japanese"
+    }
+  },
+  "Landing": {
+    "nav": {
+      "about": "Philosophy",
+      "pricing": "Pricing",
+      "artists": "Artists",
+      "login": "Log in",
+      "start": "Start free"
+    },
+    "hero": {
+      "title": "Listening should <highlight>grow music culture</highlight>.",
+      "description": "RESON distributes subscription revenue based on listener engagement—support rate, completion rate, and repeat listening—rather than raw play counts. We aim to help listeners discover music through compatibility and give them an optional way to support artists they value.",
+      "listen": "Start listening",
+      "learnMore": "How it works",
+      "note": "No credit card required · Sign up in about a minute",
+      "trending": "Tracks gaining engagement",
+      "completion": "Completion {value}%",
+      "viewAll": "View all tracks →"
+    },
+    "about": {
+      "title": "Designed to reward more than the top 1%.",
+      "paragraph1": "Streaming revenue often concentrates around the most-played artists. RESON uses an engagement score based on listening time, support rate, and completion rate to create more opportunities for independent and emerging artists, regardless of name recognition.",
+      "paragraph2": "The distribution formula is published so artists can verify their own score and revenue."
+    },
+    "features": {
+      "distribution": {
+        "title": "Distribute by engagement",
+        "desc": "Revenue is distributed using engagement calculated from support rate, completion rate, and repeat listening—not play counts alone."
+      },
+      "formula": {
+        "title": "Publish the formula",
+        "desc": "The distribution formula is always public, allowing artists to verify their own score."
+      },
+      "discovery": {
+        "title": "Discover by compatibility",
+        "desc": "Music discovery is designed around listener compatibility rather than artist popularity."
+      },
+      "gratitude": {
+        "title": "Optional direct support",
+        "desc": "Listeners can voluntarily support artists when a track resonates with them, without mandatory tipping."
+      }
+    },
+    "pricing": {
+      "title": "Plans",
+      "perMonth": "/month",
+      "student": "Middle and high school students can also use the Student plan ({price}, verified with a .ed.jp address).",
+      "plans": {
+        "free": {
+          "tag": "Start for free",
+          "features": {
+            "hours": "Up to 15 hours per month",
+            "ads": "Includes ads"
+          },
+          "cta": "Start free"
+        },
+        "standard": {
+          "tag": "Most popular",
+          "features": {
+            "unlimited": "Unlimited listening",
+            "noAds": "No ads",
+            "support": "Support and tipping"
+          },
+          "cta": "Start Standard"
+        },
+        "support": {
+          "tag": "Support artists more",
+          "features": {
+            "quality": "Higher-quality audio",
+            "bonus": "Support bonus",
+            "fee": "3.6% monthly tipping fee"
+          },
+          "cta": "Start Support+"
+        }
+      }
+    },
+    "artists": {
+      "title": "For artists.",
+      "description": "Once you exceed 100 total plays, you become eligible for distribution. The formula is fully published, so you can verify your score and revenue yourself.",
+      "register": "Register as an artist",
+      "distribution": "Read how distribution works"
+    },
+    "footer": {
+      "privacy": "Personal data"
+    }
+  },
+  "Auth": {
+    "common": {
+      "email": "Email address",
+      "password": "Password",
+      "passwordConfirm": "Confirm password",
+      "passwordMin": "At least 8 characters",
+      "back": "Back"
+    },
+    "login": {
+      "title": "Log in",
+      "submitting": "Logging in…",
+      "submit": "Log in",
+      "forgot": "Forgot your password?",
+      "noAccount": "Don't have an account?",
+      "register": "Sign up"
+    },
+    "register": {
+      "title": "Create an account",
+      "validation": {
+        "passwordMin": "Password must be at least 8 characters.",
+        "passwordMismatch": "Passwords do not match.",
+        "accountFailed": "We couldn't complete registration. Please try again later.",
+        "artistFailed": "We couldn't submit your artist registration. Please try again later.",
+        "network": "The request failed. Check your connection and try again.",
+        "rightsRequired": "You must agree to the rights confirmation.",
+        "parentRequired": "Minors must provide a parent or guardian's name and contact information."
+      },
+      "account": {
+        "creating": "Creating account…",
+        "create": "Create account",
+        "privacyBefore": "Before registering, please review our ",
+        "privacyLink": "personal data policy",
+        "privacyAfter": ".",
+        "existing": "Already have an account?",
+        "login": "Log in"
+      },
+      "role": {
+        "question": "How will you use RESON?",
+        "listenerTitle": "Start as a listener",
+        "listenerDescription": "Listen to music and support artists. You can register as an artist later at any time.",
+        "artistTitle": "Start as an artist",
+        "artistDescription": "Upload and distribute music. Artist review and payout details are required."
+      },
+      "confirmEmail": {
+        "title": "Confirmation email sent",
+        "message": "Click the confirmation link sent to {email}, then log in after confirming your email.",
+        "artistContinuation": "After logging in, choose “Register as an artist” from the home screen to continue artist registration.",
+        "login": "Go to login"
+      },
+      "artist": {
+        "name": "Artist name",
+        "namePlaceholder": "Your name or group name",
+        "bio": "Bio (optional)",
+        "bioPlaceholder": "Describe your music, where you're based, and other background",
+        "next": "Next: payout details"
+      },
+      "bank": {
+        "description": "This account will receive distributions and withdrawals. The account holder name must match the registered person.",
+        "bankName": "Bank name",
+        "branchName": "Branch name",
+        "accountType": "Account type",
+        "ordinary": "Ordinary",
+        "checking": "Checking",
+        "accountNumber": "Account number",
+        "holderName": "Account holder name (Kana)",
+        "holderPlaceholder": "Example: ヤマダ タロウ",
+        "next": "Next: rights confirmation"
+      },
+      "rights": {
+        "intro": "Please confirm the following for music you upload.",
+        "item1": "I will upload only music for which I hold the copyright and performer rights, or for which I have permission from the rights holder.",
+        "item2": "I will not register content that infringes third-party rights, including unauthorized samples or covers.",
+        "item3": "I confirm that the bank account information I entered is accurate.",
+        "agree": "I agree to the above.",
+        "minor": "I am a minor and require parent or guardian consent.",
+        "parentName": "Parent or guardian name",
+        "parentContact": "Parent or guardian contact",
+        "parentContactPlaceholder": "Phone number or email address",
+        "parentNotice": "Confirm that your parent or guardian agrees to this registration, including the rights confirmation and bank account information.",
+        "submitting": "Submitting…",
+        "submit": "Submit registration"
+      },
+      "done": {
+        "title": "Registration submitted",
+        "description": "Your application is under review. Please wait for review before starting distribution. You can upload music while the review is pending.",
+        "dashboard": "Go to dashboard"
+      },
+      "steps": {
+        "account": "Account",
+        "profile": "Profile",
+        "bank": "Payout",
+        "rights": "Rights"
+      }
+    },
+    "resetRequest": {
+      "title": "Reset your password",
+      "sent": "We sent a password reset link to {email}. Open the link in the email to finish resetting your password.",
+      "back": "Back to login",
+      "helper": "We'll send a reset link to your registered email address.",
+      "sending": "Sending…",
+      "send": "Send reset link"
+    },
+    "resetConfirm": {
+      "title": "Set a new password",
+      "validation": {
+        "passwordMin": "Password must be at least 8 characters.",
+        "passwordMismatch": "Passwords do not match."
+      },
+      "checking": "Checking the link… Please open this page directly from the link in your email.",
+      "newPassword": "New password",
+      "newPasswordConfirm": "Confirm new password",
+      "updating": "Updating…",
+      "update": "Update password"
+    }
+  },
+  "Metadata": {
+    "description": "A music subscription service where listening helps grow music culture."
+  },
+  "Home": {
+    "nav": {
+      "home": "Home",
+      "search": "Search",
+      "explore": "Explore",
+      "feed": "Feed",
+      "library": "Library",
+      "playlists": "Playlists",
+      "notifications": "Notifications",
+      "wrapped": "Year in review",
+      "curators": "Curators",
+      "boostRanking": "Weekly boosts",
+      "messages": "Messages"
+    },
+    "mainNavigation": "Main navigation",
+    "mobileNavigation": "Mobile navigation",
+    "buildLibraryTitle": "Build your library",
+    "buildLibraryDescription": "Upload music and start publishing",
+    "inviteFriends": "Invite friends →",
+    "communities": "Communities →",
+    "events": "Live events →",
+    "profile": "Music profile →",
+    "forArtists": "For artists →",
+    "searchPlaceholder": "Search artists, tracks, or moods",
+    "pricing": "Pricing",
+    "upload": "+ Upload",
+    "registerArtist": "Register as an artist",
+    "loading": "Loading…",
+    "noTracks": "No tracks yet",
+    "uploadFirst": "Upload the first track",
+    "forYou": {
+      "title": "Recommended for you",
+      "description": "Prioritizing high-engagement tracks from artists you listen to often",
+      "frequentArtist": "Frequently played artist",
+      "completion": "Completion {value}%"
+    },
+    "heat": {
+      "title": "Tracks gaining engagement",
+      "description": "Ranked by an engagement score based on listening time, support rate, and completion rate over the last 14 days",
+      "stats": "Completion {completion}% · Support {support}%"
+    },
+    "featuredArtists": "Featured artists",
+    "explore": {
+      "title": "Explore mode",
+      "viewAll": "View all →",
+      "description": "Only tracks with 100–5,000 plays. Discover by compatibility, not popularity."
+    },
+    "allTracks": "All tracks",
+    "unknownArtist": "Unknown",
+    "addNextTitle": "Add to up-next queue",
+    "addQueue": "+ Queue"
+  },
+  "Library": {
+    "title": "My Library",
+    "home": "Back to Home",
+    "description": "Tracks you supported with ❤️ are collected here",
+    "loading": "Loading…",
+    "empty": "You haven't supported any tracks with ❤️ yet",
+    "unknownArtist": "Unknown",
+    "addQueueTitle": "Add to queue",
+    "addQueue": "+ Queue"
+  },
+  "Theme": {
+    "switchToLight": "Switch to light mode",
+    "switchToDark": "Switch to dark mode"
+  },
+  "Player": {
+    "unknownArtist": "Unknown artist",
+    "seekPosition": "Playback position",
+    "shuffle": "Shuffle",
+    "previous": "Previous track",
+    "pause": "Pause",
+    "play": "Play",
+    "next": "Next track",
+    "repeat": "Repeat",
+    "queue": "Up next: {count, plural, one {# track} other {# tracks}}",
+    "normalizeTitle": "Reduce volume differences between tracks (basic normalization)",
+    "normalizeOn": "🎚️ Normalize ON",
+    "normalizeOff": "🎚️ Normalize OFF",
+    "lyrics": "📝 Lyrics",
+    "loading": "Loading…",
+    "noLyrics": "No lyrics have been added",
+    "support": {
+      "supportTitle": "Support this track (❤️, unlimited and free)",
+      "supported": "Supported",
+      "support": "Support",
+      "tipTitle": "Send a tip (minimum ¥100)",
+      "sent": "Sent",
+      "tip": "Tip",
+      "dialogTitle": "Send a tip",
+      "closeDialog": "Close tip dialog",
+      "preparing": "Preparing…",
+      "sendAmount": "Send ¥{amount}",
+      "paymentTitle": "Tip (¥{amount})"
+    },
+    "boost": {
+      "title": "Boost heart (show strong support for this track)",
+      "boosted": "Boosted",
+      "boost": "Boost",
+      "remaining": "{remaining} boosts left this month ({freeRemaining} free; paid extras are added to your next bill)",
+      "paymentTitle": "Extra boost (¥{amount})"
+    },
+    "supportGraph": {
+      "anonymous": "Anonymous listener",
+      "separator": ", ",
+      "extra": " and {count} more",
+      "following": "People you follow — {names}{extra} — are supporting this track",
+      "total": "{count, plural, one {# person is supporting this track} other {# people are supporting this track}}"
+    }
+  },
+  "Payment": {
+    "closeDialog": "Close payment dialog",
+    "failed": "Payment failed",
+    "processing": "Processing…",
+    "pay": "Pay"
+  },
+  "Search": {
+    "title": "Contextual search is coming soon",
+    "description": "We're building search that understands natural phrases such as “music for late at night.” Until then, please use track-name search.",
+    "backHome": "Back to Home",
+    "tryExplore": "Try Explore mode"
+  },
+  "Explore": {
+    "backHome": "Back to Home",
+    "title": "Explore mode",
+    "description": "Only tracks with 100–5,000 plays. Discover by compatibility rather than popularity, with tracks close to genres you've listened to prioritized.",
+    "loading": "Loading…",
+    "emptyTitle": "No tracks are eligible for Explore mode yet",
+    "emptyDescription": "Tracks will appear here once more titles reach 100–5,000 plays",
+    "unknownArtist": "Unknown",
+    "plays": "{count, plural, one {# play} other {# plays}}"
+  },
+  "Feed": {
+    "backHome": "Back to Home",
+    "title": "Feed",
+    "description": "Discover → talk → connect → support. Posts from listeners and artists appear here.",
+    "postContentLabel": "Post content",
+    "postPlaceholder": "Talk about what you're listening to…",
+    "removeAttachedTrack": "Remove attached track",
+    "attachSearchLabel": "Search for a track to attach",
+    "attachSearchPlaceholder": "Search for a track to attach…",
+    "unknownArtist": "Unknown",
+    "posting": "Posting…",
+    "post": "Post",
+    "loading": "Loading…",
+    "empty": "No posts yet",
+    "listener": "Listener",
+    "postMenu": "Open post menu",
+    "reportPrompt": "Enter a reason for the report (up to 500 characters)",
+    "reported": "Report submitted",
+    "blockConfirm": "Block this user?",
+    "report": "🚩 Report",
+    "block": "🚫 Block",
+    "liked": "❤️ Liked",
+    "like": "🤍 Like",
+    "comments": "💬 Comments",
+    "commentLabel": "Comment",
+    "commentPlaceholder": "Write a comment…",
+    "send": "Send"
+  }
+}

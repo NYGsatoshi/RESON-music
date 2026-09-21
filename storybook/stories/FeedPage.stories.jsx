@@ -1,6 +1,6 @@
 import React from 'react'
 import { expect, userEvent, within } from 'storybook/test'
-import FeedPage from '../../app/(player)/feed/page'
+import FeedPage from '../../app/[locale]/(player)/feed/page'
 
 const post = {
   id: 'post-storybook',
