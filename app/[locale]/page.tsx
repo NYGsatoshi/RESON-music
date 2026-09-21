@@ -1,5 +1,5 @@
 import { useFormatter, useTranslations } from "next-intl";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 
 const heroCards = [
   { title: "夜が明けるまで", artist: "ミナミ", completion: 88, color: "#c8f23d" },
