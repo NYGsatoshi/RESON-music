@@ -10,7 +10,7 @@ on:
   workflow_dispatch: {}
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: playwright-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -103,33 +103,4 @@ jobs:
         if: always()
         run: supabase stop --no-backup
 
-      # One-time PR #15 refresh for the Upload golden after its async
-      # genre-loading stabilization. Removed immediately after the commit.
-      - name: Stage stabilized Upload baseline
-        if: always() && github.event_name == 'pull_request' && github.head_ref == 'test/visual-regression-gate'
-        shell: bash
-        run: |
-          mkdir -p /tmp/reson-upload-baseline
-          cp e2e/visual-artifacts/upload-mobile.png /tmp/reson-upload-baseline/upload-mobile.png
-
-      - name: Checkout visual regression branch for Upload baseline
-        if: always() && github.event_name == 'pull_request' && github.head_ref == 'test/visual-regression-gate'
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref }}
-
-      - name: Commit stabilized Upload baseline once
-        if: always() && github.event_name == 'pull_request' && github.head_ref == 'test/visual-regression-gate'
-        shell: bash
-        run: |
-          cp /tmp/reson-upload-baseline/upload-mobile.png e2e/visual-baselines/upload-mobile.png
-          if git diff --quiet -- e2e/visual-baselines/upload-mobile.png; then
-            echo "Upload baseline is already current."
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add e2e/visual-baselines/upload-mobile.png
-          git commit -m "test(e2e): stabilize upload visual baseline"
-          git push origin HEAD:${{ github.head_ref }}
 
