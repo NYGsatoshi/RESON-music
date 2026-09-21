@@ -40,12 +40,36 @@ test.describe('mobile visual smoke', () => {
       await page.goto(target.path)
       await expect(target.ready(page)).toBeVisible()
 
-      const dimensions = await page.evaluate(() => ({
-        scrollWidth: document.documentElement.scrollWidth,
-        clientWidth: document.documentElement.clientWidth,
-      }))
+      const layout = await page.evaluate(() => {
+        const clientWidth = document.documentElement.clientWidth
+        const offenders = Array.from(document.querySelectorAll('*'))
+          .map((element) => {
+            const rect = element.getBoundingClientRect()
+            return {
+              tag: element.tagName.toLowerCase(),
+              className: typeof element.className === 'string' ? element.className : '',
+              text: (element.textContent ?? '').trim().replace(/\s+/g, ' ').slice(0, 80),
+              left: Math.round(rect.left),
+              right: Math.round(rect.right),
+              width: Math.round(rect.width),
+            }
+          })
+          .filter((item) => item.right > clientWidth + 1 || item.left < -1)
+          .sort((a, b) => b.right - a.right)
+          .slice(0, 12)
 
-      expect(dimensions.scrollWidth).toBeLessThanOrEqual(dimensions.clientWidth)
+        return {
+          scrollWidth: document.documentElement.scrollWidth,
+          clientWidth,
+          offenders,
+        }
+      })
+
+      if (layout.scrollWidth > layout.clientWidth) {
+        console.log('Horizontal overflow diagnostics:', JSON.stringify(layout, null, 2))
+      }
+
+      expect(layout.scrollWidth).toBeLessThanOrEqual(layout.clientWidth)
 
       await mkdir('visual-artifacts', { recursive: true })
       await page.screenshot({
