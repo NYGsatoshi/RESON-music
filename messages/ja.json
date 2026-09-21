@@ -325,5 +325,49 @@
     "failed": "決済に失敗しました",
     "processing": "処理中…",
     "pay": "支払う"
+  },
+  "Search": {
+    "title": "文脈検索は準備中です",
+    "description": "「夜に聴きたい曲」のような自然な言葉で楽曲を探せる機能を準備しています。それまでは楽曲名での検索をご利用ください。",
+    "backHome": "ホームへ戻る",
+    "tryExplore": "探索モードを試す"
+  },
+  "Explore": {
+    "backHome": "ホームへ戻る",
+    "title": "探索モード",
+    "description": "再生数 100〜5,000 の楽曲だけ。知名度ではなく相性で出会う発見モード。聴いたことのあるジャンルに近い楽曲を優先して表示しています。",
+    "loading": "読み込み中…",
+    "emptyTitle": "探索モード対象の楽曲がまだありません",
+    "emptyDescription": "再生数100〜5,000の楽曲が増えると表示されます",
+    "unknownArtist": "不明",
+    "plays": "{count, number}回再生"
+  },
+  "Feed": {
+    "backHome": "ホームへ戻る",
+    "title": "フィード",
+    "description": "好きになる → 語る → つながる → 支える。リスナー・アーティストの投稿が並びます。",
+    "postContentLabel": "投稿内容",
+    "postPlaceholder": "いま聴いている音楽について語る…",
+    "removeAttachedTrack": "添付した楽曲を外す",
+    "attachSearchLabel": "投稿に添付する楽曲を検索",
+    "attachSearchPlaceholder": "曲を検索して貼付…",
+    "unknownArtist": "不明",
+    "posting": "投稿中…",
+    "post": "投稿する",
+    "loading": "読み込み中…",
+    "empty": "まだ投稿がありません",
+    "listener": "リスナー",
+    "postMenu": "投稿メニューを開く",
+    "reportPrompt": "報告理由を入力してください（500文字以内）",
+    "reported": "報告しました",
+    "blockConfirm": "このユーザーをブロックしますか？",
+    "report": "🚩 報告する",
+    "block": "🚫 ブロックする",
+    "liked": "❤️ いいね済み",
+    "like": "🤍 いいね",
+    "comments": "💬 コメント",
+    "commentLabel": "コメント本文",
+    "commentPlaceholder": "コメントする…",
+    "send": "送信"
   }
 }
