@@ -80,6 +80,7 @@ export default defineConfig({
       dependencies: ['setup'],
       use: {
         ...devices['Pixel 5'],
+        deviceScaleFactor: 1,
         storageState: './.auth/artist.json',
       },
     },
