@@ -2,7 +2,7 @@ import {
   defaultLocale,
   getLocalePathname,
   localizePathname,
-} from '@/i18n/routing'
+} from '@/i18n/locales'
 
 describe('i18n routing helpers', () => {
   it('keeps prefixless paths in the default locale', () => {
