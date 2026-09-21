@@ -39,6 +39,17 @@ test.describe('mobile visual smoke', () => {
     test(`${target.name} has no horizontal overflow and emits a reference screenshot`, async ({ page }) => {
       await page.goto(target.path)
       await expect(target.ready(page)).toBeVisible()
+      await page.evaluate(() => document.fonts.ready)
+      await page.emulateMedia({ reducedMotion: 'reduce' })
+      await page.addStyleTag({
+        content: `
+          *, *::before, *::after {
+            animation: none !important;
+            transition: none !important;
+            caret-color: transparent !important;
+          }
+        `,
+      })
 
       const layout = await page.evaluate(() => {
         const clientWidth = document.documentElement.clientWidth
@@ -74,8 +85,9 @@ test.describe('mobile visual smoke', () => {
       await mkdir('visual-artifacts', { recursive: true })
       await page.screenshot({
         path: `visual-artifacts/${target.name}-mobile.png`,
-        fullPage: true,
+        fullPage: false,
         animations: 'disabled',
+        caret: 'hide',
       })
     })
   }
