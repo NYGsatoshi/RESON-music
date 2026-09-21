@@ -31,6 +31,9 @@ const targets = [
     name: 'upload',
     path: '/upload',
     ready: (page) => page.getByRole('heading', { name: '楽曲をアップロード' }),
+    stabilize: async (page) => {
+      await expect(page.getByText('ジャンルタグ（最大3個）')).toBeVisible()
+    },
   },
 ]
 
@@ -39,6 +42,7 @@ test.describe('mobile visual smoke', () => {
     test(`${target.name} matches the mobile visual baseline`, async ({ page }) => {
       await page.goto(target.path)
       await expect(target.ready(page)).toBeVisible()
+      if (target.stabilize) await target.stabilize(page)
       await page.evaluate(() => document.fonts.ready)
       await page.emulateMedia({ reducedMotion: 'reduce' })
       await page.addStyleTag({
