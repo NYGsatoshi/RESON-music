@@ -38,9 +38,11 @@ export const decorators = [
     }
 
     return (
-      <div className="min-h-screen bg-[var(--bg)] p-8 text-[var(--text)]">
-        <Story />
-      </div>
+      <NextIntlClientProvider locale="ja" messages={jaMessages}>
+        <div className="min-h-screen bg-[var(--bg)] p-8 text-[var(--text)]">
+          <Story />
+        </div>
+      </NextIntlClientProvider>
     )
   },
 ]
