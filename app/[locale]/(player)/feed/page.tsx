@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useState, Suspense } from 'react'
-import Link from 'next/link'
+import { Link } from '@/i18n/navigation'
+import { useFormatter, useTranslations } from 'next-intl'
 import { useSearchParams } from 'next/navigation'
 
 interface Post {
@@ -38,6 +39,8 @@ export default function FeedPage() {
 }
 
 function FeedPageInner() {
+  const tr = useTranslations('Feed')
+  const format = useFormatter()
   const searchParams = useSearchParams()
   const genreId = searchParams.get('genre_id')
   const [posts, setPosts] = useState<Post[]>([])
@@ -135,7 +138,7 @@ function FeedPageInner() {
   }
 
   async function reportPost(postId: string) {
-    const reason = window.prompt('報告理由を入力してください（500文字以内）')
+    const reason = window.prompt(tr('reportPrompt'))
     if (!reason || !reason.trim()) return
     const res = await fetch('/api/reports', {
       method: 'POST',
@@ -143,11 +146,11 @@ function FeedPageInner() {
       body: JSON.stringify({ target_type: 'post', target_id: postId, reason }),
     })
     setOpenMenu(null)
-    if (res.ok) window.alert('報告しました')
+    if (res.ok) window.alert(tr('reported'))
   }
 
   async function blockUser(authorUserId: string) {
-    if (!window.confirm('このユーザーをブロックしますか？')) return
+    if (!window.confirm(tr('blockConfirm'))) return
     const res = await fetch('/api/blocks', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -165,37 +168,35 @@ function FeedPageInner() {
         <div className="flex items-center justify-between">
           <Link href="/home" className="font-display text-xl font-bold">RESON</Link>
           <Link href="/home" className="text-sm text-[var(--dim)] hover:text-[var(--text)]">
-            ホームへ戻る
+            {tr('backHome')}
           </Link>
         </div>
 
-        <h1 className="font-display mt-8 text-2xl font-bold">フィード</h1>
-        <p className="mt-2 text-sm text-[var(--faint)]">
-          好きになる → 語る → つながる → 支える。リスナー・アーティストの投稿が並びます。
-        </p>
+        <h1 className="font-display mt-8 text-2xl font-bold">{tr('title')}</h1>
+        <p className="mt-2 text-sm text-[var(--faint)]">{tr('description')}</p>
 
         <form onSubmit={submitPost} className="mt-6 rounded-2xl border border-[var(--line)] bg-[var(--panel)] p-4">
           <textarea
-            aria-label="投稿内容"
+            aria-label={tr('postContentLabel')}
             value={body}
             onChange={(e) => setBody(e.target.value)}
             maxLength={1000}
             rows={3}
-            placeholder="いま聴いている音楽について語る…"
+            placeholder={tr('postPlaceholder')}
             className="w-full resize-none rounded-lg border border-[var(--line)] bg-[var(--surface)] px-3 py-2 text-sm placeholder-[var(--faint)] focus:outline-none"
           />
           {attachedTrack ? (
             <div className="mt-2 flex items-center justify-between rounded-lg border border-[var(--line)] bg-[var(--surface)] px-3 py-2 text-xs">
-              <span>♪ {attachedTrack.title} ・ {attachedTrack.artists?.name}</span>
-              <button type="button" onClick={() => setAttachedTrack(null)} aria-label="添付した楽曲を外す" className="text-[var(--faint)] hover:text-[var(--text)]">✕</button>
+              <span>♪ {attachedTrack.title} · {attachedTrack.artists?.name ?? tr('unknownArtist')}</span>
+              <button type="button" onClick={() => setAttachedTrack(null)} aria-label={tr('removeAttachedTrack')} className="text-[var(--faint)] hover:text-[var(--text)]">✕</button>
             </div>
           ) : (
             <div className="mt-2">
               <input
-                aria-label="投稿に添付する楽曲を検索"
+                aria-label={tr('attachSearchLabel')}
                 value={trackQuery}
                 onChange={(e) => setTrackQuery(e.target.value)}
-                placeholder="曲を検索して貼付…"
+                placeholder={tr('attachSearchPlaceholder')}
                 className="w-full rounded-lg border border-[var(--line)] bg-[var(--surface)] px-3 py-1.5 text-xs placeholder-[var(--faint)] focus:outline-none"
               />
               {trackResults.length > 0 && (
@@ -207,7 +208,7 @@ function FeedPageInner() {
                       onClick={() => { setAttachedTrack(t); setTrackQuery(''); setTrackResults([]) }}
                       className="block w-full rounded-lg px-2 py-1.5 text-left text-xs hover:bg-[var(--surface)]"
                     >
-                      {t.title} <span className="text-[var(--faint)]">・ {t.artists?.name}</span>
+                      {t.title} <span className="text-[var(--faint)]">· {t.artists?.name ?? tr('unknownArtist')}</span>
                     </button>
                   ))}
                 </div>
@@ -221,16 +222,16 @@ function FeedPageInner() {
               disabled={posting || !body.trim()}
               className="rounded-lg bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-[var(--ink)] disabled:opacity-40"
             >
-              {posting ? '投稿中…' : '投稿する'}
+              {posting ? tr('posting') : tr('post')}
             </button>
           </div>
         </form>
 
         {loading ? (
-          <div className="py-20 text-center text-[var(--faint)]">読み込み中…</div>
+          <div className="py-20 text-center text-[var(--faint)]">{tr('loading')}</div>
         ) : posts.length === 0 ? (
           <div className="mt-10 rounded-2xl border border-[var(--line)] bg-[var(--panel)] py-16 text-center text-[var(--faint)]">
-            <p>まだ投稿がありません</p>
+            <p>{tr('empty')}</p>
           </div>
         ) : (
           <div className="mt-6 space-y-4">
@@ -238,13 +239,13 @@ function FeedPageInner() {
               <div key={p.id} className="relative rounded-2xl border border-[var(--line)] bg-[var(--panel)] p-4">
                 <div className="flex items-start justify-between">
                   <p className="text-xs text-[var(--faint)]">
-                    {p.artists?.name ?? 'リスナー'}
+                    {p.artists?.name ?? tr('listener')}
                     {p.artists?.founding_artist && <span className="ml-1 text-[var(--accent)]">★</span>}
-                    {' '}・ {new Date(p.created_at).toLocaleDateString('ja-JP')}
+                    {' '}· {format.dateTime(new Date(p.created_at), { year: 'numeric', month: 'short', day: 'numeric' })}
                   </p>
                   <button
                     onClick={() => setOpenMenu(openMenu === p.id ? null : p.id)}
-                    aria-label="投稿メニューを開く"
+                    aria-label={tr('postMenu')}
                     className="text-[var(--faint)] hover:text-[var(--text)]"
                   >
                     ⋯
@@ -253,10 +254,10 @@ function FeedPageInner() {
                 {openMenu === p.id && (
                   <div className="absolute right-4 top-8 z-10 rounded-lg border border-[var(--line)] bg-[var(--surface)] text-xs shadow-lg">
                     <button onClick={() => reportPost(p.id)} className="block w-full px-4 py-2 text-left hover:bg-[var(--panel)]">
-                      🚩 報告する
+                      {tr('report')}
                     </button>
                     <button onClick={() => blockUser(p.author_user_id)} className="block w-full px-4 py-2 text-left text-red-400 hover:bg-[var(--panel)]">
-                      🚫 ブロックする
+                      {tr('block')}
                     </button>
                   </div>
                 )}
@@ -268,10 +269,10 @@ function FeedPageInner() {
                 )}
                 <div className="mt-3 flex gap-4 text-xs text-[var(--dim)]">
                   <button onClick={() => toggleLike(p.id)} className="hover:text-[var(--text)]">
-                    {likedIds.has(p.id) ? '❤️ いいね済み' : '🤍 いいね'}
+                    {likedIds.has(p.id) ? tr('liked') : tr('like')}
                   </button>
                   <button onClick={() => openPostComments(p.id)} className="hover:text-[var(--text)]">
-                    💬 コメント
+                    {tr('comments')}
                   </button>
                 </div>
 
@@ -282,18 +283,18 @@ function FeedPageInner() {
                     ))}
                     <div className="flex gap-2">
                       <input
-                        aria-label="コメント本文"
+                        aria-label={tr('commentLabel')}
                         value={commentBody}
                         onChange={(e) => setCommentBody(e.target.value)}
                         maxLength={500}
-                        placeholder="コメントする…"
+                        placeholder={tr('commentPlaceholder')}
                         className="flex-1 rounded-lg border border-[var(--line)] bg-[var(--surface)] px-3 py-1.5 text-xs placeholder-[var(--faint)] focus:outline-none"
                       />
                       <button
                         onClick={() => submitComment(p.id)}
                         className="shrink-0 rounded-lg border border-[var(--line)] px-3 py-1.5 text-xs hover:border-[var(--accent)]"
                       >
-                        送信
+                        {tr('send')}
                       </button>
                     </div>
                   </div>
