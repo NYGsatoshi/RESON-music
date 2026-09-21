@@ -44,19 +44,19 @@ interface ExploreTrack {
 }
 
 export default function PlayerPage() {
-  const t = useTranslations('Home')
+  const tr = useTranslations('Home')
   const navItems = [
-    { href: '/home', label: t('nav.home'), icon: '⌂' },
-    { href: '/search', label: t('nav.search'), icon: '⌕' },
-    { href: '/explore', label: t('nav.explore'), icon: '◎' },
-    { href: '/feed', label: t('nav.feed'), icon: '✎' },
-    { href: '/library', label: t('nav.library'), icon: '♥' },
-    { href: '/playlists', label: t('nav.playlists'), icon: '☰' },
-    { href: '/notifications', label: t('nav.notifications'), icon: '🔔' },
-    { href: '/wrapped', label: t('nav.wrapped'), icon: '🎁' },
-    { href: '/curators', label: t('nav.curators'), icon: '🔎' },
-    { href: '/boost-ranking', label: t('nav.boostRanking'), icon: '🚀' },
-    { href: '/messages', label: t('nav.messages'), icon: '✉' },
+    { href: '/home', label: tr('nav.home'), icon: '⌂' },
+    { href: '/search', label: tr('nav.search'), icon: '⌕' },
+    { href: '/explore', label: tr('nav.explore'), icon: '◎' },
+    { href: '/feed', label: tr('nav.feed'), icon: '✎' },
+    { href: '/library', label: tr('nav.library'), icon: '♥' },
+    { href: '/playlists', label: tr('nav.playlists'), icon: '☰' },
+    { href: '/notifications', label: tr('nav.notifications'), icon: '🔔' },
+    { href: '/wrapped', label: tr('nav.wrapped'), icon: '🎁' },
+    { href: '/curators', label: tr('nav.curators'), icon: '🔎' },
+    { href: '/boost-ranking', label: tr('nav.boostRanking'), icon: '🚀' },
+    { href: '/messages', label: tr('nav.messages'), icon: '✉' },
   ]
   const [tracks, setTracks] = useState<Track[]>([])
   const [heatTracks, setHeatTracks] = useState<HeatTrack[]>([])
@@ -100,7 +100,7 @@ export default function PlayerPage() {
         <Link href="/" className="font-display text-xl font-bold">
           RESON
         </Link>
-        <nav aria-label={t('mainNavigation')} className="mt-8 flex flex-col gap-1">
+        <nav aria-label={tr('mainNavigation')} className="mt-8 flex flex-col gap-1">
           {navItems.map((n) => (
             <Link
               key={n.href}
@@ -116,38 +116,38 @@ export default function PlayerPage() {
           href="/upload"
           className="mt-6 rounded-xl border border-[var(--line)] bg-[var(--surface)] p-4 text-sm hover:border-[var(--accent)]"
         >
-          <p className="font-medium">{t('buildLibraryTitle')}</p>
-          <p className="mt-1 text-xs text-[var(--dim)]">{t('buildLibraryDescription')}</p>
+          <p className="font-medium">{tr('buildLibraryTitle')}</p>
+          <p className="mt-1 text-xs text-[var(--dim)]">{tr('buildLibraryDescription')}</p>
         </Link>
         <Link
           href="/invite"
           className="mt-3 text-xs text-[var(--faint)] hover:text-[var(--dim)]"
         >
-          {t('inviteFriends')}
+          {tr('inviteFriends')}
         </Link>
         <Link
           href="/communities"
           className="mt-3 text-xs text-[var(--faint)] hover:text-[var(--dim)]"
         >
-          {t('communities')}
+          {tr('communities')}
         </Link>
         <Link
           href="/events"
           className="mt-1 text-xs text-[var(--faint)] hover:text-[var(--dim)]"
         >
-          {t('events')}
+          {tr('events')}
         </Link>
         <Link
           href="/profile"
           className="mt-1 text-xs text-[var(--faint)] hover:text-[var(--dim)]"
         >
-          {t('profile')}
+          {tr('profile')}
         </Link>
         <Link
           href="/dashboard"
           className="mt-auto text-xs text-[var(--faint)] hover:text-[var(--dim)]"
         >
-          {t('forArtists')}
+          {tr('forArtists')}
         </Link>
       </aside>
 
@@ -158,20 +158,20 @@ export default function PlayerPage() {
           <div className="flex flex-wrap items-center gap-2 sm:flex-nowrap sm:gap-4">
             <input
               disabled
-              aria-label={t('searchPlaceholder')}
-              placeholder={t('searchPlaceholder')}
+              aria-label={tr('searchPlaceholder')}
+              placeholder={tr('searchPlaceholder')}
               className="w-full min-w-0 rounded-full border border-[var(--line)] bg-[var(--surface)] px-4 py-2 text-sm text-[var(--faint)] sm:w-auto sm:flex-1"
             />
             <Link href="/pricing" className="text-sm text-[var(--dim)] hover:text-[var(--text)]">
-              {t('pricing')}
+              {tr('pricing')}
             </Link>
             {hasArtist ? (
               <Link href="/upload" className="text-sm text-[var(--dim)] hover:text-[var(--text)]">
-                {t('upload')}
+                {tr('upload')}
               </Link>
             ) : (
               <Link href="/register-artist" className="text-sm text-[var(--dim)] hover:text-[var(--text)]">
-                {t('registerArtist')}
+                {tr('registerArtist')}
               </Link>
             )}
             <ThemeToggle />
@@ -179,7 +179,7 @@ export default function PlayerPage() {
 
           {/* プレイヤー / ピックアップ */}
           {loading ? (
-            <div className="py-20 text-center text-[var(--faint)]">{t('loading')}</div>
+            <div className="py-20 text-center text-[var(--faint)]">{tr('loading')}</div>
           ) : current ? (
             <Player
               track={current}
@@ -199,9 +199,9 @@ export default function PlayerPage() {
             />
           ) : (
             <div className="rounded-2xl border border-[var(--line)] bg-[var(--panel)] py-20 text-center text-[var(--faint)]">
-              <p>{t('noTracks')}</p>
+              <p>{tr('noTracks')}</p>
               <Link href="/upload" className="mt-4 inline-block text-[var(--accent)] underline">
-                {t('uploadFirst')}
+                {tr('uploadFirst')}
               </Link>
             </div>
           )}
@@ -209,9 +209,9 @@ export default function PlayerPage() {
           {/* あなたへのおすすめ */}
           {forYouTracks.length > 0 && (
             <section>
-              <h2 className="font-display text-lg font-bold">{t('forYou.title')}</h2>
+              <h2 className="font-display text-lg font-bold">{tr('forYou.title')}</h2>
               <p className="mt-1 text-xs text-[var(--faint)]">
-                {t('forYou.description')}
+                {tr('forYou.description')}
               </p>
               <div className="scroll-x mt-4 gap-4 pb-2">
                 {forYouTracks.map((t, i) => (
@@ -228,12 +228,12 @@ export default function PlayerPage() {
                       style={{ backgroundColor: ['#3dc8f2', '#f23d8c', '#c8f23d', '#f2c83d'][i % 4] }}
                     />
                     <p className="mt-3 truncate text-sm font-medium">{t.title}</p>
-                    <p className="truncate text-xs text-[var(--dim)]">{t.artists?.name ?? t('unknownArtist')}</p>
+                    <p className="truncate text-xs text-[var(--dim)]">{t.artists?.name ?? tr('unknownArtist')}</p>
                     <p className="mt-1 text-xs text-[var(--faint)]">
                       {t.because_you_like ? (
-                        <span className="text-[var(--accent)]">{t('forYou.frequentArtist')}</span>
+                        <span className="text-[var(--accent)]">{tr('forYou.frequentArtist')}</span>
                       ) : (
-                        t('forYou.completion', { value: Math.round(t.completion_rate * 100) })
+                        tr('forYou.completion', { value: Math.round(t.completion_rate * 100) })
                       )}
                     </p>
                   </button>
@@ -245,9 +245,9 @@ export default function PlayerPage() {
           {/* 熱量が高まっている楽曲 */}
           {heatTracks.length > 0 && (
             <section>
-              <h2 className="font-display text-lg font-bold">{t('heat.title')}</h2>
+              <h2 className="font-display text-lg font-bold">{tr('heat.title')}</h2>
               <p className="mt-1 text-xs text-[var(--faint)]">
-                {t('heat.description')}
+                {tr('heat.description')}
               </p>
               <div className="scroll-x mt-4 gap-4 pb-2">
                 {heatTracks.map((t, i) => (
@@ -264,9 +264,9 @@ export default function PlayerPage() {
                       style={{ backgroundColor: ['#c8f23d', '#3dc8f2', '#f23d8c', '#f2c83d'][i % 4] }}
                     />
                     <p className="mt-3 truncate text-sm font-medium">{t.title}</p>
-                    <p className="truncate text-xs text-[var(--dim)]">{t.artists?.name ?? t('unknownArtist')}</p>
+                    <p className="truncate text-xs text-[var(--dim)]">{t.artists?.name ?? tr('unknownArtist')}</p>
                     <p className="mt-1 text-xs text-[var(--faint)]">
-                      {t('heat.stats', {
+                      {tr('heat.stats', {
                         completion: Math.round(t.completion_rate * 100),
                         support: Math.round(t.support_rate * 100),
                       })}
@@ -280,7 +280,7 @@ export default function PlayerPage() {
 
           {/* 注目のアーティスト */}
           <section>
-            <h2 className="font-display text-lg font-bold">{t('featuredArtists')}</h2>
+            <h2 className="font-display text-lg font-bold">{tr('featuredArtists')}</h2>
             <div className="scroll-x mt-4 gap-6 pb-2">
               {artists.map((a) => (
                 <div key={a.name} className="flex w-24 shrink-0 flex-col items-center text-center">
@@ -303,13 +303,13 @@ export default function PlayerPage() {
           {exploreTracks.length > 0 && (
             <section>
               <div className="flex items-center justify-between">
-                <h2 className="font-display text-lg font-bold">{t('explore.title')}</h2>
+                <h2 className="font-display text-lg font-bold">{tr('explore.title')}</h2>
                 <Link href="/explore" className="text-xs text-[var(--dim)] hover:text-[var(--text)]">
-                  {t('explore.viewAll')}
+                  {tr('explore.viewAll')}
                 </Link>
               </div>
               <p className="mt-1 text-xs text-[var(--faint)]">
-                {t('explore.description')}
+                {tr('explore.description')}
               </p>
               <div className="mt-4 grid gap-4 sm:grid-cols-3">
                 {exploreTracks.map((t, i) => (
@@ -320,7 +320,7 @@ export default function PlayerPage() {
                   >
                     <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/70 to-transparent p-4">
                       <p className="text-sm font-bold">{t.title}</p>
-                      <p className="text-xs text-[var(--dim)]">{t.artist?.name ?? t('unknownArtist')}</p>
+                      <p className="text-xs text-[var(--dim)]">{t.artist?.name ?? tr('unknownArtist')}</p>
                       {t.genres.length > 0 && (
                         <p className="mt-1 text-[10px] text-[var(--faint)]">{t.genres.join(' / ')}</p>
                       )}
@@ -334,7 +334,7 @@ export default function PlayerPage() {
           {/* トラックリスト */}
           {tracks.length > 0 && (
             <section className="space-y-1">
-              <h2 className="font-display mb-2 text-lg font-bold">{t('allTracks')}</h2>
+              <h2 className="font-display mb-2 text-lg font-bold">{tr('allTracks')}</h2>
               {tracks.map((t, i) => (
                 <div
                   key={t.id}
@@ -349,7 +349,7 @@ export default function PlayerPage() {
                           {t.title}
                         </p>
                         <p className="truncate text-xs text-[var(--dim)]">
-                          {t.artists?.name ?? t('unknownArtist')}
+                          {t.artists?.name ?? tr('unknownArtist')}
                           {t.ai_generated && <span className="ml-2 text-yellow-500">AI</span>}
                         </p>
                       </div>
@@ -360,10 +360,10 @@ export default function PlayerPage() {
                   </button>
                   <button
                     onClick={() => queue.addToQueue(t)}
-                    title={t('addNextTitle')}
+                    title={tr('addNextTitle')}
                     className="shrink-0 text-xs text-[var(--faint)] hover:text-[var(--text)] px-2"
                   >
-                    {t('addQueue')}
+                    {tr('addQueue')}
                   </button>
                 </div>
               ))}
@@ -373,7 +373,7 @@ export default function PlayerPage() {
       </main>
 
       {/* モバイルボトムナビ */}
-      <nav aria-label={t('mobileNavigation')} className="fixed inset-x-0 bottom-0 z-50 flex max-w-full overflow-x-auto overscroll-x-contain border-t border-[var(--line)] bg-[var(--panel)] sm:hidden">
+      <nav aria-label={tr('mobileNavigation')} className="fixed inset-x-0 bottom-0 z-50 flex max-w-full overflow-x-auto overscroll-x-contain border-t border-[var(--line)] bg-[var(--panel)] sm:hidden">
         {navItems.map((n) => (
           <Link
             key={n.href}
