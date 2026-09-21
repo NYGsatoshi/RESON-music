@@ -1,6 +1,6 @@
 import React from 'react'
 import { expect, userEvent, within } from 'storybook/test'
-import PricingPage from '../../app/(player)/pricing/page'
+import PricingPage from '../../app/[locale]/(player)/pricing/page'
 
 const checkoutMocks = {
   'POST /api/stripe/checkout': {
