@@ -3,7 +3,12 @@ import path from "node:path";
 import type { NextConfig } from "next";
 
 const isStaticPreview = process.env.STATIC_PREVIEW === "true";
-const withNextIntl = createNextIntlPlugin(path.join(__dirname, "i18n/request.ts"));
+const i18nRequestPath =
+  path.basename(process.cwd()) === "storybook"
+    ? "../i18n/request.ts"
+    : "./i18n/request.ts";
+
+const withNextIntl = createNextIntlPlugin(i18nRequestPath);
 
 const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
