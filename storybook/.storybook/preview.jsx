@@ -1,4 +1,6 @@
 import React from 'react'
+import { NextIntlClientProvider } from 'next-intl'
+import jaMessages from '../../messages/ja.json'
 import { MINIMAL_VIEWPORTS } from 'storybook/viewport'
 import '../../app/globals.css'
 
