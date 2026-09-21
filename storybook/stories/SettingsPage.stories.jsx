@@ -43,7 +43,7 @@ export const Default = {}
 export const KeyboardToggle = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    const profileToggle = canvasElement.querySelector('#t-profile')
+    const profileToggle = await canvas.findByRole('switch', { name: 'プロフィールページを切り替える' })
     await expect(profileToggle).toHaveAttribute('aria-checked', 'true')
     profileToggle.focus()
     await userEvent.keyboard(' ')
@@ -60,7 +60,7 @@ export const SaveFailureRollsBack = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    const profileToggle = canvasElement.querySelector('#t-profile')
+    const profileToggle = await canvas.findByRole('switch', { name: 'プロフィールページを切り替える' })
     await expect(profileToggle).toHaveAttribute('aria-checked', 'true')
     await userEvent.click(profileToggle)
     await expect(await canvas.findByRole('alert')).toHaveTextContent('保存に失敗しました')
