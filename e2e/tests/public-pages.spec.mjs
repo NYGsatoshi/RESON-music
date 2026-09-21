@@ -39,6 +39,23 @@ test.describe('public pages', () => {
     await expect(page).toHaveURL(/\/login$/)
   })
 
+
+  test('English locale renders translated landing and auth navigation', async ({ page }) => {
+    await page.goto('/en')
+
+    await expect(page.getByRole('heading', { level: 1 })).toContainText('Listening should')
+    await expect(page.getByRole('link', { name: 'Log in' })).toHaveAttribute('href', '/en/login')
+
+    await page.getByRole('link', { name: 'Log in' }).click()
+    await expect(page).toHaveURL(/\/en\/login$/)
+    await expect(page.getByRole('button', { name: 'Log in' })).toBeVisible()
+  })
+
+  test('default locale prefix redirects to the canonical prefixless URL', async ({ page }) => {
+    await page.goto('/ja/login')
+    await expect(page).toHaveURL(/\/login$/)
+  })
+
   test('middleware applies baseline security headers to public pages', async ({ request }) => {
     const response = await request.get('/')
 
