@@ -76,7 +76,7 @@ export async function middleware(request: NextRequest) {
 
     if (!user) {
       return withSecurityHeaders(
-        NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+        NextResponse.redirect(new URL("/login", request.url))
       );
     }
 
