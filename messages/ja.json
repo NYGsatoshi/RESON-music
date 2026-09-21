@@ -3,7 +3,9 @@
     "appName": "RESON",
     "language": {
       "ja": "日本語",
-      "en": "英語"
+      "en": "英語",
+      "switchToEnglish": "英語に切り替える",
+      "switchToJapanese": "日本語に切り替える"
     }
   },
   "Landing": {
@@ -204,5 +206,168 @@
       "updating": "更新中…",
       "update": "パスワードを更新する"
     }
+  },
+  "Metadata": {
+    "description": "聴くことが、そのまま音楽文化を育てるサブスク"
+  },
+  "Home": {
+    "nav": {
+      "home": "ホーム",
+      "search": "さがす",
+      "explore": "探索",
+      "feed": "フィード",
+      "library": "ライブラリ",
+      "playlists": "プレイリスト",
+      "notifications": "通知",
+      "wrapped": "年間まとめ",
+      "curators": "キュレーター",
+      "boostRanking": "週間ブースト",
+      "messages": "メッセージ"
+    },
+    "mainNavigation": "メインナビゲーション",
+    "mobileNavigation": "モバイルナビゲーション",
+    "buildLibraryTitle": "ライブラリを作ろう",
+    "buildLibraryDescription": "楽曲をアップロードして配信を始める",
+    "inviteFriends": "友人を招待する →",
+    "communities": "コミュニティ →",
+    "events": "ライブ情報 →",
+    "profile": "音楽人格・プロフィール →",
+    "forArtists": "アーティストの方へ →",
+    "searchPlaceholder": "アーティスト・楽曲・気分で探す",
+    "pricing": "料金",
+    "upload": "+ アップロード",
+    "registerArtist": "アーティストとして登録する",
+    "loading": "読み込み中…",
+    "noTracks": "楽曲がありません",
+    "uploadFirst": "最初の楽曲をアップロード",
+    "forYou": {
+      "title": "あなたへのおすすめ",
+      "description": "よく聴いているアーティストの熱量が高い楽曲を優先表示",
+      "frequentArtist": "よく聴くアーティスト",
+      "completion": "完聴率 {value}%"
+    },
+    "heat": {
+      "title": "熱量が高まっている楽曲",
+      "description": "直近14日間の再生時間・応援率・完聴率から算出した熱量スコアが高い順",
+      "stats": "完聴率 {completion}% ・ 応援率 {support}%"
+    },
+    "featuredArtists": "注目のアーティスト",
+    "explore": {
+      "title": "探索モード",
+      "viewAll": "すべて見る →",
+      "description": "再生数 100〜5,000 の楽曲だけ。知名度ではなく相性で出会う"
+    },
+    "allTracks": "すべての楽曲",
+    "unknownArtist": "不明",
+    "addNextTitle": "次に再生するキューへ追加",
+    "addQueue": "+キュー"
+  },
+  "Library": {
+    "title": "マイライブラリ",
+    "home": "ホームへ",
+    "description": "❤️で応援した曲を集約しています",
+    "loading": "読み込み中…",
+    "empty": "まだ❤️した曲がありません",
+    "unknownArtist": "不明",
+    "addQueueTitle": "キューへ追加",
+    "addQueue": "+キュー"
+  },
+  "Theme": {
+    "switchToLight": "ライトモードに切り替え",
+    "switchToDark": "ダークモードに切り替え"
+  },
+  "Player": {
+    "unknownArtist": "不明なアーティスト",
+    "seekPosition": "再生位置",
+    "shuffle": "シャッフル",
+    "previous": "前の曲",
+    "pause": "一時停止",
+    "play": "再生",
+    "next": "次の曲",
+    "repeat": "リピート",
+    "queue": "次に再生するキュー: {count}曲",
+    "normalizeTitle": "曲間の音量差を自動で抑える（簡易ノーマライズ）",
+    "normalizeOn": "🎚️ ノーマライズON",
+    "normalizeOff": "🎚️ ノーマライズOFF",
+    "lyrics": "📝 歌詞",
+    "loading": "読み込み中…",
+    "noLyrics": "歌詞は登録されていません",
+    "support": {
+      "supportTitle": "応援する（❤️・無制限・無料）",
+      "supported": "応援しました",
+      "support": "応援",
+      "tipTitle": "投げ銭（最低100円）",
+      "sent": "送りました",
+      "tip": "投げ銭",
+      "dialogTitle": "投げ銭する",
+      "closeDialog": "投げ銭ダイアログを閉じる",
+      "preparing": "準備中…",
+      "sendAmount": "¥{amount} を送る",
+      "paymentTitle": "投げ銭（¥{amount}）"
+    },
+    "boost": {
+      "title": "ブーストハート（本気で推している楽曲への応援表明）",
+      "boosted": "ブースト済み",
+      "boost": "ブースト",
+      "remaining": "今月残り{remaining}回（無料{freeRemaining}回・追加分は次回請求と合算）",
+      "paymentTitle": "追加ブースト（¥{amount}）"
+    },
+    "supportGraph": {
+      "anonymous": "名無しのリスナー",
+      "separator": "、",
+      "extra": " ほか{count}人",
+      "following": "フォロー中の{names}{extra}が応援しています",
+      "total": "{count}人が応援しています"
+    }
+  },
+  "Payment": {
+    "closeDialog": "決済ダイアログを閉じる",
+    "failed": "決済に失敗しました",
+    "processing": "処理中…",
+    "pay": "支払う"
+  },
+  "Search": {
+    "title": "文脈検索は準備中です",
+    "description": "「夜に聴きたい曲」のような自然な言葉で楽曲を探せる機能を準備しています。それまでは楽曲名での検索をご利用ください。",
+    "backHome": "ホームへ戻る",
+    "tryExplore": "探索モードを試す"
+  },
+  "Explore": {
+    "backHome": "ホームへ戻る",
+    "title": "探索モード",
+    "description": "再生数 100〜5,000 の楽曲だけ。知名度ではなく相性で出会う発見モード。聴いたことのあるジャンルに近い楽曲を優先して表示しています。",
+    "loading": "読み込み中…",
+    "emptyTitle": "探索モード対象の楽曲がまだありません",
+    "emptyDescription": "再生数100〜5,000の楽曲が増えると表示されます",
+    "unknownArtist": "不明",
+    "plays": "{count, number}回再生"
+  },
+  "Feed": {
+    "backHome": "ホームへ戻る",
+    "title": "フィード",
+    "description": "好きになる → 語る → つながる → 支える。リスナー・アーティストの投稿が並びます。",
+    "postContentLabel": "投稿内容",
+    "postPlaceholder": "いま聴いている音楽について語る…",
+    "removeAttachedTrack": "添付した楽曲を外す",
+    "attachSearchLabel": "投稿に添付する楽曲を検索",
+    "attachSearchPlaceholder": "曲を検索して貼付…",
+    "unknownArtist": "不明",
+    "posting": "投稿中…",
+    "post": "投稿する",
+    "loading": "読み込み中…",
+    "empty": "まだ投稿がありません",
+    "listener": "リスナー",
+    "postMenu": "投稿メニューを開く",
+    "reportPrompt": "報告理由を入力してください（500文字以内）",
+    "reported": "報告しました",
+    "blockConfirm": "このユーザーをブロックしますか？",
+    "report": "🚩 報告する",
+    "block": "🚫 ブロックする",
+    "liked": "❤️ いいね済み",
+    "like": "🤍 いいね",
+    "comments": "💬 コメント",
+    "commentLabel": "コメント本文",
+    "commentPlaceholder": "コメントする…",
+    "send": "送信"
   }
 }

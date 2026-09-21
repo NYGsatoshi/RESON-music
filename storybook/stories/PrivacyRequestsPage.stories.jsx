@@ -1,6 +1,6 @@
 import React from 'react'
 import { expect, userEvent, within } from 'storybook/test'
-import PrivacyRequestsPage from '../../app/(player)/privacy-requests/page'
+import PrivacyRequestsPage from '../../app/[locale]/(player)/privacy-requests/page'
 
 const meta = {
   title: 'Pages/Account/PrivacyRequests',

@@ -1,6 +1,6 @@
 import React from 'react'
 import { expect, userEvent, within } from 'storybook/test'
-import RegisterPage from '../../app/(auth)/register/page'
+import RegisterPage from '../../app/[locale]/(auth)/register/page'
 
 const successMocks = {
   'POST /api/auth/register': {

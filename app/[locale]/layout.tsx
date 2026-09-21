@@ -1,7 +1,10 @@
-import { NextIntlClientProvider } from "next-intl";
+import { hasLocale, NextIntlClientProvider } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
 import { Zen_Kaku_Gothic_New, Noto_Sans_JP } from "next/font/google";
-import "./globals.css";
+import { notFound } from "next/navigation";
+import { routing } from "@/i18n/routing";
+import "../globals.css";
 
 const zenKaku = Zen_Kaku_Gothic_New({
   variable: "--font-display",
@@ -15,19 +18,42 @@ const notoSans = Noto_Sans_JP({
   weight: ["400", "500", "700"],
 });
 
-export const metadata: Metadata = {
-  title: "RESON",
-  description: "聴くことが、そのまま音楽文化を育てるサブスク",
-};
-
-export default function RootLayout({
-  children,
-}: Readonly<{
+type LayoutProps = Readonly<{
   children: React.ReactNode;
-}>) {
+  params: Promise<{ locale: string }>;
+}>;
+
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
+
+export async function generateMetadata({
+  params,
+}: Pick<LayoutProps, "params">): Promise<Metadata> {
+  const { locale } = await params;
+
+  if (!hasLocale(routing.locales, locale)) {
+    return {};
+  }
+
+  const t = await getTranslations({ locale, namespace: "Metadata" });
+
+  return {
+    title: "RESON",
+    description: t("description"),
+  };
+}
+
+export default async function RootLayout({ children, params }: LayoutProps) {
+  const { locale } = await params;
+
+  if (!hasLocale(routing.locales, locale)) {
+    notFound();
+  }
+
   return (
     <html
-      lang="ja"
+      lang={locale}
       className={`${zenKaku.variable} ${notoSans.variable} h-full antialiased`}
     >
       <head>

@@ -1,5 +1,6 @@
 import { useFormatter, useTranslations } from "next-intl";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
+import { LocaleSwitcher } from "@/components/LocaleSwitcher";
 
 const heroCards = [
   { title: "夜が明けるまで", artist: "ミナミ", completion: 88, color: "#c8f23d" },
@@ -77,6 +78,10 @@ export default function LandingPage() {
             <a href="#artists" className="hover:text-[var(--text)]">{t("nav.artists")}</a>
           </nav>
           <div className="flex items-center gap-3">
+            <LocaleSwitcher
+              href="/"
+              className="rounded-full border border-[var(--line-md)] px-3 py-2 text-xs font-semibold text-[var(--dim)] transition hover:border-[var(--accent)] hover:text-[var(--text)]"
+            />
             <Link href="/login" className="text-sm text-[var(--dim)] hover:text-[var(--text)]">
               {t("nav.login")}
             </Link>

@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react'
 import { Player } from '@/components/Player'
 import { usePlayerQueue } from '@/lib/player/queue'
 import { ThemeToggle } from '@/components/ThemeToggle'
-import Link from 'next/link'
+import { Link } from '@/i18n/navigation'
+import { useTranslations } from 'next-intl'
 
 interface Track {
   id: string
@@ -25,20 +26,6 @@ interface ForYouTrack extends HeatTrack {
   because_you_like: boolean
 }
 
-const navItems = [
-  { href: '/home', label: 'ホーム', icon: '⌂' },
-  { href: '/search', label: 'さがす', icon: '⌕' },
-  { href: '/explore', label: '探索', icon: '◎' },
-  { href: '/feed', label: 'フィード', icon: '✎' },
-  { href: '/library', label: 'ライブラリ', icon: '♥' },
-  { href: '/playlists', label: 'プレイリスト', icon: '☰' },
-  { href: '/notifications', label: '通知', icon: '🔔' },
-  { href: '/wrapped', label: '年間まとめ', icon: '🎁' },
-  { href: '/curators', label: 'キュレーター', icon: '🔎' },
-  { href: '/boost-ranking', label: '週間ブースト', icon: '🚀' },
-  { href: '/messages', label: 'メッセージ', icon: '✉' },
-]
-
 const artists = [
   { name: 'ミナミ', genre: 'Lo-fi / Bedroom Pop', color: '#c8f23d', founding: true },
   { name: 'Kento Rui', genre: 'Alternative Rock', color: '#3dc8f2', founding: false },
@@ -57,6 +44,20 @@ interface ExploreTrack {
 }
 
 export default function PlayerPage() {
+  const tr = useTranslations('Home')
+  const navItems = [
+    { href: '/home', label: tr('nav.home'), icon: '⌂' },
+    { href: '/search', label: tr('nav.search'), icon: '⌕' },
+    { href: '/explore', label: tr('nav.explore'), icon: '◎' },
+    { href: '/feed', label: tr('nav.feed'), icon: '✎' },
+    { href: '/library', label: tr('nav.library'), icon: '♥' },
+    { href: '/playlists', label: tr('nav.playlists'), icon: '☰' },
+    { href: '/notifications', label: tr('nav.notifications'), icon: '🔔' },
+    { href: '/wrapped', label: tr('nav.wrapped'), icon: '🎁' },
+    { href: '/curators', label: tr('nav.curators'), icon: '🔎' },
+    { href: '/boost-ranking', label: tr('nav.boostRanking'), icon: '🚀' },
+    { href: '/messages', label: tr('nav.messages'), icon: '✉' },
+  ]
   const [tracks, setTracks] = useState<Track[]>([])
   const [heatTracks, setHeatTracks] = useState<HeatTrack[]>([])
   const [forYouTracks, setForYouTracks] = useState<ForYouTrack[]>([])
@@ -99,7 +100,7 @@ export default function PlayerPage() {
         <Link href="/" className="font-display text-xl font-bold">
           RESON
         </Link>
-        <nav aria-label="メインナビゲーション" className="mt-8 flex flex-col gap-1">
+        <nav aria-label={tr('mainNavigation')} className="mt-8 flex flex-col gap-1">
           {navItems.map((n) => (
             <Link
               key={n.href}
@@ -115,38 +116,38 @@ export default function PlayerPage() {
           href="/upload"
           className="mt-6 rounded-xl border border-[var(--line)] bg-[var(--surface)] p-4 text-sm hover:border-[var(--accent)]"
         >
-          <p className="font-medium">ライブラリを作ろう</p>
-          <p className="mt-1 text-xs text-[var(--dim)]">楽曲をアップロードして配信を始める</p>
+          <p className="font-medium">{tr('buildLibraryTitle')}</p>
+          <p className="mt-1 text-xs text-[var(--dim)]">{tr('buildLibraryDescription')}</p>
         </Link>
         <Link
           href="/invite"
           className="mt-3 text-xs text-[var(--faint)] hover:text-[var(--dim)]"
         >
-          友人を招待する →
+          {tr('inviteFriends')}
         </Link>
         <Link
           href="/communities"
           className="mt-3 text-xs text-[var(--faint)] hover:text-[var(--dim)]"
         >
-          コミュニティ →
+          {tr('communities')}
         </Link>
         <Link
           href="/events"
           className="mt-1 text-xs text-[var(--faint)] hover:text-[var(--dim)]"
         >
-          ライブ情報 →
+          {tr('events')}
         </Link>
         <Link
           href="/profile"
           className="mt-1 text-xs text-[var(--faint)] hover:text-[var(--dim)]"
         >
-          音楽人格・プロフィール →
+          {tr('profile')}
         </Link>
         <Link
           href="/dashboard"
           className="mt-auto text-xs text-[var(--faint)] hover:text-[var(--dim)]"
         >
-          アーティストの方へ →
+          {tr('forArtists')}
         </Link>
       </aside>
 
@@ -157,20 +158,20 @@ export default function PlayerPage() {
           <div className="flex flex-wrap items-center gap-2 sm:flex-nowrap sm:gap-4">
             <input
               disabled
-              aria-label="アーティスト・楽曲・気分で探す"
-              placeholder="アーティスト・楽曲・気分で探す"
+              aria-label={tr('searchPlaceholder')}
+              placeholder={tr('searchPlaceholder')}
               className="w-full min-w-0 rounded-full border border-[var(--line)] bg-[var(--surface)] px-4 py-2 text-sm text-[var(--faint)] sm:w-auto sm:flex-1"
             />
             <Link href="/pricing" className="text-sm text-[var(--dim)] hover:text-[var(--text)]">
-              料金
+              {tr('pricing')}
             </Link>
             {hasArtist ? (
               <Link href="/upload" className="text-sm text-[var(--dim)] hover:text-[var(--text)]">
-                + アップロード
+                {tr('upload')}
               </Link>
             ) : (
               <Link href="/register-artist" className="text-sm text-[var(--dim)] hover:text-[var(--text)]">
-                アーティストとして登録する
+                {tr('registerArtist')}
               </Link>
             )}
             <ThemeToggle />
@@ -178,7 +179,7 @@ export default function PlayerPage() {
 
           {/* プレイヤー / ピックアップ */}
           {loading ? (
-            <div className="py-20 text-center text-[var(--faint)]">読み込み中…</div>
+            <div className="py-20 text-center text-[var(--faint)]">{tr('loading')}</div>
           ) : current ? (
             <Player
               track={current}
@@ -198,9 +199,9 @@ export default function PlayerPage() {
             />
           ) : (
             <div className="rounded-2xl border border-[var(--line)] bg-[var(--panel)] py-20 text-center text-[var(--faint)]">
-              <p>楽曲がありません</p>
+              <p>{tr('noTracks')}</p>
               <Link href="/upload" className="mt-4 inline-block text-[var(--accent)] underline">
-                最初の楽曲をアップロード
+                {tr('uploadFirst')}
               </Link>
             </div>
           )}
@@ -208,9 +209,9 @@ export default function PlayerPage() {
           {/* あなたへのおすすめ */}
           {forYouTracks.length > 0 && (
             <section>
-              <h2 className="font-display text-lg font-bold">あなたへのおすすめ</h2>
+              <h2 className="font-display text-lg font-bold">{tr('forYou.title')}</h2>
               <p className="mt-1 text-xs text-[var(--faint)]">
-                よく聴いているアーティストの熱量が高い楽曲を優先表示
+                {tr('forYou.description')}
               </p>
               <div className="scroll-x mt-4 gap-4 pb-2">
                 {forYouTracks.map((t, i) => (
@@ -227,12 +228,12 @@ export default function PlayerPage() {
                       style={{ backgroundColor: ['#3dc8f2', '#f23d8c', '#c8f23d', '#f2c83d'][i % 4] }}
                     />
                     <p className="mt-3 truncate text-sm font-medium">{t.title}</p>
-                    <p className="truncate text-xs text-[var(--dim)]">{t.artists?.name ?? '不明'}</p>
+                    <p className="truncate text-xs text-[var(--dim)]">{t.artists?.name ?? tr('unknownArtist')}</p>
                     <p className="mt-1 text-xs text-[var(--faint)]">
                       {t.because_you_like ? (
-                        <span className="text-[var(--accent)]">よく聴くアーティスト</span>
+                        <span className="text-[var(--accent)]">{tr('forYou.frequentArtist')}</span>
                       ) : (
-                        `完聴率 ${Math.round(t.completion_rate * 100)}%`
+                        tr('forYou.completion', { value: Math.round(t.completion_rate * 100) })
                       )}
                     </p>
                   </button>
@@ -244,9 +245,9 @@ export default function PlayerPage() {
           {/* 熱量が高まっている楽曲 */}
           {heatTracks.length > 0 && (
             <section>
-              <h2 className="font-display text-lg font-bold">熱量が高まっている楽曲</h2>
+              <h2 className="font-display text-lg font-bold">{tr('heat.title')}</h2>
               <p className="mt-1 text-xs text-[var(--faint)]">
-                直近14日間の再生時間・応援率・完聴率から算出した熱量スコアが高い順
+                {tr('heat.description')}
               </p>
               <div className="scroll-x mt-4 gap-4 pb-2">
                 {heatTracks.map((t, i) => (
@@ -263,9 +264,12 @@ export default function PlayerPage() {
                       style={{ backgroundColor: ['#c8f23d', '#3dc8f2', '#f23d8c', '#f2c83d'][i % 4] }}
                     />
                     <p className="mt-3 truncate text-sm font-medium">{t.title}</p>
-                    <p className="truncate text-xs text-[var(--dim)]">{t.artists?.name ?? '不明'}</p>
+                    <p className="truncate text-xs text-[var(--dim)]">{t.artists?.name ?? tr('unknownArtist')}</p>
                     <p className="mt-1 text-xs text-[var(--faint)]">
-                      完聴率 {Math.round(t.completion_rate * 100)}% ・ 応援率 {Math.round(t.support_rate * 100)}%
+                      {tr('heat.stats', {
+                        completion: Math.round(t.completion_rate * 100),
+                        support: Math.round(t.support_rate * 100),
+                      })}
                       {t.ai_generated && <span className="ml-2 text-yellow-500">AI</span>}
                     </p>
                   </button>
@@ -276,7 +280,7 @@ export default function PlayerPage() {
 
           {/* 注目のアーティスト */}
           <section>
-            <h2 className="font-display text-lg font-bold">注目のアーティスト</h2>
+            <h2 className="font-display text-lg font-bold">{tr('featuredArtists')}</h2>
             <div className="scroll-x mt-4 gap-6 pb-2">
               {artists.map((a) => (
                 <div key={a.name} className="flex w-24 shrink-0 flex-col items-center text-center">
@@ -299,13 +303,13 @@ export default function PlayerPage() {
           {exploreTracks.length > 0 && (
             <section>
               <div className="flex items-center justify-between">
-                <h2 className="font-display text-lg font-bold">探索モード</h2>
+                <h2 className="font-display text-lg font-bold">{tr('explore.title')}</h2>
                 <Link href="/explore" className="text-xs text-[var(--dim)] hover:text-[var(--text)]">
-                  すべて見る →
+                  {tr('explore.viewAll')}
                 </Link>
               </div>
               <p className="mt-1 text-xs text-[var(--faint)]">
-                再生数 100〜5,000 の楽曲だけ。知名度ではなく相性で出会う
+                {tr('explore.description')}
               </p>
               <div className="mt-4 grid gap-4 sm:grid-cols-3">
                 {exploreTracks.map((t, i) => (
@@ -316,7 +320,7 @@ export default function PlayerPage() {
                   >
                     <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/70 to-transparent p-4">
                       <p className="text-sm font-bold">{t.title}</p>
-                      <p className="text-xs text-[var(--dim)]">{t.artist?.name ?? '不明'}</p>
+                      <p className="text-xs text-[var(--dim)]">{t.artist?.name ?? tr('unknownArtist')}</p>
                       {t.genres.length > 0 && (
                         <p className="mt-1 text-[10px] text-[var(--faint)]">{t.genres.join(' / ')}</p>
                       )}
@@ -330,7 +334,7 @@ export default function PlayerPage() {
           {/* トラックリスト */}
           {tracks.length > 0 && (
             <section className="space-y-1">
-              <h2 className="font-display mb-2 text-lg font-bold">すべての楽曲</h2>
+              <h2 className="font-display mb-2 text-lg font-bold">{tr('allTracks')}</h2>
               {tracks.map((t, i) => (
                 <div
                   key={t.id}
@@ -345,7 +349,7 @@ export default function PlayerPage() {
                           {t.title}
                         </p>
                         <p className="truncate text-xs text-[var(--dim)]">
-                          {t.artists?.name ?? '不明'}
+                          {t.artists?.name ?? tr('unknownArtist')}
                           {t.ai_generated && <span className="ml-2 text-yellow-500">AI</span>}
                         </p>
                       </div>
@@ -356,10 +360,10 @@ export default function PlayerPage() {
                   </button>
                   <button
                     onClick={() => queue.addToQueue(t)}
-                    title="次に再生するキューへ追加"
+                    title={tr('addNextTitle')}
                     className="shrink-0 text-xs text-[var(--faint)] hover:text-[var(--text)] px-2"
                   >
-                    +キュー
+                    {tr('addQueue')}
                   </button>
                 </div>
               ))}
@@ -369,7 +373,7 @@ export default function PlayerPage() {
       </main>
 
       {/* モバイルボトムナビ */}
-      <nav aria-label="モバイルナビゲーション" className="fixed inset-x-0 bottom-0 z-50 flex max-w-full overflow-x-auto overscroll-x-contain border-t border-[var(--line)] bg-[var(--panel)] sm:hidden">
+      <nav aria-label={tr('mobileNavigation')} className="fixed inset-x-0 bottom-0 z-50 flex max-w-full overflow-x-auto overscroll-x-contain border-t border-[var(--line)] bg-[var(--panel)] sm:hidden">
         {navItems.map((n) => (
           <Link
             key={n.href}

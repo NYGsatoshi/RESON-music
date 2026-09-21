@@ -3,7 +3,9 @@
     "appName": "RESON",
     "language": {
       "ja": "Japanese",
-      "en": "English"
+      "en": "English",
+      "switchToEnglish": "Switch to English",
+      "switchToJapanese": "Switch to Japanese"
     }
   },
   "Landing": {
@@ -204,5 +206,168 @@
       "updating": "Updating…",
       "update": "Update password"
     }
+  },
+  "Metadata": {
+    "description": "A music subscription service where listening helps grow music culture."
+  },
+  "Home": {
+    "nav": {
+      "home": "Home",
+      "search": "Search",
+      "explore": "Explore",
+      "feed": "Feed",
+      "library": "Library",
+      "playlists": "Playlists",
+      "notifications": "Notifications",
+      "wrapped": "Year in review",
+      "curators": "Curators",
+      "boostRanking": "Weekly boosts",
+      "messages": "Messages"
+    },
+    "mainNavigation": "Main navigation",
+    "mobileNavigation": "Mobile navigation",
+    "buildLibraryTitle": "Build your library",
+    "buildLibraryDescription": "Upload music and start publishing",
+    "inviteFriends": "Invite friends →",
+    "communities": "Communities →",
+    "events": "Live events →",
+    "profile": "Music profile →",
+    "forArtists": "For artists →",
+    "searchPlaceholder": "Search artists, tracks, or moods",
+    "pricing": "Pricing",
+    "upload": "+ Upload",
+    "registerArtist": "Register as an artist",
+    "loading": "Loading…",
+    "noTracks": "No tracks yet",
+    "uploadFirst": "Upload the first track",
+    "forYou": {
+      "title": "Recommended for you",
+      "description": "Prioritizing high-engagement tracks from artists you listen to often",
+      "frequentArtist": "Frequently played artist",
+      "completion": "Completion {value}%"
+    },
+    "heat": {
+      "title": "Tracks gaining engagement",
+      "description": "Ranked by an engagement score based on listening time, support rate, and completion rate over the last 14 days",
+      "stats": "Completion {completion}% · Support {support}%"
+    },
+    "featuredArtists": "Featured artists",
+    "explore": {
+      "title": "Explore mode",
+      "viewAll": "View all →",
+      "description": "Only tracks with 100–5,000 plays. Discover by compatibility, not popularity."
+    },
+    "allTracks": "All tracks",
+    "unknownArtist": "Unknown",
+    "addNextTitle": "Add to up-next queue",
+    "addQueue": "+ Queue"
+  },
+  "Library": {
+    "title": "My Library",
+    "home": "Back to Home",
+    "description": "Tracks you supported with ❤️ are collected here",
+    "loading": "Loading…",
+    "empty": "You haven't supported any tracks with ❤️ yet",
+    "unknownArtist": "Unknown",
+    "addQueueTitle": "Add to queue",
+    "addQueue": "+ Queue"
+  },
+  "Theme": {
+    "switchToLight": "Switch to light mode",
+    "switchToDark": "Switch to dark mode"
+  },
+  "Player": {
+    "unknownArtist": "Unknown artist",
+    "seekPosition": "Playback position",
+    "shuffle": "Shuffle",
+    "previous": "Previous track",
+    "pause": "Pause",
+    "play": "Play",
+    "next": "Next track",
+    "repeat": "Repeat",
+    "queue": "Up next: {count, plural, one {# track} other {# tracks}}",
+    "normalizeTitle": "Reduce volume differences between tracks (basic normalization)",
+    "normalizeOn": "🎚️ Normalize ON",
+    "normalizeOff": "🎚️ Normalize OFF",
+    "lyrics": "📝 Lyrics",
+    "loading": "Loading…",
+    "noLyrics": "No lyrics have been added",
+    "support": {
+      "supportTitle": "Support this track (❤️, unlimited and free)",
+      "supported": "Supported",
+      "support": "Support",
+      "tipTitle": "Send a tip (minimum ¥100)",
+      "sent": "Sent",
+      "tip": "Tip",
+      "dialogTitle": "Send a tip",
+      "closeDialog": "Close tip dialog",
+      "preparing": "Preparing…",
+      "sendAmount": "Send ¥{amount}",
+      "paymentTitle": "Tip (¥{amount})"
+    },
+    "boost": {
+      "title": "Boost heart (show strong support for this track)",
+      "boosted": "Boosted",
+      "boost": "Boost",
+      "remaining": "{remaining} boosts left this month ({freeRemaining} free; paid extras are added to your next bill)",
+      "paymentTitle": "Extra boost (¥{amount})"
+    },
+    "supportGraph": {
+      "anonymous": "Anonymous listener",
+      "separator": ", ",
+      "extra": " and {count} more",
+      "following": "People you follow — {names}{extra} — are supporting this track",
+      "total": "{count, plural, one {# person is supporting this track} other {# people are supporting this track}}"
+    }
+  },
+  "Payment": {
+    "closeDialog": "Close payment dialog",
+    "failed": "Payment failed",
+    "processing": "Processing…",
+    "pay": "Pay"
+  },
+  "Search": {
+    "title": "Contextual search is coming soon",
+    "description": "We're building search that understands natural phrases such as “music for late at night.” Until then, please use track-name search.",
+    "backHome": "Back to Home",
+    "tryExplore": "Try Explore mode"
+  },
+  "Explore": {
+    "backHome": "Back to Home",
+    "title": "Explore mode",
+    "description": "Only tracks with 100–5,000 plays. Discover by compatibility rather than popularity, with tracks close to genres you've listened to prioritized.",
+    "loading": "Loading…",
+    "emptyTitle": "No tracks are eligible for Explore mode yet",
+    "emptyDescription": "Tracks will appear here once more titles reach 100–5,000 plays",
+    "unknownArtist": "Unknown",
+    "plays": "{count, plural, one {# play} other {# plays}}"
+  },
+  "Feed": {
+    "backHome": "Back to Home",
+    "title": "Feed",
+    "description": "Discover → talk → connect → support. Posts from listeners and artists appear here.",
+    "postContentLabel": "Post content",
+    "postPlaceholder": "Talk about what you're listening to…",
+    "removeAttachedTrack": "Remove attached track",
+    "attachSearchLabel": "Search for a track to attach",
+    "attachSearchPlaceholder": "Search for a track to attach…",
+    "unknownArtist": "Unknown",
+    "posting": "Posting…",
+    "post": "Post",
+    "loading": "Loading…",
+    "empty": "No posts yet",
+    "listener": "Listener",
+    "postMenu": "Open post menu",
+    "reportPrompt": "Enter a reason for the report (up to 500 characters)",
+    "reported": "Report submitted",
+    "blockConfirm": "Block this user?",
+    "report": "🚩 Report",
+    "block": "🚫 Block",
+    "liked": "❤️ Liked",
+    "like": "🤍 Like",
+    "comments": "💬 Comments",
+    "commentLabel": "Comment",
+    "commentPlaceholder": "Write a comment…",
+    "send": "Send"
   }
 }

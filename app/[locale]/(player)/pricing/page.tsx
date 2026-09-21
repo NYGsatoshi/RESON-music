@@ -1,6 +1,7 @@
 'use client'
 
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
+import { Link, useRouter } from '@/i18n/navigation'
 import { useState, Suspense } from 'react'
 
 const PLANS = [
@@ -238,9 +239,9 @@ function PricingContent() {
           >
             プランの変更・解約はこちら
           </button>
-          <a href="/parental" className="text-sm text-zinc-500 hover:text-zinc-300 underline transition">
+          <Link href="/parental" className="text-sm text-zinc-500 hover:text-zinc-300 underline transition">
             未成年の方はこちら（保護者の決済に紐付ける）
-          </a>
+          </Link>
         </div>
 
         {/* 分配の透明性（仕様書: 計算式はパブリックに公開） */}
