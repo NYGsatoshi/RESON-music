@@ -239,8 +239,6 @@ function PricingContent() {
           >
             プランの変更・解約はこちら
           </button>
-          {/* next-intl Link preserves the active locale; Next.js lint cannot identify the wrapper as next/link. */}
-          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
           <Link href="/parental" className="text-sm text-zinc-500 hover:text-zinc-300 underline transition">
             未成年の方はこちら（保護者の決済に紐付ける）
           </Link>
