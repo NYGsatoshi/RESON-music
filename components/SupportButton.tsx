@@ -124,7 +124,7 @@ export function SupportButton({ trackId }: { trackId: string }) {
       {showTipForm && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4"
-          onMouseDown={(event) => {
+          onClick={(event) => {
             if (event.target === event.currentTarget) setShowTipForm(false)
           }}
         >
