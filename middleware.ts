@@ -2,11 +2,11 @@ import createIntlMiddleware from "next-intl/middleware";
 import { createServerClient } from "@supabase/ssr";
 import { NextRequest, NextResponse } from "next/server";
 import { isPublicPath } from "@/lib/auth/public-paths";
+import { routing } from "@/i18n/routing";
 import {
   getLocalePathname,
   localizePathname,
-  routing,
-} from "@/i18n/routing";
+} from "@/i18n/locales";
 
 const handleI18nRouting = createIntlMiddleware(routing);
 
