@@ -78,7 +78,7 @@ export default function EventsPage() {
                 <p className="mt-1 text-sm font-semibold">{ev.title}</p>
                 <p className="mt-1 text-xs text-[var(--dim)]">
                   {format.dateTime(new Date(ev.event_at), { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
-                  {ev.location ? ` ・ ${ev.location}` : ''}
+                  {ev.location ? ` · ${ev.location}` : ''}
                 </p>
                 {ev.description && <p className="mt-2 whitespace-pre-wrap text-sm">{ev.description}</p>}
                 <div className="mt-3 flex gap-2">
