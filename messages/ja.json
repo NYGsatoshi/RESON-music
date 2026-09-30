@@ -652,5 +652,53 @@
       "studentPool": "¥200/月",
       "freePool": "¥42/月（広告収益）"
     }
+  },
+  "TrackDetail": {
+    "loading": "読み込み中…",
+    "notFound": "楽曲が見つかりません",
+    "backHome": "← ホームへ",
+    "unknownArtist": "不明なアーティスト",
+    "foundingArtist": "創設アーティスト",
+    "album": "{album} に収録"
+  },
+  "Wrapped": {
+    "title": "{year}年のまとめ",
+    "home": "ホームへ",
+    "year": "{year}年",
+    "loading": "読み込み中…",
+    "empty": "{year}年はまだ再生記録がありません",
+    "duration": "{hours}時間{minutes}分",
+    "totalTime": "合計再生時間",
+    "plays": "再生回数",
+    "tracks": "曲",
+    "completed": "完聴",
+    "topArtists": "よく聴いたアーティスト",
+    "topTracks": "よく聴いた曲",
+    "playCount": "{count, number}回"
+  },
+  "Profile": {
+    "loadFailed": "プロフィールを取得できませんでした",
+    "bestLimit": "ランキングは{count}件までです",
+    "tagLimit": "音楽人格タグは10個までです",
+    "backHome": "ホームへ戻る",
+    "title": "音楽人格・プロフィール",
+    "description": "自分の音楽の好みをタグで表現できます（自己申告制）。",
+    "loading": "読み込み中…",
+    "retry": "再試行",
+    "displayName": "表示名",
+    "bio": "自己紹介",
+    "personaLabel": "音楽人格タグ（カンマ区切り・最大10個）",
+    "personaPlaceholder": "例: シティポップ, 夜更かし, ギターロック",
+    "suggestions": "聴取データからの提案（自己申告に追加するかはあなた次第です）",
+    "saved": "保存しました",
+    "saving": "保存中…",
+    "save": "保存する",
+    "rankingTitle": "ベストトラックランキング",
+    "rankingDescription": "好きな楽曲を最大{count}曲、ランキング形式で公開できます（Topster風プロフィール）。",
+    "searchLabel": "ベストトラックに追加する楽曲を検索",
+    "searchPlaceholder": "楽曲名で検索して追加…",
+    "separator": "・",
+    "emptyRanking": "まだランクインした楽曲がありません",
+    "saveRanking": "ランキングを保存する"
   }
 }
