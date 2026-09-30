@@ -463,5 +463,58 @@
       "complete": "対応・回答済みにする",
       "decline": "理由を付けて対応不可"
     }
+  },
+  "Album": {
+    "releaseType": {
+      "single": "シングル",
+      "ep": "EP",
+      "album": "アルバム"
+    },
+    "loading": "読み込み中…",
+    "notFound": "アルバムが見つかりません",
+    "backHome": "← ホームへ",
+    "unknownArtist": "不明なアーティスト",
+    "duration": "{minutes}分{seconds}秒",
+    "summary": "{count, number}曲・合計 {duration}",
+    "addQueueTitle": "次に再生するキューへ追加",
+    "addQueue": "+キュー"
+  },
+  "BoostRanking": {
+    "title": "週間ブーストランキング🚀",
+    "home": "ホームへ",
+    "description": "先週比の伸び率が高い曲（累計再生数500以上）が対象です。絶対的なブースト数ではなく、今まさに勢いのある曲を発見できます。",
+    "loading": "読み込み中…",
+    "empty": "まだランキングがありません",
+    "unknownArtist": "不明",
+    "weekly": "今週🚀{current, number}（先週{previous, number}）"
+  },
+  "Communities": {
+    "backHome": "ホームへ戻る",
+    "title": "ジャンル別コミュニティ",
+    "description": "好きなジャンルに参加して、専用フィードで語り合えます。",
+    "loading": "読み込み中…",
+    "members": "{count, number}人が参加中",
+    "feed": "フィードへ",
+    "joined": "参加中",
+    "join": "参加する"
+  },
+  "Curators": {
+    "title": "キュレーターランク",
+    "home": "ホームへ",
+    "description": "まだ無名だった楽曲に早く応援し、後にその楽曲が伸びた場合にスコアが加算される「先見性」の指標です。",
+    "loading": "読み込み中…",
+    "empty": "まだランキングがありません",
+    "anonymous": "名無しのリスナー"
+  },
+  "Events": {
+    "backHome": "ホームへ戻る",
+    "title": "ライブ情報",
+    "description": "アーティストの今後のライブ・イベント情報です。",
+    "loading": "読み込み中…",
+    "empty": "予定されているイベントはありません",
+    "artist": "アーティスト",
+    "interested": "気になる",
+    "going": "参加する",
+    "ticket": "チケット"
   }
 }
