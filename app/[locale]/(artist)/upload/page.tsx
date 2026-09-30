@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/i18n/navigation'
+import { useTranslations } from 'next-intl'
 import { computeClientFingerprint } from '@/lib/audio/client-fingerprint'
 
 const ALLOWED_TYPES = ['audio/mpeg', 'audio/mp4', 'audio/flac', 'audio/wav', 'audio/ogg']
@@ -24,6 +25,7 @@ interface Album {
 }
 
 export default function UploadPage() {
+  const t = useTranslations('Upload')
   const router = useRouter()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [file, setFile] = useState<File | null>(null)
@@ -95,11 +97,11 @@ export default function UploadPage() {
     const f = e.target.files?.[0]
     if (!f) return
     if (!ALLOWED_TYPES.includes(f.type)) {
-      setError('対応形式: MP3 / M4A / FLAC / WAV / OGG')
+      setError(t('validation.audioFormat'))
       return
     }
     if (f.size > MAX_SIZE_MB * 1024 * 1024) {
-      setError(`ファイルサイズは${MAX_SIZE_MB}MB以内にしてください`)
+      setError(t('validation.audioSize', { size: MAX_SIZE_MB }))
       return
     }
     setError('')
@@ -111,11 +113,11 @@ export default function UploadPage() {
     const f = e.target.files?.[0]
     if (!f || !albumId) return
     if (!ALLOWED_IMAGE_TYPES.includes(f.type)) {
-      setError('ジャケット画像はJPEG/PNG/WebP形式のみ対応しています')
+      setError(t('validation.imageFormat'))
       return
     }
     if (f.size > MAX_IMAGE_SIZE_MB * 1024 * 1024) {
-      setError(`ジャケット画像は${MAX_IMAGE_SIZE_MB}MB以内にしてください`)
+      setError(t('validation.imageSize', { size: MAX_IMAGE_SIZE_MB }))
       return
     }
     setError('')
@@ -178,7 +180,7 @@ export default function UploadPage() {
 
     const duration_sec = await getDuration(file)
     if (duration_sec < 1) {
-      setError('楽曲の長さを読み取れませんでした')
+      setError(t('validation.duration'))
       setLoading(false)
       return
     }
@@ -207,7 +209,7 @@ export default function UploadPage() {
     }
 
     setProgress(10)
-    setStatusMsg('ファイルをアップロード中…')
+    setStatusMsg(t('status.file'))
 
     // Step 2: R2 に直接 PUT（署名付きURL経由）
     const putRes = await fetch(meta.upload_url, {
@@ -216,7 +218,7 @@ export default function UploadPage() {
       body: file,
     })
     if (!putRes.ok) {
-      setError('ファイルのアップロードに失敗しました')
+      setError(t('validation.uploadFailed'))
       setLoading(false)
       return
     }
@@ -225,7 +227,7 @@ export default function UploadPage() {
 
     // ジャケット画像（任意・アルバムに紐付けた場合はアルバム側のジャケットを使うため送らない）
     if (coverFile && !albumId) {
-      setStatusMsg('ジャケット画像をアップロード中…')
+      setStatusMsg(t('status.cover'))
       const coverMetaRes = await fetch('/api/tracks/cover-upload-url', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -242,7 +244,7 @@ export default function UploadPage() {
     }
 
     setProgress(60)
-    setStatusMsg('重複チェック中…')
+    setStatusMsg(t('status.duplicate'))
 
     // Step 3: AI生成チェック（メタデータパターン検出）
     const aiRes = await fetch('/api/tracks/ai-check', {
@@ -252,11 +254,11 @@ export default function UploadPage() {
     })
     const aiData = await aiRes.json()
     if (aiData.ai_generated && aiData.reason === 'metadata_pattern') {
-      setAiWarning(aiData.message)
+      setAiWarning(t('aiMetadataWarning'))
     }
 
     setProgress(80)
-    setStatusMsg('重複楽曲を確認中…')
+    setStatusMsg(t('status.fingerprint'))
 
     // Step 4: フィンガープリント生成・送信（重複検知）
     // 簡易実装（真のChromaprint互換ではない・詳細はlib/audio/client-fingerprint.tsを参照）
@@ -272,7 +274,7 @@ export default function UploadPage() {
         const fpData = await fpRes.json()
         duplicateDetected = true
         setDuplicateWarning(
-          `この楽曲は既存の楽曲と非常に似ています（重複の可能性）。審査時に確認されます。track_id: ${fpData.existing_track_id ?? '不明'}`
+          t('duplicateWarning', { trackId: fpData.existing_track_id ?? 'unknown' })
         )
       }
     }
@@ -297,10 +299,10 @@ export default function UploadPage() {
     <main className="min-h-screen bg-black text-white px-4 py-12">
       <div className="max-w-lg mx-auto space-y-8">
         <div>
-          <h1 className="text-2xl font-bold">楽曲をアップロード</h1>
-          <p className="text-sm text-zinc-400 mt-1">MP3 / M4A / FLAC / WAV / OGG（最大{MAX_SIZE_MB}MB）</p>
+          <h1 className="text-2xl font-bold">{t('title')}</h1>
+          <p className="text-sm text-zinc-400 mt-1">{t('formats', { size: MAX_SIZE_MB })}</p>
           <p className="text-xs text-zinc-600 mt-1">
-            アップロード後、審査（著作権侵害・不正コンテンツの確認）を経て配信開始となります。審査中もダッシュボードから確認できます。
+            {t('reviewNote')}
           </p>
         </div>
 
@@ -334,7 +336,7 @@ export default function UploadPage() {
               ref={fileInputRef}
               id="track-audio-file"
               type="file"
-              aria-label="楽曲ファイル"
+              aria-label={t('audioLabel')}
               accept={ALLOWED_TYPES.join(',')}
               className="hidden"
               onChange={onFileChange}
@@ -347,14 +349,14 @@ export default function UploadPage() {
             ) : (
               <div>
                 <p className="text-4xl mb-3">🎵</p>
-                <p className="text-zinc-400">クリックしてファイルを選択</p>
+                <p className="text-zinc-400">{t('selectFile')}</p>
               </div>
             )}
           </div>
 
           {/* タイトル */}
           <div>
-            <label htmlFor="track-title" className="block text-sm text-zinc-400 mb-1">タイトル <span className="text-red-400">*</span></label>
+            <label htmlFor="track-title" className="block text-sm text-zinc-400 mb-1">{t('trackTitle')} <span className="text-red-400">*</span></label>
             <input
               id="track-title"
               type="text"
@@ -368,18 +370,18 @@ export default function UploadPage() {
 
           {/* ISRC */}
           <div>
-            <label htmlFor="track-isrc" className="block text-sm text-zinc-400 mb-1">ISRC（任意）</label>
+            <label htmlFor="track-isrc" className="block text-sm text-zinc-400 mb-1">{t('isrcLabel')}</label>
             <input
               id="track-isrc"
               type="text"
               value={isrc}
               onChange={(e) => setIsrc(e.target.value)}
-              placeholder="例: US-RC1-76-07839"
+              placeholder={t('isrcPlaceholder')}
               maxLength={15}
               className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-3 text-white placeholder-zinc-600 focus:outline-none focus:border-zinc-400"
             />
             <p className="mt-1 text-xs text-zinc-600">
-              既に取得済みのISRCがある場合のみ入力してください。未取得の場合は空欄でかまいません。
+              {t('isrcHelp')}
             </p>
           </div>
 
@@ -387,7 +389,7 @@ export default function UploadPage() {
           {genres.length > 0 && (
             <div>
               <label className="block text-sm text-zinc-400 mb-2">
-                ジャンルタグ（最大{MAX_GENRES}個）
+                {t('genreLabel', { count: MAX_GENRES })}
               </label>
               <div className="flex flex-wrap gap-2">
                 {[...macroGenres, ...subGenres].map((g) => {
@@ -413,7 +415,7 @@ export default function UploadPage() {
 
           {/* アルバム */}
           <div>
-            <label htmlFor="track-album" className="block text-sm text-zinc-400 mb-2">アルバム（任意）</label>
+            <label htmlFor="track-album" className="block text-sm text-zinc-400 mb-2">{t('album.label')}</label>
             <select
               id="track-album"
               value={albumId}
@@ -423,30 +425,30 @@ export default function UploadPage() {
               }}
               className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-zinc-400"
             >
-              <option value="">アルバムなし（シングル）</option>
+              <option value="">{t('album.none')}</option>
               {albums.map((a) => (
                 <option key={a.id} value={a.id}>
-                  {a.title}（{a.release_type === 'single' ? 'シングル' : a.release_type === 'ep' ? 'EP' : 'アルバム'}）
+                  {a.title} ({t(`releaseType.${a.release_type}`)})
                 </option>
               ))}
             </select>
             {albumId && (
               <div className="mt-2">
-                <label htmlFor="track-number" className="block text-xs text-zinc-500 mb-1">アルバム内の曲順（任意）</label>
+                <label htmlFor="track-number" className="block text-xs text-zinc-500 mb-1">{t('album.trackNumber')}</label>
                 <input
                   id="track-number"
                   type="number"
                   min={1}
                   value={trackNumber}
                   onChange={(e) => setTrackNumber(e.target.value)}
-                  placeholder="例: 1"
+                  placeholder={t('album.trackNumberPlaceholder')}
                   className="w-24 bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-zinc-400"
                 />
               </div>
             )}
             {albumId && (
               <div className="mt-3">
-                <label className="block text-xs text-zinc-500 mb-1">アルバムジャケット（任意）</label>
+                <label className="block text-xs text-zinc-500 mb-1">{t('album.cover')}</label>
                 <div
                   onClick={() => albumCoverInputRef.current?.click()}
                   className="border border-dashed border-zinc-700 rounded-lg px-3 py-2 text-xs text-zinc-500 hover:border-zinc-500 cursor-pointer transition"
@@ -454,18 +456,18 @@ export default function UploadPage() {
                   <input
                     ref={albumCoverInputRef}
                     type="file"
-                    aria-label="アルバムジャケット画像"
+                    aria-label={t('album.coverAria')}
                     accept={ALLOWED_IMAGE_TYPES.join(',')}
                     className="hidden"
                     onChange={onAlbumCoverChange}
                   />
                   {albumCoverUploading
-                    ? 'アップロード中…'
+                    ? t('album.coverUploading')
                     : albumCoverDone
-                      ? 'ジャケットを更新しました（クリックで再度変更）'
+                      ? t('album.coverUpdated')
                       : albums.find((a) => a.id === albumId)?.cover_r2_key
-                        ? '設定済み（クリックで変更）'
-                        : 'クリックしてアルバムのジャケット画像を設定'}
+                        ? t('album.coverSet')
+                        : t('album.coverSelect')}
                 </div>
               </div>
             )}
@@ -475,18 +477,18 @@ export default function UploadPage() {
                 value={newAlbumTitle}
                 onChange={(e) => setNewAlbumTitle(e.target.value)}
                 maxLength={200}
-                placeholder="新しいアルバム名"
+                placeholder={t('album.newTitle')}
                 className="flex-1 bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-zinc-400"
               />
               <select
-                aria-label="新しいアルバムのリリース種別"
+                aria-label={t('album.releaseTypeAria')}
                 value={newAlbumReleaseType}
                 onChange={(e) => setNewAlbumReleaseType(e.target.value as 'single' | 'ep' | 'album')}
                 className="bg-zinc-900 border border-zinc-700 rounded-lg px-2 py-2 text-sm text-white focus:outline-none focus:border-zinc-400"
               >
-                <option value="single">シングル</option>
-                <option value="ep">EP</option>
-                <option value="album">アルバム</option>
+                <option value="single">{t('releaseType.single')}</option>
+                <option value="ep">{t('releaseType.ep')}</option>
+                <option value="album">{t('releaseType.album')}</option>
               </select>
               <button
                 type="button"
@@ -494,7 +496,7 @@ export default function UploadPage() {
                 disabled={creatingAlbum || !newAlbumTitle.trim()}
                 className="shrink-0 rounded-lg border border-zinc-700 px-3 py-2 text-sm hover:border-zinc-400 disabled:opacity-40"
               >
-                {creatingAlbum ? '作成中…' : '作成'}
+                {creatingAlbum ? t('album.creating') : t('album.create')}
               </button>
             </div>
           </div>
@@ -503,7 +505,7 @@ export default function UploadPage() {
               単独曲＝シングルとしてアップロードする場合のみ表示する） */}
           {!albumId && (
             <div>
-              <label className="block text-sm text-zinc-400 mb-2">ジャケット画像（任意）</label>
+              <label className="block text-sm text-zinc-400 mb-2">{t('cover.label')}</label>
               <div
                 onClick={() => coverInputRef.current?.click()}
                 className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition ${
@@ -513,7 +515,7 @@ export default function UploadPage() {
                 <input
                   ref={coverInputRef}
                   type="file"
-                  aria-label="楽曲ジャケット画像"
+                  aria-label={t('cover.aria')}
                   accept={ALLOWED_IMAGE_TYPES.join(',')}
                   className="hidden"
                   onChange={onCoverChange}
@@ -521,7 +523,7 @@ export default function UploadPage() {
                 {coverFile ? (
                   <p className="text-sm text-zinc-300">{coverFile.name}</p>
                 ) : (
-                  <p className="text-sm text-zinc-500">クリックして画像を選択（JPEG/PNG/WebP）</p>
+                  <p className="text-sm text-zinc-500">{t('cover.select')}</p>
                 )}
               </div>
             </div>
@@ -536,8 +538,8 @@ export default function UploadPage() {
               className="w-5 h-5 rounded accent-white"
             />
             <div>
-              <p className="text-sm font-medium">AI生成楽曲</p>
-              <p className="text-xs text-zinc-500">AIが主体的に生成した楽曲は分配重みが 0.1 になります</p>
+              <p className="text-sm font-medium">{t('ai.title')}</p>
+              <p className="text-xs text-zinc-500">{t('ai.description')}</p>
             </div>
           </label>
 
@@ -559,7 +561,7 @@ export default function UploadPage() {
             disabled={!file || !title || loading}
             className="w-full bg-white text-black font-semibold rounded-lg py-3 hover:bg-zinc-200 disabled:opacity-50 transition"
           >
-            {loading ? 'アップロード中…' : 'アップロード'}
+            {loading ? t('uploading') : t('upload')}
           </button>
         </form>
       </div>
