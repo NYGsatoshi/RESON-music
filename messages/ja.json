@@ -999,5 +999,59 @@
     },
     "uploading": "アップロード中…",
     "upload": "アップロード"
+  },
+  "Admin": {
+    "checking": "確認中…",
+    "denied": "権限がありません",
+    "title": "審査ダッシュボード",
+    "privacy": "個人データ請求を確認する",
+    "tabs": {
+      "artists": "アーティスト審査",
+      "tracks": "楽曲審査",
+      "fraud": "不正検知",
+      "reports": "通報",
+      "payouts": "出金申請",
+      "founding": "創設アーティスト"
+    },
+    "artists": {
+      "empty": "審査待ちのアーティストはいません",
+      "minor": "未成年",
+      "approve": "承認",
+      "reject": "却下"
+    },
+    "tracks": {
+      "empty": "審査待ちの楽曲はありません",
+      "ai": "AI生成",
+      "unknown": "不明",
+      "approve": "承認",
+      "reject": "却下"
+    },
+    "fraud": {
+      "empty": "未解決の不正検知フラグはありません",
+      "suspended": "配信停止中",
+      "unknownTrack": "不明な楽曲",
+      "resolve": "解決済みにする",
+      "resume": "解決して配信を再開"
+    },
+    "reports": {
+      "empty": "保留中の通報はありません",
+      "reviewed": "対応済み",
+      "dismissed": "問題なし"
+    },
+    "payouts": {
+      "empty": "審査待ちの出金申請はありません",
+      "unknown": "不明",
+      "paid": "支払済にする",
+      "reject": "却下"
+    },
+    "founding": {
+      "description": "アーティスト名で検索し、創設アーティストのバッジ付与/解除を行います（バッジのみ・分配重みへの反映は未実装）。",
+      "searchAria": "創設アーティストを検索",
+      "placeholder": "アーティスト名で検索…",
+      "search": "検索",
+      "badge": "★ 創設アーティスト",
+      "remove": "解除する",
+      "add": "バッジを付与"
+    }
   }
 }
