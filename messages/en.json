@@ -907,7 +907,8 @@
       "saving": "Saving…",
       "save": "Save",
       "close": "Close",
-      "lyricsPlaceholder": "Enter lyrics…"
+      "lyricsPlaceholder": "Enter lyrics…",
+      "isrcPlaceholder": "e.g. US-RC1-76-07839"
     },
     "bank": {
       "title": "Payout bank account",
