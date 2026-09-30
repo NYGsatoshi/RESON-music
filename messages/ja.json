@@ -939,5 +939,65 @@
     },
     "invite": "友人を招待する",
     "pricing": "分配計算式はこちらで公開しています"
+  },
+  "Upload": {
+    "validation": {
+      "audioFormat": "対応形式: MP3 / M4A / FLAC / WAV / OGG",
+      "audioSize": "ファイルサイズは{size}MB以内にしてください",
+      "imageFormat": "ジャケット画像はJPEG/PNG/WebP形式のみ対応しています",
+      "imageSize": "ジャケット画像は{size}MB以内にしてください",
+      "duration": "楽曲の長さを読み取れませんでした",
+      "uploadFailed": "ファイルのアップロードに失敗しました"
+    },
+    "status": {
+      "file": "ファイルをアップロード中…",
+      "cover": "ジャケット画像をアップロード中…",
+      "duplicate": "重複チェック中…",
+      "fingerprint": "重複楽曲を確認中…"
+    },
+    "aiMetadataWarning": "ファイルのメタデータからAI生成ツールが検出されたため、AI生成楽曲として自動登録しました。分配重み係数は 0.1 になります。",
+    "duplicateWarning": "この楽曲は既存の楽曲と非常に似ています（重複の可能性）。審査時に確認されます。track_id: {trackId}",
+    "title": "楽曲をアップロード",
+    "formats": "MP3 / M4A / FLAC / WAV / OGG（最大{size}MB）",
+    "reviewNote": "アップロード後、審査（著作権侵害・不正コンテンツの確認）を経て配信開始となります。審査中もダッシュボードから確認できます。",
+    "audioLabel": "楽曲ファイル",
+    "selectFile": "クリックしてファイルを選択",
+    "trackTitle": "タイトル",
+    "isrcLabel": "ISRC（任意）",
+    "isrcPlaceholder": "例: US-RC1-76-07839",
+    "isrcHelp": "既に取得済みのISRCがある場合のみ入力してください。未取得の場合は空欄でかまいません。",
+    "genreLabel": "ジャンルタグ（最大{count}個）",
+    "album": {
+      "label": "アルバム（任意）",
+      "none": "アルバムなし（シングル）",
+      "trackNumber": "アルバム内の曲順（任意）",
+      "trackNumberPlaceholder": "例: 1",
+      "cover": "アルバムジャケット（任意）",
+      "coverAria": "アルバムジャケット画像",
+      "coverUploading": "アップロード中…",
+      "coverUpdated": "ジャケットを更新しました（クリックで再度変更）",
+      "coverSet": "設定済み（クリックで変更）",
+      "coverSelect": "クリックしてアルバムのジャケット画像を設定",
+      "newTitle": "新しいアルバム名",
+      "releaseTypeAria": "新しいアルバムのリリース種別",
+      "creating": "作成中…",
+      "create": "作成"
+    },
+    "releaseType": {
+      "single": "シングル",
+      "ep": "EP",
+      "album": "アルバム"
+    },
+    "cover": {
+      "label": "ジャケット画像（任意）",
+      "aria": "楽曲ジャケット画像",
+      "select": "クリックして画像を選択（JPEG/PNG/WebP）"
+    },
+    "ai": {
+      "title": "AI生成楽曲",
+      "description": "AIが主体的に生成した楽曲は分配重みが 0.1 になります"
+    },
+    "uploading": "アップロード中…",
+    "upload": "アップロード"
   }
 }
