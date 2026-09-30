@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
+import { Link } from '@/i18n/navigation'
+import { useTranslations } from 'next-intl'
 
 interface Playlist {
   id: string
@@ -11,6 +12,7 @@ interface Playlist {
 }
 
 export default function PlaylistsPage() {
+  const t = useTranslations('Playlists')
   const [playlists, setPlaylists] = useState<Playlist[]>([])
   const [loading, setLoading] = useState(true)
   const [newTitle, setNewTitle] = useState('')
@@ -48,9 +50,9 @@ export default function PlaylistsPage() {
     <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] px-4 py-10 sm:px-8">
       <div className="mx-auto max-w-lg space-y-6">
         <div className="flex items-center justify-between">
-          <h1 className="font-display text-2xl font-bold">プレイリスト</h1>
+          <h1 className="font-display text-2xl font-bold">{t('title')}</h1>
           <Link href="/home" className="text-sm text-[var(--dim)] hover:text-[var(--text)]">
-            ホームへ
+            {t('home')}
           </Link>
         </div>
 
@@ -59,7 +61,7 @@ export default function PlaylistsPage() {
             value={newTitle}
             onChange={(e) => setNewTitle(e.target.value)}
             maxLength={100}
-            placeholder="新しいプレイリスト名"
+            placeholder={t('placeholder')}
             className="flex-1 rounded-lg border border-[var(--line)] bg-[var(--surface)] px-3 py-2 text-sm placeholder-[var(--faint)] focus:outline-none"
           />
           <button
@@ -67,15 +69,15 @@ export default function PlaylistsPage() {
             disabled={creating || !newTitle.trim()}
             className="rounded-lg bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-[var(--ink)] disabled:opacity-40"
           >
-            {creating ? '作成中…' : '作成'}
+            {creating ? t('creating') : t('create')}
           </button>
         </form>
         {error && <p className="text-xs text-red-400">{error}</p>}
 
         {loading ? (
-          <p className="text-sm text-[var(--faint)]">読み込み中…</p>
+          <p className="text-sm text-[var(--faint)]">{t('loading')}</p>
         ) : playlists.length === 0 ? (
-          <p className="text-sm text-[var(--faint)]">まだプレイリストがありません</p>
+          <p className="text-sm text-[var(--faint)]">{t('empty')}</p>
         ) : (
           <div className="space-y-1">
             {playlists.map((p) => (
@@ -85,7 +87,7 @@ export default function PlaylistsPage() {
                 className="block rounded-xl border border-[var(--line)] bg-[var(--panel)] px-4 py-3 text-sm hover:border-[var(--accent)] transition"
               >
                 {p.title}
-                {!p.is_public && <span className="ml-2 text-xs text-[var(--faint)]">非公開</span>}
+                {!p.is_public && <span className="ml-2 text-xs text-[var(--faint)]">{t('private')}</span>}
               </Link>
             ))}
           </div>
