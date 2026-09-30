@@ -1,8 +1,10 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { ThemeToggle } from '@/components/ThemeToggle'
-import Link from 'next/link'
+import { Link } from '@/i18n/navigation'
+import { SELECT_SETTINGS } from '@/lib/privacy/settings'
 
 interface Settings {
   is_private: boolean
@@ -35,12 +37,12 @@ const DEFAULTS: Settings = {
   comment_enabled: true,
   community_enabled: true,
   collection_public: true,
-  follow_request_from: '全員',
-  dm_from: '全員',
-  comment_notif_from: '全員',
+  follow_request_from: SELECT_SETTINGS.follow_request_from[0],
+  dm_from: SELECT_SETTINGS.dm_from[0],
+  comment_notif_from: SELECT_SETTINGS.comment_notif_from[0],
   like_notif: true,
   matching_suggestion: true,
-  artist_news: '全て通知',
+  artist_news: SELECT_SETTINGS.artist_news[0],
   support_history_public: true,
   exclusive_content: true,
   backer_community: true,
@@ -54,7 +56,7 @@ function Toggle({ id, label, value, onChange }: { id: string; label: string; val
       <button
         role="switch"
         aria-checked={value}
-        aria-label={`${label}を切り替える`}
+        aria-label={label}
         id={id}
         onClick={() => onChange(!value)}
         className={`relative w-10 h-[22px] rounded-full transition-colors ${value ? 'bg-white' : 'bg-zinc-600'}`}
@@ -67,7 +69,17 @@ function Toggle({ id, label, value, onChange }: { id: string; label: string; val
   )
 }
 
-function Select({ label, value, options, onChange }: { label: string; value: string; options: string[]; onChange: (v: string) => void }) {
+function Select({
+  label,
+  value,
+  options,
+  onChange,
+}: {
+  label: string
+  value: string
+  options: readonly { value: string; label: string }[]
+  onChange: (v: string) => void
+}) {
   return (
     <select
       aria-label={label}
@@ -75,12 +87,13 @@ function Select({ label, value, options, onChange }: { label: string; value: str
       onChange={(e) => onChange(e.target.value)}
       className="text-[13px] px-2.5 py-1.5 rounded-lg border border-zinc-700 bg-zinc-900 text-white cursor-pointer min-w-[130px] shrink-0"
     >
-      {options.map((o) => <option key={o}>{o}</option>)}
+      {options.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
     </select>
   )
 }
 
 export default function SettingsPage() {
+  const t = useTranslations('Settings')
   const [s, setS] = useState<Settings>(DEFAULTS)
   const [loaded, setLoaded] = useState(false)
   const [saving, setSaving] = useState(false)
@@ -98,8 +111,8 @@ export default function SettingsPage() {
         }
         setLoaded(true)
       })
-      .catch(() => setError('設定を取得できませんでした。再読み込みしてください。'))
-  }, [])
+      .catch(() => setError(t('fetchFailed')))
+  }, [t])
 
   const update = useCallback(async (patch: Partial<Settings>) => {
     if (saving) return
@@ -119,21 +132,42 @@ export default function SettingsPage() {
       if (!response.ok) throw new Error('settings update failed')
     } catch {
       if (previous) setS(previous)
-      setError('保存に失敗しました。接続を確認してもう一度お試しください。')
+      setError(t('saveFailed'))
     } finally {
       setSaving(false)
     }
-  }, [saving])
+  }, [saving, t])
+
+  const followOptions = [
+    { value: SELECT_SETTINGS.follow_request_from[0], label: t('options.everyone') },
+    { value: SELECT_SETTINGS.follow_request_from[1], label: t('options.mutual') },
+    { value: SELECT_SETTINGS.follow_request_from[2], label: t('options.nobody') },
+  ]
+  const dmOptions = [
+    { value: SELECT_SETTINGS.dm_from[0], label: t('options.everyone') },
+    { value: SELECT_SETTINGS.dm_from[1], label: t('options.followers') },
+    { value: SELECT_SETTINGS.dm_from[2], label: t('options.doNotReceive') },
+  ]
+  const commentOptions = [
+    { value: SELECT_SETTINGS.comment_notif_from[0], label: t('options.everyone') },
+    { value: SELECT_SETTINGS.comment_notif_from[1], label: t('options.followers') },
+    { value: SELECT_SETTINGS.comment_notif_from[2], label: t('options.doNotReceive') },
+  ]
+  const artistNewsOptions = [
+    { value: SELECT_SETTINGS.artist_news[0], label: t('options.all') },
+    { value: SELECT_SETTINGS.artist_news[1], label: t('options.important') },
+    { value: SELECT_SETTINGS.artist_news[2], label: t('options.doNotReceive') },
+  ]
 
   if (!loaded) {
     return (
       <main className="min-h-screen bg-black px-4 py-8 text-white">
         <div className="mx-auto max-w-[680px]">
-          <h1 className="text-[22px] font-medium">プライバシーと機能</h1>
+          <h1 className="text-[22px] font-medium">{t('title')}</h1>
           <p role={error ? 'alert' : 'status'} className="mt-5 text-sm text-zinc-400">
-            {error || '設定を読み込み中…'}
+            {error || t('loading')}
           </p>
-          {error && <button onClick={() => window.location.reload()} className="mt-4 text-sm underline">再読み込み</button>}
+          {error && <button onClick={() => window.location.reload()} className="mt-4 text-sm underline">{t('reload')}</button>}
         </div>
       </main>
     )
@@ -143,151 +177,150 @@ export default function SettingsPage() {
     <main aria-busy={saving} className="min-h-screen bg-black text-white px-4 py-8">
       <div className="max-w-[680px] mx-auto">
         <div className="flex items-center justify-between mb-1">
-          <h1 className="text-[22px] font-medium">プライバシーと機能</h1>
-          {saving && <span className="text-xs text-zinc-500">保存中…</span>}
+          <h1 className="text-[22px] font-medium">{t('title')}</h1>
+          {saving && <span className="text-xs text-zinc-500">{t('saving')}</span>}
         </div>
-        <p className="text-sm text-zinc-500 mb-8">Resonの各機能について、参加するかどうかを選べます。</p>
+        <p className="text-sm text-zinc-500 mb-8">{t('description')}</p>
         {error && <p role="alert" className="mb-4 rounded-lg border border-red-800 bg-red-900/20 px-4 py-3 text-sm text-red-300">{error}</p>}
 
-        {/* 表示設定 */}
-        <Section title="表示">
+        <Section title={t('sections.display')}>
           <div className="rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-3 flex items-center justify-between">
             <div>
-              <p className="text-[15px] font-medium text-zinc-300">ライト / ダークモード</p>
-              <p className="text-[13px] text-zinc-500 mt-0.5">ホーム画面など一部のページに適用されます</p>
+              <p className="text-[15px] font-medium text-zinc-300">{t('display.theme')}</p>
+              <p className="text-[13px] text-zinc-500 mt-0.5">{t('display.themeDesc')}</p>
             </div>
             <ThemeToggle />
           </div>
         </Section>
 
-        {/* アカウント公開設定 */}
-        <Section title="アカウントの公開設定">
+        <Section title={t('sections.account')}>
           <div className={`rounded-xl border px-4 py-3 flex gap-3 mb-4 transition-colors ${
             s.is_private ? 'bg-zinc-800 border-zinc-600' : 'bg-zinc-950 border-zinc-800'
           }`}>
             <span className="text-xl mt-0.5 shrink-0">🔒</span>
             <div className="flex-1 min-w-0">
               <p className={`text-[15px] font-medium ${s.is_private ? 'text-white' : 'text-zinc-400'}`}>
-                非公開アカウント
+                {t('private.label')}
               </p>
-              <p className="text-[13px] text-zinc-500 mt-0.5 leading-relaxed">
-                オンにすると、公開設定にかかわらずプロフィールと投稿を他の利用者から非表示にします。
-              </p>
+              <p className="text-[13px] text-zinc-500 mt-0.5 leading-relaxed">{t('private.desc')}</p>
             </div>
-            <Toggle id="t-private" label="非公開アカウント" value={s.is_private} onChange={(v) => update({ is_private: v })} />
+            <Toggle id="t-private" label={t('private.label')} value={s.is_private} onChange={(v) => update({ is_private: v })} />
           </div>
         </Section>
 
-        {/* SNS機能 */}
-        <Section title="SNS機能">
+        <Section title={t('sections.social')}>
           <Card>
-            <Row label="プロフィールページ" desc="音楽趣味・好きなアーティスト・遍歴を公開する">
-              <Toggle id="t-profile" label="プロフィールページ" value={s.profile_public} onChange={(v) => update({ profile_public: v })} />
+            <Row label={t('social.profile.label')} desc={t('social.profile.desc')}>
+              <Toggle id="t-profile" label={t('social.profile.label')} value={s.profile_public} onChange={(v) => update({ profile_public: v })} />
             </Row>
-            <Row label="音楽タイムライン（投稿）" desc="楽曲投稿・アルバムレビュー・音楽日記・プレイリスト共有">
-              <Toggle id="t-feed" label="音楽タイムライン" value={s.feed_enabled} onChange={(v) => update({ feed_enabled: v })} />
+            <Row label={t('social.feed.label')} desc={t('social.feed.desc')}>
+              <Toggle id="t-feed" label={t('social.feed.label')} value={s.feed_enabled} onChange={(v) => update({ feed_enabled: v })} />
             </Row>
-            <Row label="フォロー機能" desc="ユーザー・アーティスト・プレイリスト制作者をフォローできる">
-              <Toggle id="t-follow" label="フォロー機能" value={s.follow_enabled} onChange={(v) => update({ follow_enabled: v })} />
+            <Row label={t('social.follow.label')} desc={t('social.follow.desc')}>
+              <Toggle id="t-follow" label={t('social.follow.label')} value={s.follow_enabled} onChange={(v) => update({ follow_enabled: v })} />
             </Row>
-            <Row label="音楽マッチング" desc="趣味が近いユーザーを発見・共通アーティスト表示">
-              <Toggle id="t-match" label="音楽マッチング" value={s.matching_enabled} onChange={(v) => update({ matching_enabled: v })} />
+            <Row label={t('social.matching.label')} desc={t('social.matching.desc')}>
+              <Toggle id="t-match" label={t('social.matching.label')} value={s.matching_enabled} onChange={(v) => update({ matching_enabled: v })} />
             </Row>
-            <Row label="コメント・レビュー" desc="楽曲・アルバムへの感想・時間指定・考察コメント">
-              <Toggle id="t-comment" label="コメント・レビュー" value={s.comment_enabled} onChange={(v) => update({ comment_enabled: v })} />
+            <Row label={t('social.comment.label')} desc={t('social.comment.desc')}>
+              <Toggle id="t-comment" label={t('social.comment.label')} value={s.comment_enabled} onChange={(v) => update({ comment_enabled: v })} />
             </Row>
-            <Row label="コミュニティ参加" desc="ジャンル別コミュニティへの投稿・参加">
-              <Toggle id="t-community" label="コミュニティ参加" value={s.community_enabled} onChange={(v) => update({ community_enabled: v })} />
+            <Row label={t('social.community.label')} desc={t('social.community.desc')}>
+              <Toggle id="t-community" label={t('social.community.label')} value={s.community_enabled} onChange={(v) => update({ community_enabled: v })} />
             </Row>
-            <Row label="音楽コレクション" desc="人生アルバム・年間ベストなどを公開する" last>
-              <Toggle id="t-collection" label="音楽コレクション" value={s.collection_public} onChange={(v) => update({ collection_public: v })} />
+            <Row label={t('social.collection.label')} desc={t('social.collection.desc')} last>
+              <Toggle id="t-collection" label={t('social.collection.label')} value={s.collection_public} onChange={(v) => update({ collection_public: v })} />
             </Row>
           </Card>
         </Section>
 
-        {/* 受信の可否 */}
-        <Section title="受信の可否">
+        <Section title={t('sections.incoming')}>
           <Card>
-            <Row label="フォローリクエスト" desc="誰からのフォローリクエストを受け取るか" disabled={!s.follow_enabled}>
+            <Row label={t('incoming.follow.label')} desc={t('incoming.follow.desc')} disabled={!s.follow_enabled}>
               <Select
-                label="フォローリクエストの受信範囲"
+                label={t('incoming.follow.aria')}
                 value={s.follow_request_from}
-                options={['全員', '相互フォロー', '誰も受け取らない']}
+                options={followOptions}
                 onChange={(v) => update({ follow_request_from: v })}
               />
             </Row>
-            <Row label="ダイレクトメッセージ" desc="誰からのDMを受け取るか">
+            <Row label={t('incoming.dm.label')} desc={t('incoming.dm.desc')}>
               <Select
-                label="ダイレクトメッセージの受信範囲"
+                label={t('incoming.dm.aria')}
                 value={s.dm_from}
-                options={['全員', 'フォロワーのみ', '受け取らない']}
+                options={dmOptions}
                 onChange={(v) => update({ dm_from: v })}
               />
             </Row>
-            <Row label="コメント通知" desc="自分の投稿へのコメント通知" disabled={!s.comment_enabled}>
+            <Row label={t('incoming.comments.label')} desc={t('incoming.comments.desc')} disabled={!s.comment_enabled}>
               <Select
-                label="コメント通知の受信範囲"
+                label={t('incoming.comments.aria')}
                 value={s.comment_notif_from}
-                options={['全員', 'フォロワーのみ', '受け取らない']}
+                options={commentOptions}
                 onChange={(v) => update({ comment_notif_from: v })}
               />
             </Row>
-            <Row label="いいね・応援の通知">
+            <Row label={t('incoming.likes.label')}>
               <Select
-                label="いいね・応援の通知"
-                value={s.like_notif ? 'オン' : 'オフ'}
-                options={['オン', 'オフ']}
-                onChange={(v) => update({ like_notif: v === 'オン' })}
+                label={t('incoming.likes.label')}
+                value={s.like_notif ? 'on' : 'off'}
+                options={[
+                  { value: 'on', label: t('options.on') },
+                  { value: 'off', label: t('options.off') },
+                ]}
+                onChange={(v) => update({ like_notif: v === 'on' })}
               />
             </Row>
-            <Row label="マッチング提案" desc="「音楽相性が近い人」のサジェスト通知">
+            <Row label={t('incoming.matching.label')} desc={t('incoming.matching.desc')}>
               <Select
-                label="マッチング提案"
-                value={s.matching_suggestion ? '受け取る' : '受け取らない'}
-                options={['受け取る', '受け取らない']}
-                onChange={(v) => update({ matching_suggestion: v === '受け取る' })}
+                label={t('incoming.matching.label')}
+                value={s.matching_suggestion ? 'receive' : 'none'}
+                options={[
+                  { value: 'receive', label: t('options.receive') },
+                  { value: 'none', label: t('options.doNotReceive') },
+                ]}
+                onChange={(v) => update({ matching_suggestion: v === 'receive' })}
               />
             </Row>
-            <Row label="アーティストの新着情報" desc="フォロー中アーティストの投稿・イベント通知" last>
+            <Row label={t('incoming.artist.label')} desc={t('incoming.artist.desc')} last>
               <Select
-                label="アーティストの新着情報"
+                label={t('incoming.artist.label')}
                 value={s.artist_news}
-                options={['全て通知', '重要のみ', '受け取らない']}
+                options={artistNewsOptions}
                 onChange={(v) => update({ artist_news: v })}
               />
             </Row>
           </Card>
         </Section>
 
-        {/* 支援・クラファン機能 */}
-        <Section title="支援・クラファン機能">
+        <Section title={t('sections.support')}>
           <Card>
-            <Row label="応援・支援履歴の公開" desc="支援したプロジェクト・アーティストをプロフィールに表示">
-              <Toggle id="t-support-hist" label="応援・支援履歴の公開" value={s.support_history_public} onChange={(v) => update({ support_history_public: v })} />
+            <Row label={t('support.history.label')} desc={t('support.history.desc')}>
+              <Toggle id="t-support-hist" label={t('support.history.label')} value={s.support_history_public} onChange={(v) => update({ support_history_public: v })} />
             </Row>
-            <Row label="限定コンテンツの受信" desc="支援者向けデモ音源・未公開曲・制作メモ">
-              <Toggle id="t-exclusive" label="限定コンテンツの受信" value={s.exclusive_content} onChange={(v) => update({ exclusive_content: v })} />
+            <Row label={t('support.exclusive.label')} desc={t('support.exclusive.desc')}>
+              <Toggle id="t-exclusive" label={t('support.exclusive.label')} value={s.exclusive_content} onChange={(v) => update({ exclusive_content: v })} />
             </Row>
-            <Row label="支援者コミュニティ参加" desc="プロジェクトごとの支援者タブへの参加" last>
-              <Toggle id="t-backer" label="支援者コミュニティ参加" value={s.backer_community} onChange={(v) => update({ backer_community: v })} />
+            <Row label={t('support.community.label')} desc={t('support.community.desc')} last>
+              <Toggle id="t-backer" label={t('support.community.label')} value={s.backer_community} onChange={(v) => update({ backer_community: v })} />
             </Row>
           </Card>
         </Section>
 
-        {/* データ・評価 */}
-        <Section title="データ・評価">
+        <Section title={t('sections.data')}>
           <Card>
-            <Row label="信頼度スコアの公開" desc="新人発見数・レビュー評価などの指標を表示">
-              <Toggle id="t-score" label="信頼度スコアの公開" value={s.score_public} onChange={(v) => update({ score_public: v })} />
+            <Row label={t('data.score.label')} desc={t('data.score.desc')}>
+              <Toggle id="t-score" label={t('data.score.label')} value={s.score_public} onChange={(v) => update({ score_public: v })} />
             </Row>
-            <Row label="リスニングデータの利用" desc="オンにした場合のみ、聴取履歴をおすすめと音楽人格タグの提案に利用します。いつでもオフにできます。再生・分配に必要な記録は継続します。" last>
-              <Toggle id="t-listen" label="リスニングデータの利用" value={s.listening_data_use} onChange={(v) => update({ listening_data_use: v })} />
+            <Row label={t('data.listening.label')} desc={t('data.listening.desc')} last>
+              <Toggle id="t-listen" label={t('data.listening.label')} value={s.listening_data_use} onChange={(v) => update({ listening_data_use: v })} />
             </Row>
           </Card>
         </Section>
-        <Section title="個人データの請求">
+
+        <Section title={t('sections.privacy')}>
           <Link href="/privacy-requests" className="block rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-4 text-sm text-white hover:border-zinc-600">
-            開示・移転用コピー・削除などを請求する →
+            {t('privacyCta')}
           </Link>
         </Section>
       </div>
