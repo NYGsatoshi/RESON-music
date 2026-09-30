@@ -394,7 +394,7 @@ export default function DashboardPage() {
                       type="text"
                       value={isrcDraft}
                       onChange={(e) => setIsrcDraft(e.target.value)}
-                      placeholder="例: US-RC1-76-07839"
+                      placeholder={t('tracks.isrcPlaceholder')}
                       maxLength={15}
                       className="w-full bg-zinc-950 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-zinc-400"
                     />
@@ -438,7 +438,7 @@ export default function DashboardPage() {
                         onClick={() => setLyricsEditingId(null)}
                         className="text-xs rounded-lg border border-zinc-700 px-3 py-1.5"
                       >
-                        閉じる
+                        {t('tracks.close')}
                       </button>
                     </div>
                   </div>
