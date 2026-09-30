@@ -855,5 +855,88 @@
       }
     },
     "privacyCta": "Request access, a portable copy, deletion, and more →"
+  },
+  "Dashboard": {
+    "loading": "Loading…",
+    "artistRequired": "Artist registration is required",
+    "register": "Register",
+    "foundingArtist": "Founding artist",
+    "subtitle": "Artist dashboard",
+    "supporters": "Supporters",
+    "report": "Report",
+    "upload": "+ Upload",
+    "review": {
+      "pending": "Your artist account is under review. You can upload and manage tracks while you wait, but approval is required before distribution begins.",
+      "rejected": "Your artist registration was not approved. Contact support for details."
+    },
+    "balance": {
+      "title": "Unpaid balance",
+      "schedule": "Closes at month-end · paid on the 15th of the following month",
+      "minimum": "Minimum payout is ¥1,000 (smaller balances roll over)",
+      "warning": "⚠️ Your balance exceeds ¥50,000. Please submit a payout request.",
+      "pending": "Payout request received (processing)",
+      "requesting": "Requesting…",
+      "request": "Request payout"
+    },
+    "payoutStatus": {
+      "pending": "Processing",
+      "paid": "Paid",
+      "rejected": "Rejected"
+    },
+    "score": {
+      "title": "{month} engagement score",
+      "playTime": "Listening-time score",
+      "playTimeDesc": "SUM(listened seconds × weight × duration factor) / 3600",
+      "support": "Support rate",
+      "supportDesc": "supports / valid plays",
+      "completion": "Completion rate",
+      "completionDesc": "completed plays / valid plays",
+      "tips": "Tip revenue (separate): ¥{amount, number}"
+    },
+    "historyTitle": "Monthly distribution history",
+    "tracks": {
+      "title": "Tracks",
+      "empty": "No tracks yet",
+      "pending": "Under review",
+      "rejected": "Rejected",
+      "ai": "AI-generated",
+      "notEligible": "Not eligible ({count, number}/100 plays)",
+      "isrcMissing": "Not registered",
+      "lyrics": "Lyrics",
+      "plays": "{count, number} plays",
+      "saving": "Saving…",
+      "save": "Save",
+      "close": "Close",
+      "lyricsPlaceholder": "Enter lyrics…"
+    },
+    "bank": {
+      "title": "Payout bank account",
+      "cancel": "Cancel",
+      "edit": "Edit",
+      "description": "After a payout request is approved, the operations team uses this account information for a manual bank transfer on the 15th of each month. Automated bank-API payouts are not implemented yet.",
+      "ordinary": "Ordinary",
+      "checking": "Checking",
+      "empty": "No bank account is registered",
+      "bankName": "Bank name",
+      "branchName": "Branch name",
+      "accountType": "Account type",
+      "accountNumber": "Account number",
+      "holderName": "Account holder",
+      "holderPlaceholder": "Account holder name",
+      "saved": "Saved"
+    },
+    "albums": {
+      "title": "Albums",
+      "createOnUpload": "Create while uploading",
+      "empty": "No albums yet",
+      "unreleased": "No release date"
+    },
+    "releaseType": {
+      "single": "Single",
+      "ep": "EP",
+      "album": "Album"
+    },
+    "invite": "Invite friends",
+    "pricing": "View the distribution formula"
   }
 }
