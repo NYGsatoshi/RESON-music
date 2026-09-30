@@ -854,7 +854,8 @@
         "desc": "Only when enabled, your listening history is used for recommendations and music-persona suggestions. You can disable this at any time. Records required for playback and distribution continue to be kept."
       }
     },
-    "privacyCta": "Request access, a portable copy, deletion, and more →"
+    "privacyCta": "Request access, a portable copy, deletion, and more →",
+    "toggleAria": "Toggle {label}"
   },
   "Dashboard": {
     "loading": "Loading…",
