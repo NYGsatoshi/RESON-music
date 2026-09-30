@@ -101,8 +101,8 @@ function AlbumDetailContent() {
           <Player
             track={{
               id: current.id,
-              title: current.title,
-              duration_sec: current.duration_sec,
+              title: currentrack.title,
+              duration_sec: currentrack.duration_sec,
               artists: album.artists,
             }}
             onEnded={queue.playNext}
@@ -122,27 +122,27 @@ function AlbumDetailContent() {
         )}
 
         <div className="space-y-1">
-          {tracks.map((t, i) => (
+          {tracks.map((track, i) => (
             <div
-              key={t.id}
+              key={track.id}
               className={`flex items-center gap-2 w-full px-4 py-3 rounded-xl transition ${
                 i === currentIdx ? 'bg-[var(--surface)]' : 'hover:bg-[var(--panel)]'
               }`}
             >
               <button onClick={() => queue.playAt(i)} className="flex-1 flex items-center justify-between min-w-0 text-left">
                 <div className="flex items-center gap-3 min-w-0">
-                  <span className="text-xs text-[var(--faint)] w-5 shrink-0">{t.track_number ?? i + 1}</span>
+                  <span className="text-xs text-[var(--faint)] w-5 shrink-0">{track.track_number ?? i + 1}</span>
                   <span className={`truncate text-sm font-medium ${i === currentIdx ? 'text-[var(--accent)]' : ''}`}>
-                    {t.title}
-                    {t.ai_generated && <span className="ml-2 text-xs text-yellow-500">AI</span>}
+                    {track.title}
+                    {track.ai_generated && <span className="ml-2 text-xs text-yellow-500">AI</span>}
                   </span>
                 </div>
                 <span className="text-xs text-[var(--faint)] shrink-0 ml-3">
-                  {Math.floor(t.duration_sec / 60)}:{String(t.duration_sec % 60).padStart(2, '0')}
+                  {Math.floor(track.duration_sec / 60)}:{String(track.duration_sec % 60).padStart(2, '0')}
                 </span>
               </button>
               <button
-                onClick={() => queue.addToQueue(t)}
+                onClick={() => queue.addToQueue(track)}
                 title={t('addQueueTitle')}
                 className="shrink-0 text-xs text-[var(--faint)] hover:text-[var(--text)] px-2"
               >
