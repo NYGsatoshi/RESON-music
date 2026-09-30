@@ -463,5 +463,58 @@
       "complete": "Mark handled and answered",
       "decline": "Decline with reason"
     }
+  },
+  "Album": {
+    "releaseType": {
+      "single": "Single",
+      "ep": "EP",
+      "album": "Album"
+    },
+    "loading": "Loading…",
+    "notFound": "Album not found",
+    "backHome": "← Home",
+    "unknownArtist": "Unknown artist",
+    "duration": "{minutes}m {seconds}s",
+    "summary": "{count, number} tracks · {duration}",
+    "addQueueTitle": "Add to play-next queue",
+    "addQueue": "+ Queue"
+  },
+  "BoostRanking": {
+    "title": "Weekly boost ranking 🚀",
+    "home": "Home",
+    "description": "Tracks with at least 500 total plays are ranked by week-over-week boost growth. This highlights tracks gaining momentum now rather than those with the highest absolute boost count.",
+    "loading": "Loading…",
+    "empty": "No ranking data yet",
+    "unknownArtist": "Unknown",
+    "weekly": "🚀 {current, number} this week (last week {previous, number})"
+  },
+  "Communities": {
+    "backHome": "Back to home",
+    "title": "Genre communities",
+    "description": "Join genres you like and talk with other listeners in dedicated feeds.",
+    "loading": "Loading…",
+    "members": "{count, number} members",
+    "feed": "Open feed",
+    "joined": "Joined",
+    "join": "Join"
+  },
+  "Curators": {
+    "title": "Curator ranking",
+    "home": "Home",
+    "description": "A measure of foresight: you earn score by supporting lesser-known tracks early when those tracks later gain traction.",
+    "loading": "Loading…",
+    "empty": "No ranking data yet",
+    "anonymous": "Anonymous listener"
+  },
+  "Events": {
+    "backHome": "Back to home",
+    "title": "Live events",
+    "description": "Upcoming live shows and events from artists.",
+    "loading": "Loading…",
+    "empty": "No upcoming events",
+    "artist": "Artist",
+    "interested": "Interested",
+    "going": "Going",
+    "ticket": "Tickets"
   }
 }
