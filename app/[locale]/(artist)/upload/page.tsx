@@ -148,11 +148,11 @@ export default function UploadPage() {
     const f = e.target.files?.[0]
     if (!f) return
     if (!ALLOWED_IMAGE_TYPES.includes(f.type)) {
-      setError('ジャケット画像はJPEG/PNG/WebP形式のみ対応しています')
+      setError(t('validation.imageFormat'))
       return
     }
     if (f.size > MAX_IMAGE_SIZE_MB * 1024 * 1024) {
-      setError(`ジャケット画像は${MAX_IMAGE_SIZE_MB}MB以内にしてください`)
+      setError(t('validation.imageSize', { size: MAX_IMAGE_SIZE_MB }))
       return
     }
     setError('')
