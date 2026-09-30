@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
+import { hasLocale } from 'next-intl'
 import { getTranslations } from 'next-intl/server'
+import { notFound } from 'next/navigation'
 import { Link } from '@/i18n/navigation'
+import { routing } from '@/i18n/routing'
 
 export const dynamic = 'force-dynamic'
 
@@ -17,12 +20,14 @@ type PrivacyPageProps = {
 
 export async function generateMetadata({ params }: PrivacyPageProps): Promise<Metadata> {
   const { locale } = await params
+  if (!hasLocale(routing.locales, locale)) return {}
   const t = await getTranslations({ locale, namespace: 'PrivacyPage' })
   return { title: t('metadataTitle') }
 }
 
 export default async function PrivacyPage({ params }: PrivacyPageProps) {
   const { locale } = await params
+  if (!hasLocale(routing.locales, locale)) notFound()
   const t = await getTranslations({ locale, namespace: 'PrivacyPage' })
   const required = (value: string | undefined) => value ?? t('missing')
 
