@@ -1,8 +1,9 @@
 'use client'
 
 import { useEffect, useState, Suspense, useRef } from 'react'
-import { useSearchParams, useRouter } from 'next/navigation'
-import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
+import { Link, useRouter } from '@/i18n/navigation'
+import { useTranslations } from 'next-intl'
 
 interface Conversation {
   user_id: string
@@ -34,6 +35,7 @@ interface TrackOption {
 }
 
 function MessagesContent() {
+  const t = useTranslations('Messages')
   const searchParams = useSearchParams()
   const router = useRouter()
   const withUserId = searchParams.get('with')
@@ -124,9 +126,9 @@ function MessagesContent() {
     <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] px-4 py-10 sm:px-8">
       <div className="mx-auto max-w-2xl">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="font-display text-2xl font-bold">メッセージ</h1>
+          <h1 className="font-display text-2xl font-bold">{t('title')}</h1>
           <Link href="/home" className="text-sm text-[var(--dim)] hover:text-[var(--text)]">
-            ホームへ
+            {t('home')}
           </Link>
         </div>
 
@@ -134,10 +136,10 @@ function MessagesContent() {
           {/* 会話一覧 */}
           <div className="space-y-3">
             <input
-              aria-label="会話を始めるユーザーを検索"
+              aria-label={t('userSearchLabel')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="ユーザーを検索して開始…"
+              placeholder={t('userSearchPlaceholder')}
               className="w-full rounded-lg border border-[var(--line)] bg-[var(--surface)] px-3 py-2 text-sm placeholder-[var(--faint)] focus:outline-none"
             />
             {searchResults.length > 0 && (
@@ -148,7 +150,7 @@ function MessagesContent() {
                     onClick={() => { setSearchQuery(''); setSearchResults([]); openConversation(u.user_id) }}
                     className="block w-full text-left rounded-lg px-2 py-1.5 text-sm hover:bg-[var(--surface)]"
                   >
-                    {u.display_name ?? '名無しのユーザー'}
+                    {u.display_name ?? t('anonymousUser')}
                   </button>
                 ))}
               </div>
@@ -162,7 +164,7 @@ function MessagesContent() {
                     withUserId === c.user_id ? 'bg-[var(--surface)]' : 'hover:bg-[var(--panel)]'
                   }`}
                 >
-                  <p className={c.unread ? 'font-semibold' : ''}>{c.display_name ?? '名無しのユーザー'}</p>
+                  <p className={c.unread ? 'font-semibold' : ''}>{c.display_name ?? t('anonymousUser')}</p>
                   <p className="truncate text-xs text-[var(--faint)]">{c.last_body}</p>
                 </button>
               ))}
@@ -172,7 +174,7 @@ function MessagesContent() {
           {/* スレッド */}
           <div>
             {!withUserId ? (
-              <p className="text-sm text-[var(--faint)] text-center py-12">会話を選択してください</p>
+              <p className="text-sm text-[var(--faint)] text-center py-12">{t('selectConversation')}</p>
             ) : (
               <div className="flex flex-col h-[60vh]">
                 <div className="flex-1 overflow-y-auto space-y-2 pr-1">
@@ -193,7 +195,7 @@ function MessagesContent() {
                             m.sender_id === meId ? 'bg-black/10' : 'bg-[var(--surface)]'
                           }`}
                         >
-                          ♪ {m.tracks.title} ・ {m.tracks.artists?.name}
+                          ♪ {m.tracks.title} {t('separator')} {m.tracks.artists?.name}
                         </Link>
                       )}
                     </div>
@@ -202,28 +204,28 @@ function MessagesContent() {
                 </div>
                 {attachedTrack && (
                   <div className="mt-2 flex items-center justify-between rounded-lg border border-[var(--line)] bg-[var(--surface)] px-3 py-2 text-xs">
-                    <span>♪ {attachedTrack.title} ・ {attachedTrack.artists?.name}</span>
-                    <button onClick={() => setAttachedTrack(null)} aria-label="添付した楽曲を外す" className="text-[var(--faint)] hover:text-[var(--text)]">✕</button>
+                    <span>♪ {attachedTrack.title} {t('separator')} {attachedTrack.artists?.name}</span>
+                    <button onClick={() => setAttachedTrack(null)} aria-label={t('removeAttachment')} className="text-[var(--faint)] hover:text-[var(--text)]">✕</button>
                   </div>
                 )}
                 {showTrackPicker && !attachedTrack && (
                   <div className="mt-2">
                     <input
-                      aria-label="メッセージに添付する楽曲を検索"
+                      aria-label={t('trackSearchLabel')}
                       value={trackQuery}
                       onChange={(e) => setTrackQuery(e.target.value)}
-                      placeholder="曲を検索して貼付…"
+                      placeholder={t('trackSearchPlaceholder')}
                       className="w-full rounded-lg border border-[var(--line)] bg-[var(--surface)] px-3 py-1.5 text-xs placeholder-[var(--faint)] focus:outline-none"
                     />
                     {trackResults.length > 0 && (
                       <div className="mt-1 space-y-1">
-                        {trackResults.map((t) => (
+                        {trackResults.map((track) => (
                           <button
-                            key={t.id}
-                            onClick={() => { setAttachedTrack(t); setTrackQuery(''); setTrackResults([]); setShowTrackPicker(false) }}
+                            key={track.id}
+                            onClick={() => { setAttachedTrack(track); setTrackQuery(''); setTrackResults([]); setShowTrackPicker(false) }}
                             className="block w-full rounded-lg px-2 py-1.5 text-left text-xs hover:bg-[var(--panel)]"
                           >
-                            {t.title} <span className="text-[var(--faint)]">・ {t.artists?.name}</span>
+                            {track.title} <span className="text-[var(--faint)]">{t('separator')} {track.artists?.name}</span>
                           </button>
                         ))}
                       </div>
@@ -233,18 +235,18 @@ function MessagesContent() {
                 <div className="mt-3 flex gap-2">
                   <button
                     onClick={() => setShowTrackPicker((v) => !v)}
-                    title="曲を貼付"
+                    title={t('attachTrackTitle')}
                     className="rounded-lg border border-[var(--line)] px-3 py-2 text-sm hover:border-[var(--accent)]"
                   >
                     ♪
                   </button>
                   <input
-                    aria-label="メッセージ本文"
+                    aria-label={t('bodyLabel')}
                     value={draft}
                     onChange={(e) => setDraft(e.target.value)}
                     onKeyDown={(e) => { if (e.key === 'Enter') send() }}
                     maxLength={1000}
-                    placeholder="メッセージを入力…"
+                    placeholder={t('bodyPlaceholder')}
                     className="flex-1 rounded-lg border border-[var(--line)] bg-[var(--surface)] px-3 py-2 text-sm placeholder-[var(--faint)] focus:outline-none"
                   />
                   <button
@@ -252,7 +254,7 @@ function MessagesContent() {
                     disabled={!draft.trim() && !attachedTrack}
                     className="rounded-lg bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-[var(--ink)] disabled:opacity-40"
                   >
-                    送信
+                    {t('send')}
                   </button>
                 </div>
               </div>
