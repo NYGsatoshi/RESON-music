@@ -13,6 +13,7 @@ type Step = 'artist' | 'bank' | 'rights' | 'done'
 export default function RegisterArtistPage() {
   const router = useRouter()
   const t = useTranslations('Auth.register')
+  const common = useTranslations('Auth.common')
   const [step, setStep] = useState<Step>('artist')
   const [name, setName] = useState('')
   const [bio, setBio] = useState('')
@@ -194,7 +195,7 @@ export default function RegisterArtistPage() {
               onClick={() => setStep('artist')}
               className="w-full text-sm text-zinc-500 hover:text-zinc-300 transition"
             >
-              {t('common.back')}
+              {common('back')}
             </button>
           </form>
         )}
@@ -261,7 +262,7 @@ export default function RegisterArtistPage() {
               onClick={() => setStep('bank')}
               className="w-full text-sm text-zinc-500 hover:text-zinc-300 transition"
             >
-              {t('common.back')}
+              {common('back')}
             </button>
           </form>
         )}
