@@ -68,7 +68,7 @@ export default function ArtistReportPage() {
 
   const month = data.distributions.find((d) => d.year_month === selectedMonth) ?? data.distributions[0]
   const totalPaid = data.distributions.reduce((sum, d) => sum + d.distribution_yen + (d.tips_yen ?? 0), 0)
-  const distributedTracks = data.tracks.filter((t) => t.in_distribution)
+  const distributedTracks = data.tracks.filter((t) => track.in_distribution)
 
   return (
     <main className="min-h-screen bg-black text-white px-4 py-10">
@@ -164,14 +164,14 @@ export default function ArtistReportPage() {
           {data.tracks.length === 0 ? (
             <p className="text-sm text-zinc-500">{t('noTracks')}</p>
           ) : (
-            data.tracks.map((t) => (
-              <div key={t.id} className="flex items-center justify-between text-sm border-b border-zinc-800 pb-2 last:border-0 last:pb-0">
-                <span className="truncate">{t.title}</span>
+            data.tracks.map((track) => (
+              <div key={track.id} className="flex items-center justify-between text-sm border-b border-zinc-800 pb-2 last:border-0 last:pb-0">
+                <span className="truncate">{track.title}</span>
                 <span className="flex items-center gap-2 shrink-0">
-                  {t.review_status === 'pending' && <span className="text-xs text-yellow-500">{t('pending')}</span>}
-                  {t.review_status === 'rejected' && <span className="text-xs text-red-400">{t('rejected')}</span>}
-                  <span className={t.in_distribution ? 'text-zinc-300' : 'text-zinc-600'}>
-                    {t.in_distribution ? t('eligible', { count: t.cumulative_plays }) : t('progress', { count: t.cumulative_plays })}
+                  {track.review_status === 'pending' && <span className="text-xs text-yellow-500">{t('pending')}</span>}
+                  {track.review_status === 'rejected' && <span className="text-xs text-red-400">{t('rejected')}</span>}
+                  <span className={track.in_distribution ? 'text-zinc-300' : 'text-zinc-600'}>
+                    {track.in_distribution ? t('eligible', { count: track.cumulative_plays }) : t('progress', { count: track.cumulative_plays })}
                   </span>
                 </span>
               </div>
