@@ -1,13 +1,16 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/i18n/navigation'
+import { useTranslations } from 'next-intl'
 import { createClient } from '@/lib/supabase/client'
 
 // 開発者用ログイン（電話番号SMS認証をバイパス）。/api/dev/seed-account で
 // 作成したメール+パスワードのアカウントでログインする。本番運用では使わない想定。
 export default function DevLoginPage() {
   const router = useRouter()
+  const t = useTranslations('Auth.devLogin')
+  const common = useTranslations('Auth.common')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -29,7 +32,7 @@ export default function DevLoginPage() {
       <div className="w-full max-w-sm space-y-6">
         <div className="text-center">
           <h1 className="text-2xl font-bold tracking-tight">RESON</h1>
-          <p className="mt-2 text-sm text-zinc-400">開発者用ログイン（電話番号認証なし）</p>
+          <p className="mt-2 text-sm text-zinc-400">{t('title')}</p>
         </div>
 
         {error && (
@@ -40,7 +43,7 @@ export default function DevLoginPage() {
 
         <form onSubmit={login} className="space-y-4">
           <div>
-            <label className="block text-sm text-zinc-400 mb-1">メールアドレス</label>
+            <label className="block text-sm text-zinc-400 mb-1">{common('email')}</label>
             <input
               type="email"
               value={email}
@@ -50,7 +53,7 @@ export default function DevLoginPage() {
             />
           </div>
           <div>
-            <label className="block text-sm text-zinc-400 mb-1">パスワード</label>
+            <label className="block text-sm text-zinc-400 mb-1">{common('password')}</label>
             <input
               type="password"
               value={password}
@@ -64,12 +67,12 @@ export default function DevLoginPage() {
             disabled={loading}
             className="w-full bg-white text-black font-semibold rounded-lg py-3 hover:bg-zinc-200 disabled:opacity-50 transition"
           >
-            {loading ? 'ログイン中…' : 'ログイン'}
+            {loading ? t('loggingIn') : t('login')}
           </button>
         </form>
 
         <p className="text-xs text-zinc-600 text-center">
-          このページは開発・検証専用です。アカウントは /api/dev/seed-account（CRON_SECRET認証）で作成します。
+          {t('notice')}
         </p>
       </div>
     </main>
