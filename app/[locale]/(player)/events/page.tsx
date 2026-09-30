@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
+import { Link } from '@/i18n/navigation'
+import { useFormatter, useTranslations } from 'next-intl'
 
 interface EventItem {
   id: string
@@ -15,6 +16,8 @@ interface EventItem {
 }
 
 export default function EventsPage() {
+  const t = useTranslations('Events')
+  const format = useFormatter()
   const [events, setEvents] = useState<EventItem[]>([])
   const [loading, setLoading] = useState(true)
   const [statuses, setStatuses] = useState<Record<string, 'interested' | 'going'>>({})
@@ -52,29 +55,29 @@ export default function EventsPage() {
         <div className="flex items-center justify-between">
           <Link href="/home" className="font-display text-xl font-bold">RESON</Link>
           <Link href="/home" className="text-sm text-[var(--dim)] hover:text-[var(--text)]">
-            ホームへ戻る
+            {t('backHome')}
           </Link>
         </div>
 
-        <h1 className="font-display mt-8 text-2xl font-bold">ライブ情報</h1>
+        <h1 className="font-display mt-8 text-2xl font-bold">{t('title')}</h1>
         <p className="mt-2 text-sm text-[var(--faint)]">
-          アーティストの今後のライブ・イベント情報です。
+          {t('description')}
         </p>
 
         {loading ? (
-          <div className="py-20 text-center text-[var(--faint)]">読み込み中…</div>
+          <div className="py-20 text-center text-[var(--faint)]">{t('loading')}</div>
         ) : events.length === 0 ? (
           <div className="mt-10 rounded-2xl border border-[var(--line)] bg-[var(--panel)] py-16 text-center text-[var(--faint)]">
-            <p>予定されているイベントはありません</p>
+            <p>{t('empty')}</p>
           </div>
         ) : (
           <div className="mt-6 space-y-4">
             {events.map((ev) => (
               <div key={ev.id} className="rounded-2xl border border-[var(--line)] bg-[var(--panel)] p-4">
-                <p className="text-xs text-[var(--faint)]">{ev.artists?.name ?? 'アーティスト'}</p>
+                <p className="text-xs text-[var(--faint)]">{ev.artists?.name ?? t('artist')}</p>
                 <p className="mt-1 text-sm font-semibold">{ev.title}</p>
                 <p className="mt-1 text-xs text-[var(--dim)]">
-                  {new Date(ev.event_at).toLocaleString('ja-JP')}
+                  {format.dateTime(new Date(ev.event_at), { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
                   {ev.location ? ` ・ ${ev.location}` : ''}
                 </p>
                 {ev.description && <p className="mt-2 whitespace-pre-wrap text-sm">{ev.description}</p>}
@@ -87,7 +90,7 @@ export default function EventsPage() {
                         : 'border border-[var(--line)] text-[var(--dim)]'
                     }`}
                   >
-                    気になる
+                    {t('interested')}
                   </button>
                   <button
                     onClick={() => attend(ev.id, 'going')}
@@ -97,7 +100,7 @@ export default function EventsPage() {
                         : 'border border-[var(--line)] text-[var(--dim)]'
                     }`}
                   >
-                    参加する
+                    {t('going')}
                   </button>
                   {ev.ticket_url && (
                     <a
@@ -106,7 +109,7 @@ export default function EventsPage() {
                       rel="noreferrer"
                       className="ml-auto rounded-lg border border-[var(--line)] px-3 py-1.5 text-xs hover:border-[var(--accent)]"
                     >
-                      チケット
+                      {t('ticket')}
                     </a>
                   )}
                 </div>
