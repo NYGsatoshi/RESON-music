@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
+import { Link } from '@/i18n/navigation'
+import { useFormatter, useTranslations } from 'next-intl'
 
 interface Distribution {
   year_month: string
@@ -46,8 +47,6 @@ interface AlbumSummary {
   cover_r2_key: string | null
 }
 
-const RELEASE_TYPE_LABEL: Record<string, string> = { single: 'シングル', ep: 'EP', album: 'アルバム' }
-
 interface BankAccount {
   bank_name: string
   branch_name: string
@@ -57,6 +56,8 @@ interface BankAccount {
 }
 
 export default function DashboardPage() {
+  const t = useTranslations('Dashboard')
+  const format = useFormatter()
   const [data, setData] = useState<ReportData | null>(null)
   const [loading, setLoading] = useState(true)
   const [payoutRequests, setPayoutRequests] = useState<PayoutRequest[]>([])
@@ -175,7 +176,7 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <main className="min-h-screen bg-black text-white flex items-center justify-center">
-        <p className="text-zinc-500">読み込み中…</p>
+        <p className="text-zinc-500">{t('loading')}</p>
       </main>
     )
   }
@@ -184,8 +185,8 @@ export default function DashboardPage() {
     return (
       <main className="min-h-screen bg-black text-white flex items-center justify-center">
         <div className="text-center space-y-4">
-          <p className="text-zinc-400">アーティスト登録が必要です</p>
-          <Link href="/register" className="text-white underline">登録する</Link>
+          <p className="text-zinc-400">{t('artistRequired')}</p>
+          <Link href="/register" className="text-white underline">{t('register')}</Link>
         </div>
       </main>
     )
@@ -203,58 +204,58 @@ export default function DashboardPage() {
             <h1 className="text-2xl font-bold">
               {data.artist.name}
               {data.artist.founding_artist && (
-                <span title="創設アーティスト" className="ml-2 text-yellow-400">★</span>
+                <span title={t('foundingArtist')} className="ml-2 text-yellow-400">★</span>
               )}
             </h1>
-            <p className="text-sm text-zinc-400">アーティストダッシュボード</p>
+            <p className="text-sm text-zinc-400">{t('subtitle')}</p>
           </div>
           <div className="flex gap-2">
             <Link
               href="/supporters"
               className="text-sm border border-zinc-700 px-4 py-2 rounded-lg font-semibold hover:border-zinc-400 transition"
             >
-              支援者
+              {t('supporters')}
             </Link>
             <Link
               href="/report"
               className="text-sm border border-zinc-700 px-4 py-2 rounded-lg font-semibold hover:border-zinc-400 transition"
             >
-              レポート
+              {t('report')}
             </Link>
             <Link
               href="/upload"
               className="text-sm bg-white text-black px-4 py-2 rounded-lg font-semibold hover:bg-zinc-200 transition"
             >
-              + アップロード
+              {t('upload')}
             </Link>
           </div>
         </div>
 
         {/* 審査ステータス */}
-        {data.artist.review_status === 'pending' && (
+        {data.artistrack.review_status === 'pending' && (
           <div className="bg-zinc-900 border border-yellow-800 rounded-2xl p-4 text-sm text-yellow-400">
-            審査中です。審査完了まで楽曲のアップロード・運用は可能ですが、配信開始には審査の承認が必要です。
+            {t('review.pending')}
           </div>
         )}
-        {data.artist.review_status === 'rejected' && (
+        {data.artistrack.review_status === 'rejected' && (
           <div className="bg-zinc-900 border border-red-800 rounded-2xl p-4 text-sm text-red-400">
-            審査の結果、登録が承認されませんでした。詳細はサポートにお問い合わせください。
+            {t('review.rejected')}
           </div>
         )}
 
         {/* 残高カード */}
         <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
-          <p className="text-sm text-zinc-400">未払い残高</p>
+          <p className="text-sm text-zinc-400">{t('balance.title')}</p>
           <p className="text-4xl font-bold mt-1">
             ¥{Math.floor(data.balance.balance_yen).toLocaleString()}
           </p>
           {data.balance.balance_yen >= 1000 ? (
-            <p className="text-xs text-zinc-500 mt-2">毎月末締め・翌月15日払い</p>
+            <p className="text-xs text-zinc-500 mt-2">{t('balance.schedule')}</p>
           ) : (
-            <p className="text-xs text-zinc-600 mt-2">出金最低額は¥1,000（翌月へ繰り越し）</p>
+            <p className="text-xs text-zinc-600 mt-2">{t('balance.minimum')}</p>
           )}
           {data.balance.balance_yen >= 50000 && (
-            <p className="text-xs text-yellow-500 mt-2">⚠️ 残高が50,000円を超えています。出金申請を行ってください。</p>
+            <p className="text-xs text-yellow-500 mt-2">{t('balance.warning')}</p>
           )}
 
           {payoutError && (
@@ -262,14 +263,14 @@ export default function DashboardPage() {
           )}
 
           {payoutRequests.some((r) => r.status === 'pending') ? (
-            <p className="text-xs text-zinc-500 mt-3">出金申請受付済み（処理中）</p>
+            <p className="text-xs text-zinc-500 mt-3">{t('balance.pending')}</p>
           ) : (
             <button
               onClick={requestPayout}
               disabled={data.balance.balance_yen < 1000 || payoutLoading}
               className="mt-3 text-sm bg-white text-black px-4 py-2 rounded-lg font-semibold hover:bg-zinc-200 disabled:opacity-40 transition"
             >
-              {payoutLoading ? '申請中…' : '出金申請'}
+              {payoutLoading ? t('balance.requesting') : t('balance.request')}
             </button>
           )}
 
@@ -277,10 +278,10 @@ export default function DashboardPage() {
             <div className="mt-4 space-y-1.5 border-t border-zinc-800 pt-3">
               {payoutRequests.slice(0, 5).map((r) => (
                 <div key={r.id} className="flex justify-between text-xs text-zinc-500">
-                  <span>{new Date(r.requested_at).toLocaleDateString('ja-JP')}</span>
+                  <span>{format.dateTime(new Date(r.requested_at), { year: 'numeric', month: 'short', day: 'numeric' })}</span>
                   <span>¥{Math.floor(r.amount_yen).toLocaleString()}</span>
                   <span>
-                    {r.status === 'pending' ? '処理中' : r.status === 'paid' ? '支払済' : '却下'}
+                    {r.status === 'pending' ? t('payoutStatus.pending') : r.status === 'paid' ? t('payoutStatus.paid') : t('payoutStatus.rejected')}
                   </span>
                 </div>
               ))}
@@ -292,35 +293,35 @@ export default function DashboardPage() {
         {latest && (
           <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="font-semibold">{latest.year_month} の熱量スコア</h2>
+              <h2 className="font-semibold">{t('score.title', { month: latest.year_month })}</h2>
               <p className="text-sm text-zinc-400">
                 ¥{Math.floor(latest.distribution_yen).toLocaleString()}
               </p>
             </div>
             <div className="space-y-3">
               <ScoreBar
-                label="再生時間スコア"
+                label={t('score.playTime')}
                 value={latest.score_breakdown.play_time_score}
                 weight={0.4}
-                desc="SUM(再生秒 × 重み係数 × 秒数係数) / 3600"
+                desc={t('score.playTimeDesc')}
               />
               <ScoreBar
-                label="応援率"
+                label={t('score.support')}
                 value={latest.score_breakdown.support_rate * 100}
                 weight={0.35}
                 isPercent
-                desc="応援数 / 有効再生数"
+                desc={t('score.supportDesc')}
               />
               <ScoreBar
-                label="完聴率"
+                label={t('score.completion')}
                 value={latest.score_breakdown.completion_rate * 100}
                 weight={0.25}
                 isPercent
-                desc="完聴数 / 有効再生数"
+                desc={t('score.completionDesc')}
               />
             </div>
             <p className="text-xs text-zinc-600 border-t border-zinc-800 pt-3">
-              投げ銭収益（別計算）: ¥{latest.tips_yen?.toLocaleString() ?? 0}
+              {t('score.tips', { amount: latest.tips_yen ?? 0 })}
             </p>
           </div>
         )}
@@ -328,7 +329,7 @@ export default function DashboardPage() {
         {/* 月次履歴 */}
         {data.distributions.length > 1 && (
           <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 space-y-3">
-            <h2 className="font-semibold">月次分配履歴</h2>
+            <h2 className="font-semibold">{t('historyTitle')}</h2>
             {data.distributions.map((d) => (
               <div key={d.year_month} className="flex justify-between text-sm border-b border-zinc-800 pb-2 last:border-0 last:pb-0">
                 <span className="text-zinc-300">{d.year_month}</span>
@@ -340,54 +341,54 @@ export default function DashboardPage() {
 
         {/* 楽曲リスト */}
         <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 space-y-3">
-          <h2 className="font-semibold">楽曲</h2>
+          <h2 className="font-semibold">{t('tracks.title')}</h2>
           {data.tracks.length === 0 ? (
-            <p className="text-sm text-zinc-500">まだ楽曲がありません</p>
+            <p className="text-sm text-zinc-500">{t('tracks.empty')}</p>
           ) : (
-            data.tracks.map((t) => (
-              <div key={t.id} className="border-b border-zinc-800 pb-2 last:border-0 last:pb-0 space-y-2">
+            data.tracks.map((track) => (
+              <div key={track.id} className="border-b border-zinc-800 pb-2 last:border-0 last:pb-0 space-y-2">
                 <div className="flex items-center justify-between text-sm">
                   <div className="min-w-0">
-                    <p className="truncate">{t.title}</p>
+                    <p className="truncate">{track.title}</p>
                     <div className="flex gap-2 mt-0.5">
-                      {t.review_status === 'pending' && (
-                        <span className="text-xs text-yellow-500">審査中</span>
+                      {track.review_status === 'pending' && (
+                        <span className="text-xs text-yellow-500">{t('tracks.pending')}</span>
                       )}
-                      {t.review_status === 'rejected' && (
-                        <span className="text-xs text-red-400">却下</span>
+                      {track.review_status === 'rejected' && (
+                        <span className="text-xs text-red-400">{t('tracks.rejected')}</span>
                       )}
-                      {t.ai_generated && (
-                        <span className="text-xs text-yellow-600">AI生成</span>
+                      {track.ai_generated && (
+                        <span className="text-xs text-yellow-600">{t('tracks.ai')}</span>
                       )}
-                      {!t.in_distribution && (
+                      {!track.in_distribution && (
                         <span className="text-xs text-zinc-600">
-                          分配対象外（{t.cumulative_plays}/100再生）
+                          {t('tracks.notEligible', { count: track.cumulative_plays })}
                         </span>
                       )}
                     </div>
                     <p className="text-xs text-zinc-600 mt-0.5">
-                      ISRC: {t.isrc ?? '未登録'}
+                      ISRC: {track.isrc ?? t('tracks.isrcMissing')}
                     </p>
                   </div>
                   <div className="flex items-center gap-3 shrink-0">
                     <button
-                      onClick={() => toggleIsrcEditor(t.id, t.isrc)}
+                      onClick={() => toggleIsrcEditor(track.id, track.isrc)}
                       className="text-xs text-zinc-500 hover:text-white underline"
                     >
                       ISRC
                     </button>
                     <button
-                      onClick={() => toggleLyricsEditor(t.id)}
+                      onClick={() => toggleLyricsEditor(track.id)}
                       className="text-xs text-zinc-500 hover:text-white underline"
                     >
-                      歌詞
+                      {t('tracks.lyrics')}
                     </button>
                     <span className="text-zinc-400">
-                      {t.cumulative_plays.toLocaleString()}再生
+                      {t('tracks.plays', { count: track.cumulative_plays })}
                     </span>
                   </div>
                 </div>
-                {isrcEditingId === t.id && (
+                {isrcEditingId === track.id && (
                   <div className="space-y-2">
                     <input
                       type="text"
@@ -400,38 +401,38 @@ export default function DashboardPage() {
                     {isrcError && <p className="text-xs text-red-400">{isrcError}</p>}
                     <div className="flex gap-2">
                       <button
-                        onClick={() => saveIsrc(t.id)}
+                        onClick={() => saveIsrc(track.id)}
                         disabled={isrcSaving}
                         className="text-xs rounded-lg bg-white text-black px-3 py-1.5 font-semibold disabled:opacity-40"
                       >
-                        {isrcSaving ? '保存中…' : '保存する'}
+                        {isrcSaving ? t('tracks.saving') : t('tracks.save')}
                       </button>
                       <button
                         onClick={() => setIsrcEditingId(null)}
                         className="text-xs rounded-lg border border-zinc-700 px-3 py-1.5"
                       >
-                        閉じる
+                        {t('tracks.close')}
                       </button>
                     </div>
                   </div>
                 )}
-                {lyricsEditingId === t.id && (
+                {lyricsEditingId === track.id && (
                   <div className="space-y-2">
                     <textarea
                       value={lyricsDraft}
                       onChange={(e) => setLyricsDraft(e.target.value)}
                       rows={6}
                       maxLength={10000}
-                      placeholder="歌詞を入力…"
+                      placeholder={t('tracks.lyricsPlaceholder')}
                       className="w-full bg-zinc-950 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-zinc-400 resize-none"
                     />
                     <div className="flex gap-2">
                       <button
-                        onClick={() => saveLyrics(t.id)}
+                        onClick={() => saveLyrics(track.id)}
                         disabled={lyricsSaving}
                         className="text-xs rounded-lg bg-white text-black px-3 py-1.5 font-semibold disabled:opacity-40"
                       >
-                        {lyricsSaving ? '保存中…' : '保存する'}
+                        {lyricsSaving ? t('tracks.saving') : t('tracks.save')}
                       </button>
                       <button
                         onClick={() => setLyricsEditingId(null)}
@@ -450,7 +451,7 @@ export default function DashboardPage() {
         {/* 出金先銀行口座 */}
         <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="font-semibold">出金先銀行口座</h2>
+            <h2 className="font-semibold">{t('bank.title')}</h2>
             <button
               onClick={() => {
                 if (bankAccount) setBankForm(bankAccount)
@@ -458,64 +459,63 @@ export default function DashboardPage() {
               }}
               className="text-xs text-zinc-400 hover:text-white underline"
             >
-              {editingBank ? 'キャンセル' : '編集する'}
+              {editingBank ? t('bank.cancel') : t('bank.edit')}
             </button>
           </div>
           <p className="text-xs text-zinc-600">
-            出金申請が承認されると、運営がこの口座情報を参照して毎月15日payoutで手動振込を行います
-            （銀行APIとの自動連携は未実装のため、振込自体は人力オペレーションです）。
+            {t('bank.description')}
           </p>
 
           {!editingBank ? (
             bankAccount ? (
               <div className="text-sm text-zinc-300 space-y-1">
                 <p>{bankAccount.bank_name} {bankAccount.branch_name}</p>
-                <p>{bankAccount.account_type === 'ordinary' ? '普通' : '当座'} {bankAccount.account_number}</p>
+                <p>{bankAccount.account_type === 'ordinary' ? t('bank.ordinary') : t('bank.checking')} {bankAccount.account_number}</p>
                 <p className="text-zinc-500">{bankAccount.account_holder_name}</p>
               </div>
             ) : (
-              <p className="text-sm text-zinc-500">口座情報が登録されていません</p>
+              <p className="text-sm text-zinc-500">{t('bank.empty')}</p>
             )
           ) : (
             <form onSubmit={saveBankAccount} className="space-y-2">
               <input
-                aria-label="銀行名"
+                aria-label={t('bank.bankName')}
                 value={bankForm.bank_name}
                 onChange={(e) => setBankForm({ ...bankForm, bank_name: e.target.value })}
-                placeholder="銀行名"
+                placeholder={t('bank.bankName')}
                 required
                 className="w-full bg-zinc-950 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-zinc-400"
               />
               <input
-                aria-label="支店名"
+                aria-label={t('bank.branchName')}
                 value={bankForm.branch_name}
                 onChange={(e) => setBankForm({ ...bankForm, branch_name: e.target.value })}
-                placeholder="支店名"
+                placeholder={t('bank.branchName')}
                 required
                 className="w-full bg-zinc-950 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-zinc-400"
               />
               <select
-                aria-label="口座種別"
+                aria-label={t('bank.accountType')}
                 value={bankForm.account_type}
                 onChange={(e) => setBankForm({ ...bankForm, account_type: e.target.value as 'ordinary' | 'checking' })}
                 className="w-full bg-zinc-950 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-zinc-400"
               >
-                <option value="ordinary">普通</option>
-                <option value="checking">当座</option>
+                <option value="ordinary">{t('bank.ordinary')}</option>
+                <option value="checking">{t('bank.checking')}</option>
               </select>
               <input
-                aria-label="口座番号"
+                aria-label={t('bank.accountNumber')}
                 value={bankForm.account_number}
                 onChange={(e) => setBankForm({ ...bankForm, account_number: e.target.value })}
-                placeholder="口座番号"
+                placeholder={t('bank.accountNumber')}
                 required
                 className="w-full bg-zinc-950 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-zinc-400"
               />
               <input
-                aria-label="口座名義"
+                aria-label={t('bank.holderName')}
                 value={bankForm.account_holder_name}
                 onChange={(e) => setBankForm({ ...bankForm, account_holder_name: e.target.value })}
-                placeholder="口座名義（カナ）"
+                placeholder={t('bank.holderPlaceholder')}
                 required
                 className="w-full bg-zinc-950 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-zinc-400"
               />
@@ -524,23 +524,23 @@ export default function DashboardPage() {
                 type="submit"
                 className="w-full rounded-lg bg-white py-2 text-sm font-semibold text-black hover:bg-zinc-200"
               >
-                保存する
+                {t('tracks.save')}
               </button>
             </form>
           )}
-          {bankSaved && <p className="text-xs text-emerald-400">保存しました</p>}
+          {bankSaved && <p className="text-xs text-emerald-400">{t('bank.saved')}</p>}
         </div>
 
         {/* アルバム */}
         <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="font-semibold">アルバム</h2>
+            <h2 className="font-semibold">{t('albums.title')}</h2>
             <Link href="/upload" className="text-xs text-zinc-400 hover:text-white underline">
-              アップロード時に作成
+              {t('albums.createOnUpload')}
             </Link>
           </div>
           {albums.length === 0 ? (
-            <p className="text-sm text-zinc-500">まだアルバムがありません</p>
+            <p className="text-sm text-zinc-500">{t('albums.empty')}</p>
           ) : (
             albums.map((a) => (
               <Link
@@ -556,11 +556,11 @@ export default function DashboardPage() {
                   )}
                   <span className="truncate">
                     {a.title}
-                    <span className="ml-2 text-xs text-zinc-500">{RELEASE_TYPE_LABEL[a.release_type] ?? 'アルバム'}</span>
+                    <span className="ml-2 text-xs text-zinc-500">{t(`releaseType.${a.release_type}`)}</span>
                   </span>
                 </span>
                 <span className="text-zinc-500 text-xs">
-                  {a.released_at ? new Date(a.released_at).toLocaleDateString('ja-JP') : '未発表日'}
+                  {a.released_at ? format.dateTime(new Date(a.released_at), { year: 'numeric', month: 'short', day: 'numeric' }) : t('albums.unreleased')}
                 </span>
               </Link>
             ))
@@ -570,10 +570,10 @@ export default function DashboardPage() {
         {/* 紹介・透明性リンク */}
         <p className="text-center text-xs text-zinc-600 space-x-4">
           <Link href="/invite" className="hover:text-zinc-400 underline">
-            友人を招待する
+            {t('invite')}
           </Link>
           <Link href="/pricing" className="hover:text-zinc-400 underline">
-            分配計算式はこちらで公開しています
+            {t('pricing')}
           </Link>
         </p>
       </div>
