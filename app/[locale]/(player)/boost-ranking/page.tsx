@@ -44,17 +44,17 @@ export default function BoostRankingPage() {
           <p className="text-sm text-[var(--faint)] text-center py-8">{t('empty')}</p>
         ) : (
           <div className="space-y-1">
-            {tracks.map((t, i) => (
-              <div key={t.id} className="flex items-center justify-between rounded-xl border border-[var(--line)] bg-[var(--panel)] px-4 py-3">
+            {tracks.map((track, i) => (
+              <div key={track.id} className="flex items-center justify-between rounded-xl border border-[var(--line)] bg-[var(--panel)] px-4 py-3">
                 <div className="min-w-0">
                   <p className="text-sm truncate">
                     <span className="text-[var(--faint)] mr-2">#{i + 1}</span>
-                    {t.title}
+                    {track.title}
                   </p>
-                  <p className="text-xs text-[var(--dim)] ml-6">{t.artists?.name ?? t('unknownArtist')}</p>
+                  <p className="text-xs text-[var(--dim)] ml-6">{track.artists?.name ?? t('unknownArtist')}</p>
                 </div>
                 <span className="text-xs text-[var(--accent)] shrink-0 ml-2">
-                  {t('weekly', { current: t.this_week_boosts, previous: t.last_week_boosts })}
+                  {t('weekly', { current: track.this_week_boosts, previous: track.last_week_boosts })}
                 </span>
               </div>
             ))}
