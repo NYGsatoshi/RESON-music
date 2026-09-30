@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
+import { Link } from '@/i18n/navigation'
+import { useTranslations } from 'next-intl'
 
 interface Supporter {
   user_id: string
@@ -12,6 +13,7 @@ interface Supporter {
 }
 
 export default function SupportersPage() {
+  const t = useTranslations('ArtistSupporters')
   const [supporters, setSupporters] = useState<Supporter[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -31,23 +33,23 @@ export default function SupportersPage() {
       <div className="max-w-2xl mx-auto space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold">支援者への感謝</h1>
+            <h1 className="text-2xl font-bold">{t('title')}</h1>
             <p className="text-sm text-zinc-400 mt-1">
-              あなたを応援してくれた方々です。感謝の気持ちを込めて、日々の投稿や音楽で応えてください。
+              {t('description')}
             </p>
           </div>
           <Link href="/dashboard" className="text-sm text-zinc-400 hover:text-white underline">
-            ダッシュボードへ
+            {t('dashboard')}
           </Link>
         </div>
 
         {loading ? (
-          <p className="text-sm text-zinc-500">読み込み中…</p>
+          <p className="text-sm text-zinc-500">{t('loading')}</p>
         ) : error ? (
           <p className="text-sm text-red-400">{error}</p>
         ) : supporters.length === 0 ? (
           <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 text-sm text-zinc-500 text-center">
-            まだ支援者はいません。楽曲を届け続けましょう。
+            {t('empty')}
           </div>
         ) : (
           <div className="bg-zinc-900 border border-zinc-800 rounded-2xl divide-y divide-zinc-800">
@@ -57,7 +59,7 @@ export default function SupportersPage() {
                   <span className="flex h-9 w-9 items-center justify-center rounded-full bg-zinc-800 text-sm">
                     🎧
                   </span>
-                  <span className="text-sm">{s.display_name ?? '名無しのリスナー'}</span>
+                  <span className="text-sm">{s.display_name ?? t('anonymous')}</span>
                 </div>
                 <div className="flex gap-4 text-xs text-zinc-500">
                   {s.heart_count > 0 && <span>❤️ {s.heart_count}</span>}
