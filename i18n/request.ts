@@ -20,5 +20,6 @@ export default getRequestConfig(async ({ locale }) => {
   return {
     locale,
     messages: locale === "en" ? enMessages : jaMessages,
+    timeZone: "Asia/Tokyo",
   };
 });
