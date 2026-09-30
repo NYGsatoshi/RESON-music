@@ -2,7 +2,8 @@
 
 import { useEffect, useState, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
-import Link from 'next/link'
+import { Link } from '@/i18n/navigation'
+import { useFormatter, useTranslations } from 'next-intl'
 import { Player } from '@/components/Player'
 import { usePlayerQueue } from '@/lib/player/queue'
 
@@ -29,19 +30,9 @@ interface AlbumDetail {
   total_duration_sec: number
 }
 
-const RELEASE_TYPE_LABEL: Record<string, string> = {
-  single: 'シングル',
-  ep: 'EP',
-  album: 'アルバム',
-}
-
-function formatDuration(totalSec: number) {
-  const m = Math.floor(totalSec / 60)
-  const s = totalSec % 60
-  return `${m}分${s}秒`
-}
-
 function AlbumDetailContent() {
+  const t = useTranslations('Album')
+  const format = useFormatter()
   const searchParams = useSearchParams()
   const albumId = searchParams.get('id') ?? ''
   const [data, setData] = useState<AlbumDetail | null>(null)
@@ -58,7 +49,7 @@ function AlbumDetailContent() {
   if (loading) {
     return (
       <div className="min-h-screen bg-[var(--bg)] flex items-center justify-center text-[var(--faint)]">
-        読み込み中…
+        {t('loading')}
       </div>
     )
   }
@@ -66,7 +57,7 @@ function AlbumDetailContent() {
   if (!data || !data.album) {
     return (
       <div className="min-h-screen bg-[var(--bg)] flex items-center justify-center text-[var(--faint)]">
-        アルバムが見つかりません
+        {t('notFound')}
       </div>
     )
   }
@@ -75,12 +66,14 @@ function AlbumDetailContent() {
   const current = queue.current
   const currentIdx = queue.baseIndex
   const nextTrackId = queue.queue[0]?.id ?? (queue.shuffleOn ? undefined : tracks[currentIdx + 1]?.id)
+  const releaseTypeLabel = t(`releaseType.${album.release_type}`)
+  const duration = t('duration', { minutes: Math.floor(total_duration_sec / 60), seconds: total_duration_sec % 60 })
 
   return (
     <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] px-4 py-10 sm:px-8">
       <div className="mx-auto max-w-2xl space-y-8">
         <Link href="/home" className="text-sm text-[var(--dim)] hover:text-[var(--text)]">
-          ← ホームへ
+          {t('backHome')}
         </Link>
 
         <div className="flex gap-4">
@@ -93,13 +86,13 @@ function AlbumDetailContent() {
           )}
           <div>
             <span className="text-xs rounded-full border border-[var(--line)] px-2 py-0.5 text-[var(--dim)]">
-              {RELEASE_TYPE_LABEL[album.release_type] ?? 'アルバム'}
+              {releaseTypeLabel}
             </span>
             <h1 className="font-display mt-2 text-2xl font-bold">{album.title}</h1>
-            <p className="mt-1 text-sm text-[var(--dim)]">{album.artists?.name ?? '不明なアーティスト'}</p>
+            <p className="mt-1 text-sm text-[var(--dim)]">{album.artists?.name ?? t('unknownArtist')}</p>
             <p className="mt-1 text-xs text-[var(--faint)]">
-              {tracks.length}曲・合計 {formatDuration(total_duration_sec)}
-              {album.released_at && ` ・ ${new Date(album.released_at).toLocaleDateString('ja-JP')}`}
+              {t('summary', { count: tracks.length, duration })}
+              {album.released_at && <> · {format.dateTime(new Date(album.released_at), { year: 'numeric', month: 'short', day: 'numeric' })}</>}
             </p>
           </div>
         </div>
@@ -150,10 +143,10 @@ function AlbumDetailContent() {
               </button>
               <button
                 onClick={() => queue.addToQueue(t)}
-                title="次に再生するキューへ追加"
+                title={t('addQueueTitle')}
                 className="shrink-0 text-xs text-[var(--faint)] hover:text-[var(--text)] px-2"
               >
-                +キュー
+                {t('addQueue')}
               </button>
             </div>
           ))}
