@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { Link } from '@/i18n/navigation'
+import { useFormatter, useTranslations } from 'next-intl'
 
 type Tab = 'artists' | 'tracks' | 'fraud' | 'reports' | 'payouts' | 'founding'
 
@@ -50,14 +51,7 @@ interface PayoutRequest {
   artists: { id: string; name: string } | null
 }
 
-const TABS: { key: Tab; label: string }[] = [
-  { key: 'artists', label: 'アーティスト審査' },
-  { key: 'tracks', label: '楽曲審査' },
-  { key: 'fraud', label: '不正検知' },
-  { key: 'reports', label: '通報' },
-  { key: 'payouts', label: '出金申請' },
-  { key: 'founding', label: '創設アーティスト' },
-]
+const TABS: Tab[] = ['artists', 'tracks', 'fraud', 'reports', 'payouts', 'founding']
 
 interface ArtistSearchResult {
   id: string
@@ -67,6 +61,8 @@ interface ArtistSearchResult {
 }
 
 export default function AdminPage() {
+  const t = useTranslations('Admin')
+  const format = useFormatter()
   const [authState, setAuthState] = useState<'checking' | 'denied' | 'ok'>('checking')
   const [tab, setTab] = useState<Tab>('artists')
 
@@ -159,33 +155,33 @@ export default function AdminPage() {
   }
 
   if (authState === 'checking') {
-    return <main className="min-h-screen bg-black text-white flex items-center justify-center text-zinc-500">確認中…</main>
+    return <main className="min-h-screen bg-black text-white flex items-center justify-center text-zinc-500">{t('checking')}</main>
   }
   if (authState === 'denied') {
-    return <main className="min-h-screen bg-black text-white flex items-center justify-center text-zinc-500">権限がありません</main>
+    return <main className="min-h-screen bg-black text-white flex items-center justify-center text-zinc-500">{t('denied')}</main>
   }
 
   return (
     <main className="min-h-screen bg-black text-white px-4 py-10">
       <div className="max-w-3xl mx-auto space-y-6">
-        <h1 className="text-2xl font-bold">審査ダッシュボード</h1>
-        <Link href="/admin/privacy-requests" className="inline-block text-sm text-zinc-300 underline hover:text-white">個人データ請求を確認する</Link>
+        <h1 className="text-2xl font-bold">{t('title')}</h1>
+        <Link href="/admin/privacy-requests" className="inline-block text-sm text-zinc-300 underline hover:text-white">{t('privacy')}</Link>
 
         <div className="flex gap-2 overflow-x-auto pb-1">
-          {TABS.map((t) => (
+          {TABS.map((tabKey) => (
             <button
-              key={t.key}
-              onClick={() => setTab(t.key)}
+              key={tabKey}
+              onClick={() => setTab(tabKey)}
               className={`shrink-0 text-sm px-3 py-1.5 rounded-lg border transition ${
-                t.key === tab ? 'border-white bg-white text-black' : 'border-zinc-700 text-zinc-400 hover:border-zinc-500'
+                tabKey === tab ? 'border-white bg-white text-black' : 'border-zinc-700 text-zinc-400 hover:border-zinc-500'
               }`}
             >
-              {t.label}
-              {t.key === 'artists' && artists.length > 0 && ` (${artists.length})`}
-              {t.key === 'tracks' && tracks.length > 0 && ` (${tracks.length})`}
-              {t.key === 'fraud' && flags.length > 0 && ` (${flags.length})`}
-              {t.key === 'reports' && reports.length > 0 && ` (${reports.length})`}
-              {t.key === 'payouts' && payouts.length > 0 && ` (${payouts.length})`}
+              {t(`tabs.${tabKey}`)}
+              {tabKey === 'artists' && artists.length > 0 && ` (${artists.length})`}
+              {tabKey === 'tracks' && tracks.length > 0 && ` (${tracks.length})`}
+              {tabKey === 'fraud' && flags.length > 0 && ` (${flags.length})`}
+              {tabKey === 'reports' && reports.length > 0 && ` (${reports.length})`}
+              {tabKey === 'payouts' && payouts.length > 0 && ` (${payouts.length})`}
             </button>
           ))}
         </div>
@@ -193,18 +189,18 @@ export default function AdminPage() {
         {tab === 'artists' && (
           <div className="space-y-2">
             {artists.length === 0 ? (
-              <p className="text-sm text-zinc-500">審査待ちのアーティストはいません</p>
+              <p className="text-sm text-zinc-500">{t('artists.empty')}</p>
             ) : (
               artists.map((a) => (
                 <div key={a.id} className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 space-y-2">
                   <div className="flex items-center justify-between">
-                    <p className="font-medium">{a.name}{a.is_minor && <span className="ml-2 text-xs text-yellow-500">未成年</span>}</p>
-                    <p className="text-xs text-zinc-500">{new Date(a.created_at).toLocaleDateString('ja-JP')}</p>
+                    <p className="font-medium">{a.name}{a.is_minor && <span className="ml-2 text-xs text-yellow-500">{t('artists.minor')}</span>}</p>
+                    <p className="text-xs text-zinc-500">{format.dateTime(new Date(a.created_at), { year: 'numeric', month: 'short', day: 'numeric' })}</p>
                   </div>
                   {a.bio && <p className="text-sm text-zinc-400">{a.bio}</p>}
                   <div className="flex gap-2">
-                    <button onClick={() => reviewArtist(a.id, 'approved')} className="text-xs bg-white text-black px-3 py-1.5 rounded-lg font-semibold">承認</button>
-                    <button onClick={() => reviewArtist(a.id, 'rejected')} className="text-xs border border-red-800 text-red-400 px-3 py-1.5 rounded-lg">却下</button>
+                    <button onClick={() => reviewArtist(a.id, 'approved')} className="text-xs bg-white text-black px-3 py-1.5 rounded-lg font-semibold">{t('artists.approve')}</button>
+                    <button onClick={() => reviewArtist(a.id, 'rejected')} className="text-xs border border-red-800 text-red-400 px-3 py-1.5 rounded-lg">{t('artists.reject')}</button>
                   </div>
                 </div>
               ))
@@ -215,21 +211,21 @@ export default function AdminPage() {
         {tab === 'tracks' && (
           <div className="space-y-2">
             {tracks.length === 0 ? (
-              <p className="text-sm text-zinc-500">審査待ちの楽曲はありません</p>
+              <p className="text-sm text-zinc-500">{t('tracks.empty')}</p>
             ) : (
-              tracks.map((t) => (
-                <div key={t.id} className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 space-y-2">
+              tracks.map((track) => (
+                <div key={track.id} className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 space-y-2">
                   <div className="flex items-center justify-between">
                     <p className="font-medium">
-                      {t.title}
-                      {t.ai_generated && <span className="ml-2 text-xs text-yellow-500">AI生成</span>}
+                      {track.title}
+                      {track.ai_generated && <span className="ml-2 text-xs text-yellow-500">{t('tracks.ai')}</span>}
                     </p>
-                    <p className="text-xs text-zinc-500">{new Date(t.created_at).toLocaleDateString('ja-JP')}</p>
+                    <p className="text-xs text-zinc-500">{format.dateTime(new Date(track.created_at), { year: 'numeric', month: 'short', day: 'numeric' })}</p>
                   </div>
-                  <p className="text-sm text-zinc-400">{t.artists?.name ?? '不明'}</p>
+                  <p className="text-sm text-zinc-400">{track.artists?.name ?? t('tracks.unknown')}</p>
                   <div className="flex gap-2">
-                    <button onClick={() => reviewTrack(t.id, 'approved')} className="text-xs bg-white text-black px-3 py-1.5 rounded-lg font-semibold">承認</button>
-                    <button onClick={() => reviewTrack(t.id, 'rejected')} className="text-xs border border-red-800 text-red-400 px-3 py-1.5 rounded-lg">却下</button>
+                    <button onClick={() => reviewTrack(track.id, 'approved')} className="text-xs bg-white text-black px-3 py-1.5 rounded-lg font-semibold">承認</button>
+                    <button onClick={() => reviewTrack(track.id, 'rejected')} className="text-xs border border-red-800 text-red-400 px-3 py-1.5 rounded-lg">却下</button>
                   </div>
                 </div>
               ))
@@ -240,7 +236,7 @@ export default function AdminPage() {
         {tab === 'fraud' && (
           <div className="space-y-2">
             {flags.length === 0 ? (
-              <p className="text-sm text-zinc-500">未解決の不正検知フラグはありません</p>
+              <p className="text-sm text-zinc-500">{t('fraud.empty')}</p>
             ) : (
               flags.map((f) => (
                 <div key={f.id} className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 space-y-2">
@@ -248,18 +244,18 @@ export default function AdminPage() {
                     <p className="font-medium">
                       {f.flag_type}
                       <span className="ml-2 text-xs text-zinc-500">level {f.level}</span>
-                      {f.tracks?.fraud_suspended && <span className="ml-2 text-xs text-red-400">配信停止中</span>}
+                      {f.tracks?.fraud_suspended && <span className="ml-2 text-xs text-red-400">{t('fraud.suspended')}</span>}
                     </p>
-                    <p className="text-xs text-zinc-500">{new Date(f.created_at).toLocaleDateString('ja-JP')}</p>
+                    <p className="text-xs text-zinc-500">{format.dateTime(new Date(f.created_at), { year: 'numeric', month: 'short', day: 'numeric' })}</p>
                   </div>
-                  <p className="text-sm text-zinc-400">{f.tracks?.title ?? '不明な楽曲'}</p>
+                  <p className="text-sm text-zinc-400">{f.tracks?.title ?? t('fraud.unknownTrack')}</p>
                   <div className="flex gap-2">
                     <button onClick={() => resolveFlag(f.id, false)} className="text-xs border border-zinc-700 px-3 py-1.5 rounded-lg">
-                      解決済みにする
+                      {t('fraud.resolve')}
                     </button>
                     {f.tracks?.fraud_suspended && (
                       <button onClick={() => resolveFlag(f.id, true)} className="text-xs bg-white text-black px-3 py-1.5 rounded-lg font-semibold">
-                        解決して配信を再開
+                        {t('fraud.resume')}
                       </button>
                     )}
                   </div>
@@ -272,18 +268,18 @@ export default function AdminPage() {
         {tab === 'reports' && (
           <div className="space-y-2">
             {reports.length === 0 ? (
-              <p className="text-sm text-zinc-500">保留中の通報はありません</p>
+              <p className="text-sm text-zinc-500">{t('reports.empty')}</p>
             ) : (
               reports.map((r) => (
                 <div key={r.id} className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 space-y-2">
                   <div className="flex items-center justify-between">
                     <p className="font-medium">{r.target_type}</p>
-                    <p className="text-xs text-zinc-500">{new Date(r.created_at).toLocaleDateString('ja-JP')}</p>
+                    <p className="text-xs text-zinc-500">{format.dateTime(new Date(r.created_at), { year: 'numeric', month: 'short', day: 'numeric' })}</p>
                   </div>
                   <p className="text-sm text-zinc-400">{r.reason}</p>
                   <div className="flex gap-2">
-                    <button onClick={() => resolveReport(r.id, 'reviewed')} className="text-xs bg-white text-black px-3 py-1.5 rounded-lg font-semibold">対応済み</button>
-                    <button onClick={() => resolveReport(r.id, 'dismissed')} className="text-xs border border-zinc-700 px-3 py-1.5 rounded-lg">問題なし</button>
+                    <button onClick={() => resolveReport(r.id, 'reviewed')} className="text-xs bg-white text-black px-3 py-1.5 rounded-lg font-semibold">{t('reports.reviewed')}</button>
+                    <button onClick={() => resolveReport(r.id, 'dismissed')} className="text-xs border border-zinc-700 px-3 py-1.5 rounded-lg">{t('reports.dismissed')}</button>
                   </div>
                 </div>
               ))
@@ -294,17 +290,17 @@ export default function AdminPage() {
         {tab === 'payouts' && (
           <div className="space-y-2">
             {payouts.length === 0 ? (
-              <p className="text-sm text-zinc-500">審査待ちの出金申請はありません</p>
+              <p className="text-sm text-zinc-500">{t('payouts.empty')}</p>
             ) : (
               payouts.map((p) => (
                 <div key={p.id} className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 space-y-2">
                   <div className="flex items-center justify-between">
-                    <p className="font-medium">{p.artists?.name ?? '不明'}</p>
+                    <p className="font-medium">{p.artists?.name ?? t('payouts.unknown')}</p>
                     <p className="text-sm">¥{Math.floor(p.amount_yen).toLocaleString()}</p>
                   </div>
-                  <p className="text-xs text-zinc-500">{new Date(p.requested_at).toLocaleDateString('ja-JP')}</p>
+                  <p className="text-xs text-zinc-500">{format.dateTime(new Date(p.requested_at), { year: 'numeric', month: 'short', day: 'numeric' })}</p>
                   <div className="flex gap-2">
-                    <button onClick={() => processPayout(p.id, 'paid')} className="text-xs bg-white text-black px-3 py-1.5 rounded-lg font-semibold">支払済にする</button>
+                    <button onClick={() => processPayout(p.id, 'paid')} className="text-xs bg-white text-black px-3 py-1.5 rounded-lg font-semibold">{t('payouts.paid')}</button>
                     <button onClick={() => processPayout(p.id, 'rejected')} className="text-xs border border-red-800 text-red-400 px-3 py-1.5 rounded-lg">却下</button>
                   </div>
                 </div>
@@ -316,25 +312,25 @@ export default function AdminPage() {
         {tab === 'founding' && (
           <div className="space-y-3">
             <p className="text-sm text-zinc-500">
-              アーティスト名で検索し、創設アーティストのバッジ付与/解除を行います（バッジのみ・分配重みへの反映は未実装）。
+              {t('founding.description')}
             </p>
             <div className="flex gap-2">
               <input
-                aria-label="創設アーティストを検索"
+                aria-label={t('founding.searchAria')}
                 value={foundingQuery}
                 onChange={(e) => setFoundingQuery(e.target.value)}
                 onKeyDown={(e) => { if (e.key === 'Enter') searchFoundingArtists() }}
-                placeholder="アーティスト名で検索…"
+                placeholder={t('founding.placeholder')}
                 className="flex-1 bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-600 focus:outline-none"
               />
-              <button onClick={searchFoundingArtists} className="text-xs border border-zinc-700 px-4 py-2 rounded-lg">検索</button>
+              <button onClick={searchFoundingArtists} className="text-xs border border-zinc-700 px-4 py-2 rounded-lg">{t('founding.search')}</button>
             </div>
             <div className="space-y-2">
               {foundingResults.map((a) => (
                 <div key={a.id} className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 flex items-center justify-between">
                   <p className="font-medium">
                     {a.name}
-                    {a.founding_artist && <span className="ml-2 text-yellow-400">★ 創設アーティスト</span>}
+                    {a.founding_artist && <span className="ml-2 text-yellow-400">{t('founding.badge')}</span>}
                   </p>
                   <button
                     onClick={() => toggleFounding(a.id, !a.founding_artist)}
@@ -342,7 +338,7 @@ export default function AdminPage() {
                       a.founding_artist ? 'border border-zinc-700 text-zinc-300' : 'bg-white text-black'
                     }`}
                   >
-                    {a.founding_artist ? '解除する' : 'バッジを付与'}
+                    {a.founding_artist ? t('founding.remove') : t('founding.add')}
                   </button>
                 </div>
               ))}
