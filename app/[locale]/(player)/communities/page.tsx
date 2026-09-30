@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
+import { Link } from '@/i18n/navigation'
+import { useTranslations } from 'next-intl'
 
 interface Community {
   id: string
@@ -12,6 +13,7 @@ interface Community {
 }
 
 export default function CommunitiesPage() {
+  const t = useTranslations('Communities')
   const [communities, setCommunities] = useState<Community[]>([])
   const [loading, setLoading] = useState(true)
   const [busyId, setBusyId] = useState<string | null>(null)
@@ -41,24 +43,24 @@ export default function CommunitiesPage() {
         <div className="flex items-center justify-between">
           <Link href="/home" className="font-display text-xl font-bold">RESON</Link>
           <Link href="/home" className="text-sm text-[var(--dim)] hover:text-[var(--text)]">
-            ホームへ戻る
+            {t('backHome')}
           </Link>
         </div>
 
-        <h1 className="font-display mt-8 text-2xl font-bold">ジャンル別コミュニティ</h1>
+        <h1 className="font-display mt-8 text-2xl font-bold">{t('title')}</h1>
         <p className="mt-2 text-sm text-[var(--faint)]">
-          好きなジャンルに参加して、専用フィードで語り合えます。
+          {t('description')}
         </p>
 
         {loading ? (
-          <div className="py-20 text-center text-[var(--faint)]">読み込み中…</div>
+          <div className="py-20 text-center text-[var(--faint)]">{t('loading')}</div>
         ) : (
           <div className="mt-6 space-y-3">
             {communities.map((c) => (
               <div key={c.id} className="flex items-center justify-between rounded-2xl border border-[var(--line)] bg-[var(--panel)] p-4">
                 <div>
                   <p className="text-sm font-semibold">{c.name}</p>
-                  <p className="text-xs text-[var(--faint)]">{c.member_count}人が参加中</p>
+                  <p className="text-xs text-[var(--faint)]">{t('members', { count: c.member_count })}</p>
                 </div>
                 <div className="flex items-center gap-2">
                   {c.joined && (
@@ -66,7 +68,7 @@ export default function CommunitiesPage() {
                       href={`/feed?genre_id=${c.id}`}
                       className="rounded-lg border border-[var(--line)] px-3 py-1.5 text-xs hover:border-[var(--accent)]"
                     >
-                      フィードへ
+                      {t('feed')}
                     </Link>
                   )}
                   <button
@@ -78,7 +80,7 @@ export default function CommunitiesPage() {
                         : 'bg-[var(--accent)] text-[var(--ink)]'
                     }`}
                   >
-                    {c.joined ? '参加中' : '参加する'}
+                    {c.joined ? t('joined') : t('join')}
                   </button>
                 </div>
               </div>
