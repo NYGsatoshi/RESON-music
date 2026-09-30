@@ -51,12 +51,13 @@ const DEFAULTS: Settings = {
 }
 
 function Toggle({ id, label, value, onChange }: { id: string; label: string; value: boolean; onChange: (v: boolean) => void }) {
+  const t = useTranslations('Settings')
   return (
     <div className="shrink-0 mt-0.5">
       <button
         role="switch"
         aria-checked={value}
-        aria-label={label}
+        aria-label={t('toggleAria', { label })}
         id={id}
         onClick={() => onChange(!value)}
         className={`relative w-10 h-[22px] rounded-full transition-colors ${value ? 'bg-white' : 'bg-zinc-600'}`}
