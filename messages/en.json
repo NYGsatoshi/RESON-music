@@ -700,5 +700,160 @@
     "separator": "·",
     "emptyRanking": "No ranked tracks yet",
     "saveRanking": "Save ranking"
+  },
+  "PrivacyPage": {
+    "metadataTitle": "Personal data handling | RESON",
+    "missing": "Not configured (required before offering the service in the EU)",
+    "title": "Personal data handling",
+    "description": "This page explains the information RESON handles and the settings and request options available to users.",
+    "operator": {
+      "title": "Operator and contact details",
+      "name": "Operator: {value}",
+      "address": "Address: {value}",
+      "contact": "Personal data contact: {value}",
+      "representative": "EU representative: {value}"
+    },
+    "data": {
+      "title": "Data categories and purposes",
+      "email": "Email address and authentication data: account creation, login, identity verification, and communication.",
+      "listening": "Listening and support records: playback services, distribution calculations, and fraud investigation. Only when enabled in settings, listening history is also used for recommendations and music-persona tag suggestions.",
+      "social": "Profile, posts, comments, and messages: providing the social features you choose to use. Content you publish may be visible to other users.",
+      "payments": "Purchases, payments, and artist payout details: payments, revenue distribution, accounting, and legally required records.",
+      "minors": "Parent or guardian information for minor artists and student-verification data: application review and eligibility checks.",
+      "basis": "We process data under the legal basis appropriate to each purpose, including contract performance, legal obligations, legitimate interests in preventing abuse, and consent for optional features. Optional use of listening history can be disabled at any time in settings."
+    },
+    "services": {
+      "title": "Storage and external services",
+      "providers": "The service is configured to use Supabase for authentication and data storage, Cloudflare R2 for tracks and other files, Stripe for payments, and Resend for notification emails. Service regions and contractual arrangements vary by operating environment.",
+      "retention": "Retention and deletion policy: {value}",
+      "transfer": "Transfers outside the EU and safeguards: {value}",
+      "browser": "The browser uses cookies required to keep you signed in and local storage for settings such as theme and volume. If we add non-essential device storage for advertising or analytics, we will obtain any required consent separately."
+    },
+    "rights": {
+      "title": "Your choices and requests",
+      "options": "You can change visibility and optional use of listening history in <settings>Settings</settings>. After signing in, you can request access, correction, a portable copy, deletion, restriction, or objection through <requests>Personal data requests</requests>.",
+      "response": "We review the request, identity verification, and applicable retention obligations before responding. We aim to respond within one month of receipt, and explain the reason when a request cannot be fulfilled. You may also have the right to lodge a complaint with a supervisory authority."
+    }
+  },
+  "Settings": {
+    "title": "Privacy & features",
+    "fetchFailed": "Could not load settings. Please reload the page.",
+    "saveFailed": "Could not save your settings. Check your connection and try again.",
+    "loading": "Loading settings…",
+    "reload": "Reload",
+    "saving": "Saving…",
+    "description": "Choose whether to participate in each RESON feature.",
+    "sections": {
+      "display": "Display",
+      "account": "Account visibility",
+      "social": "Social features",
+      "incoming": "Who can reach you",
+      "support": "Support & crowdfunding",
+      "data": "Data & reputation",
+      "privacy": "Personal data requests"
+    },
+    "display": {
+      "theme": "Light / dark mode",
+      "themeDesc": "Applies to the home screen and some other pages"
+    },
+    "private": {
+      "label": "Private account",
+      "desc": "When enabled, your profile and posts are hidden from other users regardless of individual visibility settings."
+    },
+    "social": {
+      "profile": {
+        "label": "Profile page",
+        "desc": "Share your music taste, favorite artists, and listening history"
+      },
+      "feed": {
+        "label": "Music timeline (posts)",
+        "desc": "Share tracks, album reviews, music journals, and playlists"
+      },
+      "follow": {
+        "label": "Following",
+        "desc": "Follow users, artists, and playlist creators"
+      },
+      "matching": {
+        "label": "Music matching",
+        "desc": "Discover people with similar taste and shared artists"
+      },
+      "comment": {
+        "label": "Comments & reviews",
+        "desc": "Post reactions, timestamped comments, and analysis on tracks and albums"
+      },
+      "community": {
+        "label": "Community participation",
+        "desc": "Join and post in genre communities"
+      },
+      "collection": {
+        "label": "Music collections",
+        "desc": "Publish life albums, annual favorites, and other collections"
+      }
+    },
+    "incoming": {
+      "follow": {
+        "label": "Follow requests",
+        "desc": "Choose who can send follow requests",
+        "aria": "Who can send follow requests"
+      },
+      "dm": {
+        "label": "Direct messages",
+        "desc": "Choose who can send you DMs",
+        "aria": "Who can send direct messages"
+      },
+      "comments": {
+        "label": "Comment notifications",
+        "desc": "Notifications for comments on your posts",
+        "aria": "Who can trigger comment notifications"
+      },
+      "likes": {
+        "label": "Like & support notifications"
+      },
+      "matching": {
+        "label": "Matching suggestions",
+        "desc": "Suggestions for people with similar music compatibility"
+      },
+      "artist": {
+        "label": "Artist updates",
+        "desc": "Posts and event notifications from artists you follow"
+      }
+    },
+    "options": {
+      "everyone": "Everyone",
+      "mutual": "Mutual follows",
+      "nobody": "Nobody",
+      "followers": "Followers only",
+      "doNotReceive": "Do not receive",
+      "on": "On",
+      "off": "Off",
+      "receive": "Receive",
+      "all": "All updates",
+      "important": "Important only"
+    },
+    "support": {
+      "history": {
+        "label": "Show support history",
+        "desc": "Display supported projects and artists on your profile"
+      },
+      "exclusive": {
+        "label": "Receive exclusive content",
+        "desc": "Supporter demos, unreleased tracks, and production notes"
+      },
+      "community": {
+        "label": "Join supporter communities",
+        "desc": "Participate in supporter tabs for each project"
+      }
+    },
+    "data": {
+      "score": {
+        "label": "Show reputation score",
+        "desc": "Display metrics such as early discoveries and review ratings"
+      },
+      "listening": {
+        "label": "Use listening data",
+        "desc": "Only when enabled, your listening history is used for recommendations and music-persona suggestions. You can disable this at any time. Records required for playback and distribution continue to be kept."
+      }
+    },
+    "privacyCta": "Request access, a portable copy, deletion, and more →"
   }
 }
