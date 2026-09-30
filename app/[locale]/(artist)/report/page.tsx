@@ -68,7 +68,7 @@ export default function ArtistReportPage() {
 
   const month = data.distributions.find((d) => d.year_month === selectedMonth) ?? data.distributions[0]
   const totalPaid = data.distributions.reduce((sum, d) => sum + d.distribution_yen + (d.tips_yen ?? 0), 0)
-  const distributedTracks = data.tracks.filter((t) => track.in_distribution)
+  const distributedTracks = data.tracks.filter((track) => track.in_distribution)
 
   return (
     <main className="min-h-screen bg-black text-white px-4 py-10">
