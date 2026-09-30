@@ -516,5 +516,63 @@
     "interested": "Interested",
     "going": "Going",
     "ticket": "Tickets"
+  },
+  "Invite": {
+    "backHome": "Back to home",
+    "title": "Invite friends",
+    "description": "Friends who sign up through your link are recorded whether they join as listeners or artists. There are no rewards yet — this is a simple referral feature to help grow the RESON network.",
+    "loading": "Loading…",
+    "loginRequired": "Log in to get your invitation link",
+    "linkLabel": "Your invitation link",
+    "copied": "Copied",
+    "copy": "Copy",
+    "invitedCount": "People invited",
+    "registeredAt": "Joined on {date}"
+  },
+  "Notifications": {
+    "title": "Notifications",
+    "home": "Home",
+    "loading": "Loading…",
+    "empty": "No notifications",
+    "types": {
+      "follow": "Someone followed you",
+      "like": "Someone liked your post",
+      "comment": "Someone commented",
+      "mention": "You were mentioned",
+      "support": "You received support",
+      "newTrack": "An artist you follow released a new track",
+      "balanceThreshold": "Your balance crossed a threshold",
+      "message": "You received a message",
+      "monthlyReport": "This month's distribution report is ready"
+    }
+  },
+  "Parental": {
+    "title": "Parental billing",
+    "description": "Minors can link subscription billing to a parent or guardian's account. The plan is applied to your account while payment is charged to the parent or guardian's card.",
+    "loading": "Loading…",
+    "linked": "Your account is linked to a parent or guardian for billing.",
+    "share": "Share the link below with your parent or guardian and ask them to open it while signed in to their account.",
+    "creating": "Creating…",
+    "create": "Create approval link",
+    "backPricing": "Back to pricing",
+    "approve": {
+      "title": "Parent or guardian approval",
+      "invalid": "This link is invalid",
+      "approved": "Approved. Future subscription payments will be charged through your account.",
+      "rejected": "The request was declined.",
+      "description": "This links the minor's subscription billing to the account of the parent or guardian who opened this page. Future subscription charges will use the card on this account.",
+      "decline": "Decline",
+      "approve": "Approve"
+    }
+  },
+  "Playlists": {
+    "title": "Playlists",
+    "home": "Home",
+    "placeholder": "New playlist name",
+    "creating": "Creating…",
+    "create": "Create",
+    "loading": "Loading…",
+    "empty": "No playlists yet",
+    "private": "Private"
   }
 }
