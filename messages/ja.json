@@ -907,7 +907,8 @@
       "saving": "保存中…",
       "save": "保存する",
       "close": "閉じる",
-      "lyricsPlaceholder": "歌詞を入力…"
+      "lyricsPlaceholder": "歌詞を入力…",
+      "isrcPlaceholder": "例: US-RC1-76-07839"
     },
     "bank": {
       "title": "出金先銀行口座",
