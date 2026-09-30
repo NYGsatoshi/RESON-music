@@ -574,5 +574,83 @@
     "loading": "Loading…",
     "empty": "No playlists yet",
     "private": "Private"
+  },
+  "PlaylistDetail": {
+    "loading": "Loading…",
+    "notFound": "Playlist not found",
+    "back": "← Back to playlists",
+    "delete": "Delete",
+    "searchLabel": "Search for a track to add to the playlist",
+    "searchPlaceholder": "Search tracks to add…",
+    "separator": "·",
+    "empty": "No tracks yet",
+    "unknownArtist": "Unknown",
+    "addQueueTitle": "Add to queue",
+    "addQueue": "+ Queue"
+  },
+  "Messages": {
+    "title": "Messages",
+    "home": "Home",
+    "userSearchLabel": "Search users to start a conversation",
+    "userSearchPlaceholder": "Search users to start a conversation…",
+    "anonymousUser": "Anonymous user",
+    "selectConversation": "Select a conversation",
+    "separator": "·",
+    "removeAttachment": "Remove attached track",
+    "trackSearchLabel": "Search tracks to attach to the message",
+    "trackSearchPlaceholder": "Search tracks to attach…",
+    "attachTrackTitle": "Attach a track",
+    "bodyLabel": "Message body",
+    "bodyPlaceholder": "Type a message…",
+    "send": "Send"
+  },
+  "Pricing": {
+    "title": "Pricing",
+    "subtitle": "More listening means more revenue returned to artists",
+    "success": "Subscription activated 🎉",
+    "recommended": "Recommended",
+    "free": "Free",
+    "price": "¥{amount}",
+    "perMonth": "/month",
+    "processing": "Processing…",
+    "subscribe": "Subscribe to {plan}",
+    "student": {
+      "title": "Student plan verification",
+      "description": "Verify your identity with a school-issued .ed.jp email address",
+      "emailLabel": "School-issued email address",
+      "sending": "Sending…",
+      "sendCode": "Send verification code",
+      "codeLabel": "Student verification code",
+      "codePlaceholder": "6-digit code",
+      "checking": "Checking…",
+      "confirm": "Verify and continue",
+      "cancel": "Cancel"
+    },
+    "manage": "Change or cancel your plan",
+    "parental": "For minors: link billing to a parent or guardian",
+    "features": {
+      "monthly15": "Up to 15 hours per month",
+      "ads": "Includes ads",
+      "standardQuality": "Standard quality",
+      "unlimited": "Unlimited listening",
+      "noAds": "No ads",
+      "supportButton": "Support button",
+      "schoolEmail": ".ed.jp email verification required",
+      "highQuality": "High-quality audio",
+      "supportBonus": "Support bonus (1.3× weight)",
+      "tipFee": "Only a 3.6% tip fee"
+    },
+    "transparency": {
+      "title": "How distribution works (transparency policy)",
+      "paragraph1": "75–80% of monthly subscription revenue goes into the artist distribution pool. An engagement score is calculated from listening time, support rate, and completion rate, then the pool is allocated proportionally. Distribution is based on <bold>engagement</bold>, not raw play counts, which helps independent artists compete.",
+      "paragraph2": "The support rate includes hearts and tips, plus boost hearts 🚀 (3 free per month, then ¥30 each, capped at 23 per month) at <bold>double weight</bold>. Of each additional ¥30 boost charge, 70% (¥21) goes directly to the boosted artist without passing through the distribution pool.",
+      "plan": "Plan",
+      "weight": "Listening weight",
+      "pool": "Pool contribution",
+      "supportPool": "¥800/month",
+      "standardPool": "¥562/month",
+      "studentPool": "¥200/month",
+      "freePool": "¥42/month (ad revenue)"
+    }
   }
 }
