@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/i18n/navigation'
+import { useTranslations } from 'next-intl'
 
 type Step = 'artist' | 'bank' | 'rights' | 'done'
 
@@ -11,6 +12,7 @@ type Step = 'artist' | 'bank' | 'rights' | 'done'
 // 向けの単独ページとして提供する（メール+パスワードの作成は不要）。
 export default function RegisterArtistPage() {
   const router = useRouter()
+  const t = useTranslations('Auth.register')
   const [step, setStep] = useState<Step>('artist')
   const [name, setName] = useState('')
   const [bio, setBio] = useState('')
@@ -41,11 +43,11 @@ export default function RegisterArtistPage() {
   async function submitRegistration(e: React.FormEvent) {
     e.preventDefault()
     if (!rightsConfirmed) {
-      setError('権利確認への同意が必要です')
+      setError(t('validation.rightsRequired'))
       return
     }
     if (isMinor && (!parentConsentName.trim() || !parentConsentContact.trim())) {
-      setError('未成年の場合は保護者の氏名・連絡先が必要です')
+      setError(t('validation.parentRequired'))
       return
     }
     setError('')
@@ -80,7 +82,7 @@ export default function RegisterArtistPage() {
       <div className="w-full max-w-sm space-y-8">
         <div className="text-center">
           <h1 className="text-3xl font-bold tracking-tight">RESON</h1>
-          <p className="mt-2 text-sm text-zinc-400">アーティスト登録</p>
+          <p className="mt-2 text-sm text-zinc-400">{t('standaloneTitle')}</p>
         </div>
 
         {error && (
@@ -92,10 +94,10 @@ export default function RegisterArtistPage() {
         {step === 'artist' && (
           <form onSubmit={nextFromArtist} className="space-y-4">
             <div>
-              <label className="block text-sm text-zinc-400 mb-1">アーティスト名 <span className="text-red-400">*</span></label>
+              <label className="block text-sm text-zinc-400 mb-1">{t('artist.name')} <span className="text-red-400">*</span></label>
               <input
                 type="text"
-                placeholder="あなたの名前・グループ名"
+                placeholder={t('artist.namePlaceholder')}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 maxLength={100}
@@ -104,9 +106,9 @@ export default function RegisterArtistPage() {
               />
             </div>
             <div>
-              <label className="block text-sm text-zinc-400 mb-1">自己紹介（任意）</label>
+              <label className="block text-sm text-zinc-400 mb-1">{t('artist.bio')}</label>
               <textarea
-                placeholder="どんな音楽を作っているか、活動拠点など"
+                placeholder={t('artist.bioPlaceholder')}
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
                 rows={4}
@@ -119,7 +121,7 @@ export default function RegisterArtistPage() {
               type="submit"
               className="w-full bg-white text-black font-semibold rounded-lg py-3 hover:bg-zinc-200 transition"
             >
-              次へ（出金先の登録）
+              {t('artist.next')}
             </button>
           </form>
         )}
@@ -127,10 +129,10 @@ export default function RegisterArtistPage() {
         {step === 'bank' && (
           <form onSubmit={nextFromBank} className="space-y-4">
             <p className="text-xs text-zinc-500">
-              分配金・出金の受け取り先として使用します。口座名義は登録者本人の氏名と一致させてください。
+              {t('bank.description')}
             </p>
             <div>
-              <label className="block text-sm text-zinc-400 mb-1">銀行名 <span className="text-red-400">*</span></label>
+              <label className="block text-sm text-zinc-400 mb-1">{t('bank.bankName')} <span className="text-red-400">*</span></label>
               <input
                 type="text"
                 value={bankName}
@@ -140,7 +142,7 @@ export default function RegisterArtistPage() {
               />
             </div>
             <div>
-              <label className="block text-sm text-zinc-400 mb-1">支店名 <span className="text-red-400">*</span></label>
+              <label className="block text-sm text-zinc-400 mb-1">{t('bank.branchName')} <span className="text-red-400">*</span></label>
               <input
                 type="text"
                 value={branchName}
@@ -150,18 +152,18 @@ export default function RegisterArtistPage() {
               />
             </div>
             <div>
-              <label className="block text-sm text-zinc-400 mb-1">口座種別 <span className="text-red-400">*</span></label>
+              <label className="block text-sm text-zinc-400 mb-1">{t('bank.accountType')} <span className="text-red-400">*</span></label>
               <select
                 value={accountType}
                 onChange={(e) => setAccountType(e.target.value as 'ordinary' | 'checking')}
                 className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-zinc-400"
               >
-                <option value="ordinary">普通</option>
-                <option value="checking">当座</option>
+                <option value="ordinary">{t('bank.ordinary')}</option>
+                <option value="checking">{t('bank.checking')}</option>
               </select>
             </div>
             <div>
-              <label className="block text-sm text-zinc-400 mb-1">口座番号 <span className="text-red-400">*</span></label>
+              <label className="block text-sm text-zinc-400 mb-1">{t('bank.accountNumber')} <span className="text-red-400">*</span></label>
               <input
                 type="text"
                 value={accountNumber}
@@ -171,10 +173,10 @@ export default function RegisterArtistPage() {
               />
             </div>
             <div>
-              <label className="block text-sm text-zinc-400 mb-1">口座名義（カナ） <span className="text-red-400">*</span></label>
+              <label className="block text-sm text-zinc-400 mb-1">{t('bank.holderName')} <span className="text-red-400">*</span></label>
               <input
                 type="text"
-                placeholder="例: ヤマダ タロウ"
+                placeholder={t('bank.holderPlaceholder')}
                 value={accountHolderName}
                 onChange={(e) => setAccountHolderName(e.target.value)}
                 required
@@ -185,14 +187,14 @@ export default function RegisterArtistPage() {
               type="submit"
               className="w-full bg-white text-black font-semibold rounded-lg py-3 hover:bg-zinc-200 transition"
             >
-              次へ（権利確認）
+              {t('bank.next')}
             </button>
             <button
               type="button"
               onClick={() => setStep('artist')}
               className="w-full text-sm text-zinc-500 hover:text-zinc-300 transition"
             >
-              戻る
+              {t('common.back')}
             </button>
           </form>
         )}
@@ -200,11 +202,11 @@ export default function RegisterArtistPage() {
         {step === 'rights' && (
           <form onSubmit={submitRegistration} className="space-y-4">
             <div className="rounded-lg border border-zinc-700 bg-zinc-900 p-4 text-sm text-zinc-300 space-y-2">
-              <p>アップロードする楽曲について、以下を確認してください。</p>
+              <p>{t('rights.intro')}</p>
               <ul className="list-disc list-inside text-zinc-400 space-y-1">
-                <li>自身が著作権・実演者の権利を有する、または権利者から許諾を得ている楽曲のみをアップロードします</li>
-                <li>第三者の権利を侵害するコンテンツ（無許諾サンプリング・カバー等）は登録しません</li>
-                <li>登録した銀行口座情報が正確であることを確認しました</li>
+                <li>{t('rights.item1')}</li>
+                <li>{t('rights.item2')}</li>
+                <li>{t('rights.item3')}</li>
               </ul>
             </div>
             <label className="flex items-start gap-3 cursor-pointer">
@@ -214,7 +216,7 @@ export default function RegisterArtistPage() {
                 onChange={(e) => setRightsConfirmed(e.target.checked)}
                 className="w-5 h-5 mt-0.5 rounded accent-white"
               />
-              <span className="text-sm">上記の内容に同意します</span>
+              <span className="text-sm">{t('rights.agree')}</span>
             </label>
 
             <label className="flex items-start gap-3 cursor-pointer border-t border-zinc-800 pt-4">
@@ -224,26 +226,26 @@ export default function RegisterArtistPage() {
                 onChange={(e) => setIsMinor(e.target.checked)}
                 className="w-5 h-5 mt-0.5 rounded accent-white"
               />
-              <span className="text-sm">未成年です（保護者の同意が必要です）</span>
+              <span className="text-sm">{t('rights.minor')}</span>
             </label>
             {isMinor && (
               <div className="space-y-2 pl-8">
                 <input
                   type="text"
-                  placeholder="保護者の氏名"
+                  placeholder={t('rights.parentName')}
                   value={parentConsentName}
                   onChange={(e) => setParentConsentName(e.target.value)}
                   className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-zinc-400"
                 />
                 <input
                   type="text"
-                  placeholder="保護者の連絡先（電話番号 or メールアドレス）"
+                  placeholder={t('rights.parentContactPlaceholder')}
                   value={parentConsentContact}
                   onChange={(e) => setParentConsentContact(e.target.value)}
                   className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-zinc-400"
                 />
                 <p className="text-xs text-zinc-600">
-                  保護者本人が本登録内容（著作権確認・銀行口座情報を含む）に同意していることを確認してください。
+                  {t('rights.parentNotice')}
                 </p>
               </div>
             )}
@@ -252,14 +254,14 @@ export default function RegisterArtistPage() {
               disabled={loading || !rightsConfirmed}
               className="w-full bg-white text-black font-semibold rounded-lg py-3 hover:bg-zinc-200 disabled:opacity-50 transition"
             >
-              {loading ? '登録中…' : '登録を申請する'}
+              {loading ? t('rights.submitting') : t('rights.submit')}
             </button>
             <button
               type="button"
               onClick={() => setStep('bank')}
               className="w-full text-sm text-zinc-500 hover:text-zinc-300 transition"
             >
-              戻る
+              {t('common.back')}
             </button>
           </form>
         )}
@@ -267,15 +269,15 @@ export default function RegisterArtistPage() {
         {step === 'done' && (
           <div className="text-center space-y-4">
             <p className="text-4xl">🛠️</p>
-            <h2 className="text-lg font-bold">登録申請を受け付けました</h2>
+            <h2 className="text-lg font-bold">{t('done.title')}</h2>
             <p className="text-sm text-zinc-400">
-              現在審査中です。審査完了まで楽曲の配信開始をお待ちください。アップロード自体は審査結果を待たずに行えます。
+              {t('done.description')}
             </p>
             <button
               onClick={() => router.push('/dashboard')}
               className="w-full bg-white text-black font-semibold rounded-lg py-3 hover:bg-zinc-200 transition"
             >
-              ダッシュボードへ
+              {t('done.dashboard')}
             </button>
           </div>
         )}
