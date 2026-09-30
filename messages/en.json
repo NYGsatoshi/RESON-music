@@ -184,7 +184,8 @@
         "profile": "Profile",
         "bank": "Payout",
         "rights": "Rights"
-      }
+      },
+      "standaloneTitle": "Artist registration"
     },
     "resetRequest": {
       "title": "Reset your password",
@@ -205,6 +206,12 @@
       "newPasswordConfirm": "Confirm new password",
       "updating": "Updating…",
       "update": "Update password"
+    },
+    "devLogin": {
+      "title": "Developer login (no phone verification)",
+      "loggingIn": "Logging in…",
+      "login": "Log in",
+      "notice": "This page is for development and testing only. Create accounts through /api/dev/seed-account using CRON_SECRET authentication."
     }
   },
   "Metadata": {
@@ -369,5 +376,92 @@
     "commentLabel": "Comment",
     "commentPlaceholder": "Write a comment…",
     "send": "Send"
+  },
+  "ArtistSupporters": {
+    "title": "Thank your supporters",
+    "description": "These are the people who have supported you. Keep showing your appreciation through your posts and music.",
+    "dashboard": "Dashboard",
+    "loading": "Loading…",
+    "empty": "You do not have any supporters yet. Keep sharing your music.",
+    "anonymous": "Anonymous listener"
+  },
+  "ArtistReport": {
+    "loading": "Loading…",
+    "artistRequired": "Artist registration is required",
+    "register": "Register",
+    "title": "Monthly report",
+    "dashboard": "Dashboard",
+    "empty": "There is no distribution history yet. Tracks become eligible after they exceed 100 plays.",
+    "distributionResult": "{month} distribution",
+    "playTimeScore": "Listening-time score",
+    "playTimeFormula": "SUM(listened seconds × plan weight × duration factor) / 3600",
+    "playTimeNote": "Plan weights: Support+ 1.3 / Standard 1.0 / Student 0.7 / Free 0.4 / AI-generated tracks are fixed at 0.1",
+    "supportRate": "Support rate",
+    "supportFormula": "(supports + boost hearts × 2.0) / valid plays",
+    "supportNote": "Valid plays include only plays with a duration factor > 0 (at least 30 seconds listened)",
+    "completionRate": "Completion rate",
+    "completionFormula": "completed plays / valid plays",
+    "rawFormula": "raw_score = listening-time score×0.4 + support rate×0.35 + completion rate×0.25",
+    "distributionFormula": "distribution = monthly pool × (this artist's raw_score / total raw_score across all artists)",
+    "tipsRevenue": "Tip revenue (calculated separately and paid directly outside the distribution pool): ¥{amount, number}",
+    "totalReceived": "Total received (distribution + tips)",
+    "tracksTitle": "Track status",
+    "tracksDescription": "Only tracks with more than 100 cumulative plays are eligible for distribution (in_distribution = true).",
+    "noTracks": "No tracks yet",
+    "pending": "Under review",
+    "rejected": "Rejected",
+    "eligible": "Eligible ({count, number} plays)",
+    "progress": "{count, number}/100 plays",
+    "eligibleCount": "Eligible tracks: {eligible, number} / {total, number}",
+    "pricingLink": "View the full distribution formula and pool composition"
+  },
+  "PrivacyRequests": {
+    "types": {
+      "access": "Access my data",
+      "portability": "Portable copy of my data",
+      "erasure": "Delete data and account",
+      "rectification": "Correct my data",
+      "restriction": "Restrict processing",
+      "objection": "Object to processing"
+    },
+    "status": {
+      "received": "Received",
+      "inProgress": "In progress",
+      "completed": "Answered",
+      "declined": "Declined with explanation"
+    },
+    "user": {
+      "fetchFailed": "Could not load requests",
+      "sendFailed": "Could not send the request",
+      "accepted": "Your request has been received. A team member will review it.",
+      "backSettings": "← Back to settings",
+      "title": "Personal data requests",
+      "description": "You can request access, a portable copy, deletion, correction, restriction of processing, or object to processing here. Requests are not carried out automatically. We verify your identity, the rights of others, and any legal retention obligations before responding. We aim to respond within one month of receipt.",
+      "type": "Request type",
+      "details": "Details or target data (optional)",
+      "detailsHelp": "Do not enter passwords or payment card numbers.",
+      "sending": "Sending…",
+      "send": "Send request",
+      "historyAria": "Previous requests",
+      "historyTitle": "Request history",
+      "empty": "You have not submitted any requests yet.",
+      "receivedAt": "Received {date}"
+    },
+    "admin": {
+      "fetchFailed": "Could not load requests",
+      "updateFailed": "Could not update the request",
+      "responseRequired": "Enter a response or explain why the request cannot be fulfilled",
+      "backDashboard": "← Review dashboard",
+      "title": "Personal data request handling",
+      "description": "Review and respond to requests within one month in principle. Mark a request as answered only after the actual action has been completed.",
+      "empty": "There are no requests.",
+      "user": "User: {id}",
+      "receivedTarget": "Received: {received} / Target: {target}",
+      "response": "Response: {response}",
+      "responseLabel": "Response to the user",
+      "markInProgress": "Mark in progress",
+      "complete": "Mark handled and answered",
+      "decline": "Decline with reason"
+    }
   }
 }
