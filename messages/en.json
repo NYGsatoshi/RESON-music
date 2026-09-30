@@ -652,5 +652,53 @@
       "studentPool": "¥200/month",
       "freePool": "¥42/month (ad revenue)"
     }
+  },
+  "TrackDetail": {
+    "loading": "Loading…",
+    "notFound": "Track not found",
+    "backHome": "← Home",
+    "unknownArtist": "Unknown artist",
+    "foundingArtist": "Founding artist",
+    "album": "From {album}"
+  },
+  "Wrapped": {
+    "title": "Your {year} listening recap",
+    "home": "Home",
+    "year": "{year}",
+    "loading": "Loading…",
+    "empty": "No listening history for {year} yet",
+    "duration": "{hours}h {minutes}m",
+    "totalTime": "Total listening time",
+    "plays": "Plays",
+    "tracks": "Tracks",
+    "completed": "Completed",
+    "topArtists": "Most-listened artists",
+    "topTracks": "Most-listened tracks",
+    "playCount": "{count, number} plays"
+  },
+  "Profile": {
+    "loadFailed": "Could not load your profile",
+    "bestLimit": "You can rank up to {count} tracks",
+    "tagLimit": "You can add up to 10 music-persona tags",
+    "backHome": "Back to home",
+    "title": "Music persona & profile",
+    "description": "Describe your music taste with self-selected tags.",
+    "loading": "Loading…",
+    "retry": "Retry",
+    "displayName": "Display name",
+    "bio": "Bio",
+    "personaLabel": "Music-persona tags (comma separated, max 10)",
+    "personaPlaceholder": "e.g. city pop, late-night, guitar rock",
+    "suggestions": "Suggestions from your listening data (you decide whether to add them)",
+    "saved": "Saved",
+    "saving": "Saving…",
+    "save": "Save",
+    "rankingTitle": "Best-track ranking",
+    "rankingDescription": "Publish up to {count} favorite tracks as a ranked list (Topster-style profile).",
+    "searchLabel": "Search for a track to add to your best-track ranking",
+    "searchPlaceholder": "Search tracks to add…",
+    "separator": "·",
+    "emptyRanking": "No ranked tracks yet",
+    "saveRanking": "Save ranking"
   }
 }
