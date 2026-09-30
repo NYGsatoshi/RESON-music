@@ -184,7 +184,8 @@
         "profile": "プロフィール",
         "bank": "出金先",
         "rights": "権利確認"
-      }
+      },
+      "standaloneTitle": "アーティスト登録"
     },
     "resetRequest": {
       "title": "パスワードの再設定",
@@ -205,6 +206,12 @@
       "newPasswordConfirm": "新しいパスワード（確認）",
       "updating": "更新中…",
       "update": "パスワードを更新する"
+    },
+    "devLogin": {
+      "title": "開発者用ログイン（電話番号認証なし）",
+      "loggingIn": "ログイン中…",
+      "login": "ログイン",
+      "notice": "このページは開発・検証専用です。アカウントは /api/dev/seed-account（CRON_SECRET認証）で作成します。"
     }
   },
   "Metadata": {
@@ -369,5 +376,92 @@
     "commentLabel": "コメント本文",
     "commentPlaceholder": "コメントする…",
     "send": "送信"
+  },
+  "ArtistSupporters": {
+    "title": "支援者への感謝",
+    "description": "あなたを応援してくれた方々です。感謝の気持ちを込めて、日々の投稿や音楽で応えてください。",
+    "dashboard": "ダッシュボードへ",
+    "loading": "読み込み中…",
+    "empty": "まだ支援者はいません。楽曲を届け続けましょう。",
+    "anonymous": "名無しのリスナー"
+  },
+  "ArtistReport": {
+    "loading": "読み込み中…",
+    "artistRequired": "アーティスト登録が必要です",
+    "register": "登録する",
+    "title": "月次レポート",
+    "dashboard": "ダッシュボードへ",
+    "empty": "まだ分配履歴がありません。楽曲が100再生を超えると分配対象になります。",
+    "distributionResult": "{month} の分配結果",
+    "playTimeScore": "再生時間スコア",
+    "playTimeFormula": "SUM(再生秒数 × プラン重み係数 × 秒数係数) / 3600",
+    "playTimeNote": "プラン重み: Support+ 1.3 / Standard 1.0 / Student 0.7 / Free 0.4 / AI生成楽曲は0.1に固定",
+    "supportRate": "応援率",
+    "supportFormula": "(応援数 + ブーストハート数 × 2.0) / 有効再生数",
+    "supportNote": "有効再生数は再生秒数係数 > 0（30秒以上再生）のもののみ集計",
+    "completionRate": "完聴率",
+    "completionFormula": "完聴数 / 有効再生数",
+    "rawFormula": "raw_score = 再生時間スコア×0.4 + 応援率×0.35 + 完聴率×0.25",
+    "distributionFormula": "分配額 = 月間プール × (このアーティストのraw_score / 全アーティストのraw_score合計)",
+    "tipsRevenue": "投げ銭収益（別計算・分配プールを経由しない直接受取）: ¥{amount, number}",
+    "totalReceived": "累計受取額（分配 + 投げ銭）",
+    "tracksTitle": "楽曲別ステータス",
+    "tracksDescription": "cumulative_plays が100再生を超えた楽曲のみ分配対象（in_distribution = true）になります。",
+    "noTracks": "まだ楽曲がありません",
+    "pending": "審査中",
+    "rejected": "却下",
+    "eligible": "分配対象（{count, number}再生）",
+    "progress": "{count, number}/100再生",
+    "eligibleCount": "分配対象楽曲数: {eligible, number} / {total, number}",
+    "pricingLink": "計算式・プール構成の全体はこちらで常時公開しています"
+  },
+  "PrivacyRequests": {
+    "types": {
+      "access": "保有データの開示",
+      "portability": "データの移転用コピー",
+      "erasure": "データ・アカウントの削除",
+      "rectification": "データの訂正",
+      "restriction": "処理の制限",
+      "objection": "処理への異議"
+    },
+    "status": {
+      "received": "受付済み",
+      "inProgress": "確認中",
+      "completed": "回答済み",
+      "declined": "対応できない理由を回答済み"
+    },
+    "user": {
+      "fetchFailed": "取得に失敗しました",
+      "sendFailed": "送信できませんでした",
+      "accepted": "請求を受け付けました。担当者が内容を確認します。",
+      "backSettings": "← 設定に戻る",
+      "title": "個人データに関する請求",
+      "description": "開示、移転用コピー、削除、訂正、処理の制限・異議をここから請求できます。請求は自動実行されません。本人確認、他者の権利や法令上の保存義務を確認して回答します。原則として受け付けから1か月以内に回答します。",
+      "type": "請求の種類",
+      "details": "詳細・対象データ（任意）",
+      "detailsHelp": "パスワードや決済カード番号は入力しないでください。",
+      "sending": "送信中…",
+      "send": "請求を送信する",
+      "historyAria": "過去の請求",
+      "historyTitle": "請求の履歴",
+      "empty": "請求はまだありません。",
+      "receivedAt": "{date} 受付"
+    },
+    "admin": {
+      "fetchFailed": "取得できませんでした",
+      "updateFailed": "更新できませんでした",
+      "responseRequired": "回答または対応できない理由を入力してください",
+      "backDashboard": "← 審査ダッシュボード",
+      "title": "個人データ請求の対応",
+      "description": "受付から原則1か月以内に確認・回答してください。回答済みへの変更は実際の対応後に行います。",
+      "empty": "請求はありません。",
+      "user": "利用者: {id}",
+      "receivedTarget": "受付: {received} / 目安: {target}",
+      "response": "回答: {response}",
+      "responseLabel": "利用者への回答",
+      "markInProgress": "確認中にする",
+      "complete": "対応・回答済みにする",
+      "decline": "理由を付けて対応不可"
+    }
   }
 }
