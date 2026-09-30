@@ -574,5 +574,83 @@
     "loading": "読み込み中…",
     "empty": "まだプレイリストがありません",
     "private": "非公開"
+  },
+  "PlaylistDetail": {
+    "loading": "読み込み中…",
+    "notFound": "プレイリストが見つかりません",
+    "back": "← プレイリスト一覧へ",
+    "delete": "削除する",
+    "searchLabel": "プレイリストに追加する楽曲を検索",
+    "searchPlaceholder": "楽曲名で検索して追加…",
+    "separator": "・",
+    "empty": "まだ曲がありません",
+    "unknownArtist": "不明",
+    "addQueueTitle": "キューへ追加",
+    "addQueue": "+キュー"
+  },
+  "Messages": {
+    "title": "メッセージ",
+    "home": "ホームへ",
+    "userSearchLabel": "会話を始めるユーザーを検索",
+    "userSearchPlaceholder": "ユーザーを検索して開始…",
+    "anonymousUser": "名無しのユーザー",
+    "selectConversation": "会話を選択してください",
+    "separator": "・",
+    "removeAttachment": "添付した楽曲を外す",
+    "trackSearchLabel": "メッセージに添付する楽曲を検索",
+    "trackSearchPlaceholder": "曲を検索して貼付…",
+    "attachTrackTitle": "曲を貼付",
+    "bodyLabel": "メッセージ本文",
+    "bodyPlaceholder": "メッセージを入力…",
+    "send": "送信"
+  },
+  "Pricing": {
+    "title": "料金プラン",
+    "subtitle": "聴くほどアーティストへ還元される",
+    "success": "サブスクリプションの登録が完了しました 🎉",
+    "recommended": "おすすめ",
+    "free": "無料",
+    "price": "¥{amount}",
+    "perMonth": "/月",
+    "processing": "処理中…",
+    "subscribe": "{plan} に登録",
+    "student": {
+      "title": "Studentプラン認証",
+      "description": "学校発行の .ed.jp メールアドレスで本人確認が必要です",
+      "emailLabel": "学校発行のメールアドレス",
+      "sending": "送信中…",
+      "sendCode": "認証コードを送信",
+      "codeLabel": "Student認証コード",
+      "codePlaceholder": "6桁のコード",
+      "checking": "確認中…",
+      "confirm": "確認して登録へ進む",
+      "cancel": "キャンセル"
+    },
+    "manage": "プランの変更・解約はこちら",
+    "parental": "未成年の方はこちら（保護者の決済に紐付ける）",
+    "features": {
+      "monthly15": "月15時間まで",
+      "ads": "広告あり",
+      "standardQuality": "標準音質",
+      "unlimited": "無制限",
+      "noAds": "広告なし",
+      "supportButton": "応援ボタン",
+      "schoolEmail": ".ed.jpメール認証が必要",
+      "highQuality": "高音質",
+      "supportBonus": "応援ボーナス（重み1.3）",
+      "tipFee": "投げ銭手数料 3.6%のみ"
+    },
+    "transparency": {
+      "title": "分配の仕組み（透明性ポリシー）",
+      "paragraph1": "月額の75〜80%がアーティスト分配プールに入ります。再生時間・応援率・完聴率から「熱量スコア」を算出し、スコア比率で按分します。再生数ではなく<bold>熱量</bold>で分配するため、インディーズアーティストが有利です。",
+      "paragraph2": "応援率には❤️・投げ銭に加え、ブーストハート🚀（月3回まで無料・以降1回30円・月23回上限）が<bold>重み2倍</bold>で反映されます。ブーストの追加課金分（30円）はプール按分を経由せず、ブーストしたアーティストへ直接70%（21円）が渡ります。",
+      "plan": "プラン",
+      "weight": "再生重み",
+      "pool": "プールへの寄与",
+      "supportPool": "¥800/月",
+      "standardPool": "¥562/月",
+      "studentPool": "¥200/月",
+      "freePool": "¥42/月（広告収益）"
+    }
   }
 }
