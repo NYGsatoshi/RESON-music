@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
+import { Link } from '@/i18n/navigation'
+import { useTranslations } from 'next-intl'
 
 interface Distribution {
   year_month: string
@@ -31,6 +32,7 @@ interface ReportData {
 }
 
 export default function ArtistReportPage() {
+  const t = useTranslations('ArtistReport')
   const [data, setData] = useState<ReportData | null>(null)
   const [loading, setLoading] = useState(true)
   const [selectedMonth, setSelectedMonth] = useState<string | null>(null)
@@ -48,7 +50,7 @@ export default function ArtistReportPage() {
   if (loading) {
     return (
       <main className="min-h-screen bg-black text-white flex items-center justify-center">
-        <p className="text-zinc-500">読み込み中…</p>
+        <p className="text-zinc-500">{t('loading')}</p>
       </main>
     )
   }
@@ -57,8 +59,8 @@ export default function ArtistReportPage() {
     return (
       <main className="min-h-screen bg-black text-white flex items-center justify-center">
         <div className="text-center space-y-4">
-          <p className="text-zinc-400">アーティスト登録が必要です</p>
-          <Link href="/register" className="text-white underline">登録する</Link>
+          <p className="text-zinc-400">{t('artistRequired')}</p>
+          <Link href="/register" className="text-white underline">{t('register')}</Link>
         </div>
       </main>
     )
@@ -73,17 +75,17 @@ export default function ArtistReportPage() {
       <div className="max-w-2xl mx-auto space-y-8">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold">月次レポート</h1>
+            <h1 className="text-2xl font-bold">{t('title')}</h1>
             <p className="text-sm text-zinc-400">{data.artist.name}</p>
           </div>
           <Link href="/dashboard" className="text-sm text-zinc-400 hover:text-white underline">
-            ダッシュボードへ
+            {t('dashboard')}
           </Link>
         </div>
 
         {data.distributions.length === 0 ? (
           <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 text-sm text-zinc-500">
-            まだ分配履歴がありません。楽曲が100再生を超えると分配対象になります。
+            {t('empty')}
           </div>
         ) : (
           <>
@@ -107,7 +109,7 @@ export default function ArtistReportPage() {
             {month && (
               <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 space-y-5">
                 <div className="flex items-center justify-between">
-                  <h2 className="font-semibold">{month.year_month} の分配結果</h2>
+                  <h2 className="font-semibold">{t('distributionResult', { month: month.year_month })}</h2>
                   <p className="text-2xl font-bold">
                     ¥{Math.floor(month.distribution_yen).toLocaleString()}
                   </p>
@@ -115,39 +117,39 @@ export default function ArtistReportPage() {
 
                 <div className="space-y-4">
                   <FormulaRow
-                    label="再生時間スコア"
+                    label={t('playTimeScore')}
                     weight={0.4}
                     value={month.score_breakdown.play_time_score}
-                    formula="SUM(再生秒数 × プラン重み係数 × 秒数係数) / 3600"
-                    note="プラン重み: Support+ 1.3 / Standard 1.0 / Student 0.7 / Free 0.4 / AI生成楽曲は0.1に固定"
+                    formula={t('playTimeFormula')}
+                    note={t('playTimeNote')}
                   />
                   <FormulaRow
-                    label="応援率"
+                    label={t('supportRate')}
                     weight={0.35}
                     value={month.score_breakdown.support_rate * 100}
                     isPercent
-                    formula="(応援数 + ブーストハート数 × 2.0) / 有効再生数"
-                    note="有効再生数は再生秒数係数 > 0（30秒以上再生）のもののみ集計"
+                    formula={t('supportFormula')}
+                    note={t('supportNote')}
                   />
                   <FormulaRow
-                    label="完聴率"
+                    label={t('completionRate')}
                     weight={0.25}
                     value={month.score_breakdown.completion_rate * 100}
                     isPercent
-                    formula="完聴数 / 有効再生数"
+                    formula={t('completionFormula')}
                   />
                 </div>
 
                 <div className="border-t border-zinc-800 pt-4 text-sm text-zinc-400 space-y-1">
-                  <p>raw_score = 再生時間スコア×0.4 + 応援率×0.35 + 完聴率×0.25</p>
-                  <p>分配額 = 月間プール × (このアーティストのraw_score / 全アーティストのraw_score合計)</p>
-                  <p className="text-zinc-600">投げ銭収益（別計算・分配プールを経由しない直接受取）: ¥{Math.floor(month.tips_yen ?? 0).toLocaleString()}</p>
+                  <p>{t('rawFormula')}</p>
+                  <p>{t('distributionFormula')}</p>
+                  <p className="text-zinc-600">{t('tipsRevenue', { amount: Math.floor(month.tips_yen ?? 0) })}</p>
                 </div>
               </div>
             )}
 
             <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 flex justify-between text-sm">
-              <span className="text-zinc-400">累計受取額（分配 + 投げ銭）</span>
+              <span className="text-zinc-400">{t('totalReceived')}</span>
               <span className="font-semibold">¥{Math.floor(totalPaid).toLocaleString()}</span>
             </div>
           </>
@@ -155,32 +157,32 @@ export default function ArtistReportPage() {
 
         {/* 楽曲別の分配対象状況 */}
         <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 space-y-3">
-          <h2 className="font-semibold">楽曲別ステータス</h2>
+          <h2 className="font-semibold">{t('tracksTitle')}</h2>
           <p className="text-xs text-zinc-600">
-            cumulative_plays が100再生を超えた楽曲のみ分配対象（in_distribution = true）になります。
+            {t('tracksDescription')}
           </p>
           {data.tracks.length === 0 ? (
-            <p className="text-sm text-zinc-500">まだ楽曲がありません</p>
+            <p className="text-sm text-zinc-500">{t('noTracks')}</p>
           ) : (
             data.tracks.map((t) => (
               <div key={t.id} className="flex items-center justify-between text-sm border-b border-zinc-800 pb-2 last:border-0 last:pb-0">
                 <span className="truncate">{t.title}</span>
                 <span className="flex items-center gap-2 shrink-0">
-                  {t.review_status === 'pending' && <span className="text-xs text-yellow-500">審査中</span>}
-                  {t.review_status === 'rejected' && <span className="text-xs text-red-400">却下</span>}
+                  {t.review_status === 'pending' && <span className="text-xs text-yellow-500">{t('pending')}</span>}
+                  {t.review_status === 'rejected' && <span className="text-xs text-red-400">{t('rejected')}</span>}
                   <span className={t.in_distribution ? 'text-zinc-300' : 'text-zinc-600'}>
-                    {t.in_distribution ? `分配対象（${t.cumulative_plays.toLocaleString()}再生）` : `${t.cumulative_plays}/100再生`}
+                    {t.in_distribution ? t('eligible', { count: t.cumulative_plays }) : t('progress', { count: t.cumulative_plays })}
                   </span>
                 </span>
               </div>
             ))
           )}
-          <p className="text-xs text-zinc-600 pt-1">分配対象楽曲数: {distributedTracks.length} / {data.tracks.length}</p>
+          <p className="text-xs text-zinc-600 pt-1">{t('eligibleCount', { eligible: distributedTracks.length, total: data.tracks.length })}</p>
         </div>
 
         <p className="text-center text-xs text-zinc-600">
           <Link href="/pricing" className="hover:text-zinc-400 underline">
-            計算式・プール構成の全体はこちらで常時公開しています
+            {t('pricingLink')}
           </Link>
         </p>
       </div>
