@@ -232,12 +232,12 @@ export default function DashboardPage() {
         </div>
 
         {/* 審査ステータス */}
-        {data.artistrack.review_status === 'pending' && (
+        {data.artist.review_status === 'pending' && (
           <div className="bg-zinc-900 border border-yellow-800 rounded-2xl p-4 text-sm text-yellow-400">
             {t('review.pending')}
           </div>
         )}
-        {data.artistrack.review_status === 'rejected' && (
+        {data.artist.review_status === 'rejected' && (
           <div className="bg-zinc-900 border border-red-800 rounded-2xl p-4 text-sm text-red-400">
             {t('review.rejected')}
           </div>
