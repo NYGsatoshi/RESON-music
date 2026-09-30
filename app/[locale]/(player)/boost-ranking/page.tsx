@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
+import { Link } from '@/i18n/navigation'
+import { useTranslations } from 'next-intl'
 
 interface RankedTrack {
   id: string
@@ -14,6 +15,7 @@ interface RankedTrack {
 }
 
 export default function BoostRankingPage() {
+  const t = useTranslations('BoostRanking')
   const [tracks, setTracks] = useState<RankedTrack[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -27,20 +29,19 @@ export default function BoostRankingPage() {
     <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] px-4 py-10 sm:px-8">
       <div className="mx-auto max-w-lg space-y-6">
         <div className="flex items-center justify-between">
-          <h1 className="font-display text-2xl font-bold">週間ブーストランキング🚀</h1>
+          <h1 className="font-display text-2xl font-bold">{t('title')}</h1>
           <Link href="/home" className="text-sm text-[var(--dim)] hover:text-[var(--text)]">
-            ホームへ
+            {t('home')}
           </Link>
         </div>
         <p className="text-xs text-[var(--faint)]">
-          先週比の伸び率が高い曲（累計再生数500以上）が対象です。絶対的なブースト数ではなく、
-          今まさに勢いのある曲を発見できます。
+          {t('description')}
         </p>
 
         {loading ? (
-          <p className="text-sm text-[var(--faint)]">読み込み中…</p>
+          <p className="text-sm text-[var(--faint)]">{t('loading')}</p>
         ) : tracks.length === 0 ? (
-          <p className="text-sm text-[var(--faint)] text-center py-8">まだランキングがありません</p>
+          <p className="text-sm text-[var(--faint)] text-center py-8">{t('empty')}</p>
         ) : (
           <div className="space-y-1">
             {tracks.map((t, i) => (
@@ -50,10 +51,10 @@ export default function BoostRankingPage() {
                     <span className="text-[var(--faint)] mr-2">#{i + 1}</span>
                     {t.title}
                   </p>
-                  <p className="text-xs text-[var(--dim)] ml-6">{t.artists?.name ?? '不明'}</p>
+                  <p className="text-xs text-[var(--dim)] ml-6">{t.artists?.name ?? t('unknownArtist')}</p>
                 </div>
                 <span className="text-xs text-[var(--accent)] shrink-0 ml-2">
-                  今週🚀{t.this_week_boosts}（先週{t.last_week_boosts}）
+                  {t('weekly', { current: t.this_week_boosts, previous: t.last_week_boosts })}
                 </span>
               </div>
             ))}
