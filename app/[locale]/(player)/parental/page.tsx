@@ -1,9 +1,12 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
+import { getPathname, Link } from '@/i18n/navigation'
+import { useLocale, useTranslations } from 'next-intl'
 
 export default function ParentalPage() {
+  const t = useTranslations('Parental')
+  const locale = useLocale()
   const [linked, setLinked] = useState(false)
   const [token, setToken] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
@@ -28,32 +31,31 @@ export default function ParentalPage() {
   }
 
   const approveUrl = token && typeof window !== 'undefined'
-    ? `${window.location.origin}/parental/approve?token=${token}`
+    ? `${window.location.origin}${getPathname({ locale, href: '/parental/approve' })}?token=${token}`
     : ''
 
   return (
     <main className="min-h-screen bg-black text-white px-4 py-12">
       <div className="max-w-md mx-auto space-y-6">
         <div>
-          <h1 className="text-2xl font-bold">ペアレンタル決済</h1>
+          <h1 className="text-2xl font-bold">{t('title')}</h1>
           <p className="text-sm text-zinc-400 mt-1">
-            未成年の方は、保護者のアカウントに決済（月額プラン）を紐付けることができます。
-            プランはあなたのアカウントに付与され、支払いのみ保護者のカードで行われます。
+            {t('description')}
           </p>
         </div>
 
         {loading ? (
-          <p className="text-sm text-zinc-500">読み込み中…</p>
+          <p className="text-sm text-zinc-500">{t('loading')}</p>
         ) : linked ? (
           <div className="border border-zinc-800 rounded-2xl p-6 text-sm text-emerald-400">
-            保護者のアカウントに紐付けが完了しています。
+            {t('linked')}
           </div>
         ) : (
           <div className="border border-zinc-800 rounded-2xl p-6 space-y-4">
             {token ? (
               <>
                 <p className="text-sm text-zinc-400">
-                  以下のリンクを保護者に共有し、保護者のアカウントでログインした状態で開いてもらってください。
+                  {t('share')}
                 </p>
                 <div className="bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-xs break-all text-zinc-300">
                   {approveUrl}
@@ -65,14 +67,14 @@ export default function ParentalPage() {
                 disabled={creating}
                 className="w-full bg-white text-black font-semibold rounded-lg py-3 hover:bg-zinc-200 disabled:opacity-50 transition"
               >
-                {creating ? '作成中…' : '保護者への承認リンクを作成'}
+                {creating ? t('creating') : t('create')}
               </button>
             )}
           </div>
         )}
 
         <Link href="/pricing" className="block text-center text-sm text-zinc-500 hover:text-zinc-300 underline">
-          料金プランへ戻る
+          {t('backPricing')}
         </Link>
       </div>
     </main>
