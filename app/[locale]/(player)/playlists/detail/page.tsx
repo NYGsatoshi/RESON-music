@@ -132,7 +132,7 @@ function PlaylistDetailContent() {
         </Link>
 
         <div className="flex items-center justify-between">
-          <h1 className="font-display text-2xl font-bold">{playlistrack.title}</h1>
+          <h1 className="font-display text-2xl font-bold">{playlist.title}</h1>
           {isOwner && (
             <button onClick={deletePlaylist} className="text-xs text-red-400 hover:text-red-300">
               {t('delete')}
@@ -189,7 +189,7 @@ function PlaylistDetailContent() {
           {flatTracks.length === 0 ? (
             <p className="text-sm text-[var(--faint)] text-center py-8">{t('empty')}</p>
           ) : (
-            flatTracks.map((t, i) => (
+            flatTracks.map((track, i) => (
               <div
                 key={track.id}
                 className={`flex items-center gap-2 px-4 py-3 rounded-xl transition ${
