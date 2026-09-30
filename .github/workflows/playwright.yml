@@ -73,6 +73,9 @@ jobs:
             echo "E2E_CRON_SECRET=e2e-local-cron-secret"
           } >> "$GITHUB_ENV"
 
+      - name: Build application for E2E
+        run: npm run build
+
       - name: Run Playwright tests
         working-directory: e2e
         env:
