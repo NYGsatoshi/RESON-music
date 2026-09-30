@@ -2,7 +2,8 @@
 
 import { useEffect, useState, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
-import Link from 'next/link'
+import { Link } from '@/i18n/navigation'
+import { useTranslations } from 'next-intl'
 import { Player } from '@/components/Player'
 
 interface TrackDetail {
@@ -17,6 +18,7 @@ interface TrackDetail {
 }
 
 function TrackDetailContent() {
+  const t = useTranslations('TrackDetail')
   const searchParams = useSearchParams()
   const trackId = searchParams.get('id') ?? ''
   const [track, setTrack] = useState<TrackDetail | null>(null)
@@ -37,10 +39,10 @@ function TrackDetailContent() {
   }, [trackId])
 
   if (loading) {
-    return <div className="min-h-screen bg-[var(--bg)] flex items-center justify-center text-[var(--faint)]">読み込み中…</div>
+    return <div className="min-h-screen bg-[var(--bg)] flex items-center justify-center text-[var(--faint)]">{t('loading')}</div>
   }
   if (notFound || !track) {
-    return <div className="min-h-screen bg-[var(--bg)] flex items-center justify-center text-[var(--faint)]">楽曲が見つかりません</div>
+    return <div className="min-h-screen bg-[var(--bg)] flex items-center justify-center text-[var(--faint)]">{t('notFound')}</div>
   }
 
   const coverSrc = track.albums?.cover_r2_key
@@ -51,7 +53,7 @@ function TrackDetailContent() {
     <div className="min-h-screen bg-[var(--bg)] text-[var(--text)] px-4 py-10 sm:px-8">
       <div className="mx-auto max-w-lg space-y-6">
         <Link href="/home" className="text-sm text-[var(--dim)] hover:text-[var(--text)]">
-          ← ホームへ
+          {t('backHome')}
         </Link>
 
         <div className="flex gap-4">
@@ -61,14 +63,14 @@ function TrackDetailContent() {
           <div>
             <h1 className="font-display text-xl font-bold">{track.title}</h1>
             <p className="mt-1 text-sm text-[var(--dim)] flex items-center gap-1">
-              {track.artists?.name ?? '不明なアーティスト'}
+              {track.artists?.name ?? t('unknownArtist')}
               {track.artists?.founding_artist && (
-                <span title="創設アーティスト" className="text-[var(--accent)]">★</span>
+                <span title={t('foundingArtist')} className="text-[var(--accent)]">★</span>
               )}
             </p>
             {track.albums && (
               <Link href={`/albums?id=${track.albums.id}`} className="mt-1 inline-block text-xs text-[var(--faint)] hover:text-[var(--dim)] underline">
-                {track.albums.title} に収録
+                {t('album', { album: track.albums.title })}
               </Link>
             )}
           </div>
