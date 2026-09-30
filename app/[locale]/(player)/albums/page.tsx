@@ -101,8 +101,8 @@ function AlbumDetailContent() {
           <Player
             track={{
               id: current.id,
-              title: currentrack.title,
-              duration_sec: currentrack.duration_sec,
+              title: current.title,
+              duration_sec: current.duration_sec,
               artists: album.artists,
             }}
             onEnded={queue.playNext}
