@@ -855,5 +855,88 @@
       }
     },
     "privacyCta": "開示・移転用コピー・削除などを請求する →"
+  },
+  "Dashboard": {
+    "loading": "読み込み中…",
+    "artistRequired": "アーティスト登録が必要です",
+    "register": "登録する",
+    "foundingArtist": "創設アーティスト",
+    "subtitle": "アーティストダッシュボード",
+    "supporters": "支援者",
+    "report": "レポート",
+    "upload": "+ アップロード",
+    "review": {
+      "pending": "審査中です。審査完了まで楽曲のアップロード・運用は可能ですが、配信開始には審査の承認が必要です。",
+      "rejected": "審査の結果、登録が承認されませんでした。詳細はサポートにお問い合わせください。"
+    },
+    "balance": {
+      "title": "未払い残高",
+      "schedule": "毎月末締め・翌月15日払い",
+      "minimum": "出金最低額は¥1,000（翌月へ繰り越し）",
+      "warning": "⚠️ 残高が50,000円を超えています。出金申請を行ってください。",
+      "pending": "出金申請受付済み（処理中）",
+      "requesting": "申請中…",
+      "request": "出金申請"
+    },
+    "payoutStatus": {
+      "pending": "処理中",
+      "paid": "支払済",
+      "rejected": "却下"
+    },
+    "score": {
+      "title": "{month} の熱量スコア",
+      "playTime": "再生時間スコア",
+      "playTimeDesc": "SUM(再生秒 × 重み係数 × 秒数係数) / 3600",
+      "support": "応援率",
+      "supportDesc": "応援数 / 有効再生数",
+      "completion": "完聴率",
+      "completionDesc": "完聴数 / 有効再生数",
+      "tips": "投げ銭収益（別計算）: ¥{amount, number}"
+    },
+    "historyTitle": "月次分配履歴",
+    "tracks": {
+      "title": "楽曲",
+      "empty": "まだ楽曲がありません",
+      "pending": "審査中",
+      "rejected": "却下",
+      "ai": "AI生成",
+      "notEligible": "分配対象外（{count, number}/100再生）",
+      "isrcMissing": "未登録",
+      "lyrics": "歌詞",
+      "plays": "{count, number}再生",
+      "saving": "保存中…",
+      "save": "保存する",
+      "close": "閉じる",
+      "lyricsPlaceholder": "歌詞を入力…"
+    },
+    "bank": {
+      "title": "出金先銀行口座",
+      "cancel": "キャンセル",
+      "edit": "編集する",
+      "description": "出金申請が承認されると、運営がこの口座情報を参照して毎月15日payoutで手動振込を行います（銀行APIとの自動連携は未実装のため、振込自体は人力オペレーションです）。",
+      "ordinary": "普通",
+      "checking": "当座",
+      "empty": "口座情報が登録されていません",
+      "bankName": "銀行名",
+      "branchName": "支店名",
+      "accountType": "口座種別",
+      "accountNumber": "口座番号",
+      "holderName": "口座名義",
+      "holderPlaceholder": "口座名義（カナ）",
+      "saved": "保存しました"
+    },
+    "albums": {
+      "title": "アルバム",
+      "createOnUpload": "アップロード時に作成",
+      "empty": "まだアルバムがありません",
+      "unreleased": "未発表日"
+    },
+    "releaseType": {
+      "single": "シングル",
+      "ep": "EP",
+      "album": "アルバム"
+    },
+    "invite": "友人を招待する",
+    "pricing": "分配計算式はこちらで公開しています"
   }
 }
