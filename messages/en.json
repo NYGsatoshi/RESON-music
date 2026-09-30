@@ -999,5 +999,59 @@
     },
     "uploading": "Uploading…",
     "upload": "Upload"
+  },
+  "Admin": {
+    "checking": "Checking…",
+    "denied": "You do not have permission",
+    "title": "Review dashboard",
+    "privacy": "Review personal data requests",
+    "tabs": {
+      "artists": "Artist reviews",
+      "tracks": "Track reviews",
+      "fraud": "Fraud flags",
+      "reports": "Reports",
+      "payouts": "Payout requests",
+      "founding": "Founding artists"
+    },
+    "artists": {
+      "empty": "No artists are waiting for review",
+      "minor": "Minor",
+      "approve": "Approve",
+      "reject": "Reject"
+    },
+    "tracks": {
+      "empty": "No tracks are waiting for review",
+      "ai": "AI-generated",
+      "unknown": "Unknown",
+      "approve": "Approve",
+      "reject": "Reject"
+    },
+    "fraud": {
+      "empty": "No unresolved fraud flags",
+      "suspended": "Distribution suspended",
+      "unknownTrack": "Unknown track",
+      "resolve": "Mark resolved",
+      "resume": "Resolve and resume distribution"
+    },
+    "reports": {
+      "empty": "No pending reports",
+      "reviewed": "Mark handled",
+      "dismissed": "No issue"
+    },
+    "payouts": {
+      "empty": "No payout requests are waiting for review",
+      "unknown": "Unknown",
+      "paid": "Mark paid",
+      "reject": "Reject"
+    },
+    "founding": {
+      "description": "Search by artist name to add or remove the Founding Artist badge. The badge is visual only; it does not currently affect distribution weight.",
+      "searchAria": "Search founding artists",
+      "placeholder": "Search by artist name…",
+      "search": "Search",
+      "badge": "★ Founding artist",
+      "remove": "Remove badge",
+      "add": "Add badge"
+    }
   }
 }
