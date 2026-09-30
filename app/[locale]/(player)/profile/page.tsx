@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
+import { Link } from '@/i18n/navigation'
+import { useTranslations } from 'next-intl'
 
 const MAX_BEST_TRACKS = 10
 
@@ -18,6 +19,7 @@ interface BestTrackEntry {
 }
 
 export default function ProfilePage() {
+  const t = useTranslations('Profile')
   const [displayName, setDisplayName] = useState('')
   const [bio, setBio] = useState('')
   const [personaTags, setPersonaTags] = useState('')
@@ -48,14 +50,14 @@ export default function ProfilePage() {
     try {
       const response = await fetch('/api/profile')
       const data = await response.json()
-      if (!response.ok) throw new Error(data.error ?? 'プロフィールを取得できませんでした')
+      if (!response.ok) throw new Error(data.error ?? t('loadFailed'))
       if (data.profile) {
         setDisplayName(data.profile.display_name ?? '')
         setBio(data.profile.bio ?? '')
         setPersonaTags((data.profile.persona_tags ?? []).join(', '))
       }
     } catch (cause) {
-      setLoadError(cause instanceof Error ? cause.message : 'プロフィールを取得できませんでした')
+      setLoadError(cause instanceof Error ? cause.message : t('loadFailed'))
     } finally {
       setLoading(false)
     }
@@ -86,7 +88,7 @@ export default function ProfilePage() {
   function addBestTrack(track: TrackOption) {
     if (bestTracks.some((b) => b.track_id === track.id)) return
     if (bestTracks.length >= MAX_BEST_TRACKS) {
-      setBestTracksError(`ランキングは${MAX_BEST_TRACKS}件までです`)
+      setBestTracksError(t('bestLimit', { count: MAX_BEST_TRACKS }))
       return
     }
     setBestTracksError('')
@@ -131,7 +133,7 @@ export default function ProfilePage() {
     setSaved(false)
     const tags = personaTags.split(',').map((t) => t.trim()).filter(Boolean)
     if (tags.length > 10) {
-      setError('音楽人格タグは10個までです')
+      setError(t('tagLimit'))
       return
     }
     setSaving(true)
@@ -152,28 +154,28 @@ export default function ProfilePage() {
         <div className="flex items-center justify-between">
           <Link href="/home" className="font-display text-xl font-bold">RESON</Link>
           <Link href="/home" className="text-sm text-[var(--dim)] hover:text-[var(--text)]">
-            ホームへ戻る
+            {t('backHome')}
           </Link>
         </div>
 
-        <h1 className="font-display mt-8 text-2xl font-bold">音楽人格・プロフィール</h1>
+        <h1 className="font-display mt-8 text-2xl font-bold">{t('title')}</h1>
         <p className="mt-2 text-sm text-[var(--faint)]">
-          自分の音楽の好みをタグで表現できます（自己申告制）。
+          {t('description')}
         </p>
 
         {loading ? (
-          <div role="status" aria-live="polite" className="py-20 text-center text-[var(--faint)]">読み込み中…</div>
+          <div role="status" aria-live="polite" className="py-20 text-center text-[var(--faint)]">{t('loading')}</div>
         ) : loadError ? (
           <div className="mt-6 rounded-2xl border border-red-800 bg-red-900/20 p-4">
             <p role="alert" className="text-sm text-red-300">{loadError}</p>
             <button type="button" onClick={loadProfile} className="mt-3 text-sm underline">
-              再試行
+              {t('retry')}
             </button>
           </div>
         ) : (
           <form onSubmit={save} className="mt-6 space-y-4 rounded-2xl border border-[var(--line)] bg-[var(--panel)] p-4">
             <div>
-              <label htmlFor="profile-display-name" className="text-xs text-[var(--faint)]">表示名</label>
+              <label htmlFor="profile-display-name" className="text-xs text-[var(--faint)]">{t('displayName')}</label>
               <input
                 id="profile-display-name"
                 value={displayName}
@@ -183,7 +185,7 @@ export default function ProfilePage() {
               />
             </div>
             <div>
-              <label htmlFor="profile-bio" className="text-xs text-[var(--faint)]">自己紹介</label>
+              <label htmlFor="profile-bio" className="text-xs text-[var(--faint)]">{t('bio')}</label>
               <textarea
                 id="profile-bio"
                 value={bio}
@@ -194,17 +196,17 @@ export default function ProfilePage() {
               />
             </div>
             <div>
-              <label htmlFor="profile-persona-tags" className="text-xs text-[var(--faint)]">音楽人格タグ（カンマ区切り・最大10個）</label>
+              <label htmlFor="profile-persona-tags" className="text-xs text-[var(--faint)]">{t('personaLabel')}</label>
               <input
                 id="profile-persona-tags"
                 value={personaTags}
                 onChange={(e) => setPersonaTags(e.target.value)}
-                placeholder="例: シティポップ, 夜更かし, ギターロック"
+                placeholder={t('personaPlaceholder')}
                 className="mt-1 w-full rounded-lg border border-[var(--line)] bg-[var(--surface)] px-3 py-2 text-sm placeholder-[var(--faint)] focus:outline-none"
               />
               {suggestedTags.length > 0 && (
                 <div className="mt-2">
-                  <p className="text-xs text-[var(--faint)]">聴取データからの提案（自己申告に追加するかはあなた次第です）</p>
+                  <p className="text-xs text-[var(--faint)]">{t('suggestions')}</p>
                   <div className="mt-1 flex flex-wrap gap-1.5">
                     {suggestedTags.map((tag) => (
                       <button
@@ -221,39 +223,39 @@ export default function ProfilePage() {
               )}
             </div>
             {error && <p role="alert" className="text-xs text-red-400">{error}</p>}
-            {saved && <p role="status" className="text-xs text-[var(--accent)]">保存しました</p>}
+            {saved && <p role="status" className="text-xs text-[var(--accent)]">{t('saved')}</p>}
             <button
               type="submit"
               disabled={saving}
               className="w-full rounded-lg bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-[var(--ink)] disabled:opacity-40"
             >
-              {saving ? '保存中…' : '保存する'}
+              {saving ? t('saving') : t('save')}
             </button>
           </form>
         )}
 
-        <h2 className="font-display mt-10 text-xl font-bold">ベストトラックランキング</h2>
+        <h2 className="font-display mt-10 text-xl font-bold">{t('rankingTitle')}</h2>
         <p className="mt-2 text-sm text-[var(--faint)]">
-          好きな楽曲を最大{MAX_BEST_TRACKS}曲、ランキング形式で公開できます（Topster風プロフィール）。
+          {t('rankingDescription', { count: MAX_BEST_TRACKS })}
         </p>
 
         <div className="mt-4 rounded-2xl border border-[var(--line)] bg-[var(--panel)] p-4">
           <input
-            aria-label="ベストトラックに追加する楽曲を検索"
+            aria-label={t('searchLabel')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="楽曲名で検索して追加…"
+            placeholder={t('searchPlaceholder')}
             className="w-full rounded-lg border border-[var(--line)] bg-[var(--surface)] px-3 py-2 text-sm placeholder-[var(--faint)] focus:outline-none"
           />
           {searchResults.length > 0 && (
             <div className="mt-2 space-y-1">
-              {searchResults.map((t) => (
+              {searchResults.map((track) => (
                 <button
-                  key={t.id}
-                  onClick={() => addBestTrack(t)}
+                  key={track.id}
+                  onClick={() => addBestTrack(track)}
                   className="block w-full rounded-lg px-3 py-2 text-left text-sm hover:bg-[var(--surface)]"
                 >
-                  {t.title} <span className="text-[var(--faint)]">・ {t.artists?.name}</span>
+                  {track.title} <span className="text-[var(--faint)]">{t('separator')} {track.artists?.name}</span>
                 </button>
               ))}
             </div>
@@ -262,7 +264,7 @@ export default function ProfilePage() {
           {bestTracksError && <p className="mt-2 text-xs text-red-400">{bestTracksError}</p>}
 
           {bestTracks.length === 0 ? (
-            <p className="mt-4 text-center text-xs text-[var(--faint)]">まだランクインした楽曲がありません</p>
+            <p className="mt-4 text-center text-xs text-[var(--faint)]">{t('emptyRanking')}</p>
           ) : (
             <div className="mt-4 space-y-2">
               {bestTracks.map((b, i) => (
@@ -270,7 +272,7 @@ export default function ProfilePage() {
                   <span className="w-6 shrink-0 text-sm font-bold text-[var(--accent)]">#{b.rank}</span>
                   <div className="flex-1 text-sm">
                     {b.tracks?.title}
-                    <span className="ml-1 text-xs text-[var(--faint)]">・ {b.tracks?.artists?.name}</span>
+                    <span className="ml-1 text-xs text-[var(--faint)]">{t('separator')} {b.tracks?.artists?.name}</span>
                   </div>
                   <button onClick={() => moveBestTrack(i, -1)} disabled={i === 0} className="text-xs text-[var(--dim)] disabled:opacity-30">▲</button>
                   <button onClick={() => moveBestTrack(i, 1)} disabled={i === bestTracks.length - 1} className="text-xs text-[var(--dim)] disabled:opacity-30">▼</button>
@@ -280,13 +282,13 @@ export default function ProfilePage() {
             </div>
           )}
 
-          {bestTracksSaved && <p className="mt-3 text-xs text-[var(--accent)]">保存しました</p>}
+          {bestTracksSaved && <p className="mt-3 text-xs text-[var(--accent)]">{t('saved')}</p>}
           <button
             onClick={saveBestTracks}
             disabled={bestTracks.length === 0}
             className="mt-4 w-full rounded-lg bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-[var(--ink)] disabled:opacity-40"
           >
-            ランキングを保存する
+            {t('saveRanking')}
           </button>
         </div>
       </div>
