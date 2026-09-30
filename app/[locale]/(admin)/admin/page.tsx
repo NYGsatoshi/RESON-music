@@ -224,8 +224,8 @@ export default function AdminPage() {
                   </div>
                   <p className="text-sm text-zinc-400">{track.artists?.name ?? t('tracks.unknown')}</p>
                   <div className="flex gap-2">
-                    <button onClick={() => reviewTrack(track.id, 'approved')} className="text-xs bg-white text-black px-3 py-1.5 rounded-lg font-semibold">承認</button>
-                    <button onClick={() => reviewTrack(track.id, 'rejected')} className="text-xs border border-red-800 text-red-400 px-3 py-1.5 rounded-lg">却下</button>
+                    <button onClick={() => reviewTrack(track.id, 'approved')} className="text-xs bg-white text-black px-3 py-1.5 rounded-lg font-semibold">{t('tracks.approve')}</button>
+                    <button onClick={() => reviewTrack(track.id, 'rejected')} className="text-xs border border-red-800 text-red-400 px-3 py-1.5 rounded-lg">{t('tracks.reject')}</button>
                   </div>
                 </div>
               ))
@@ -301,7 +301,7 @@ export default function AdminPage() {
                   <p className="text-xs text-zinc-500">{format.dateTime(new Date(p.requested_at), { year: 'numeric', month: 'short', day: 'numeric' })}</p>
                   <div className="flex gap-2">
                     <button onClick={() => processPayout(p.id, 'paid')} className="text-xs bg-white text-black px-3 py-1.5 rounded-lg font-semibold">{t('payouts.paid')}</button>
-                    <button onClick={() => processPayout(p.id, 'rejected')} className="text-xs border border-red-800 text-red-400 px-3 py-1.5 rounded-lg">却下</button>
+                    <button onClick={() => processPayout(p.id, 'rejected')} className="text-xs border border-red-800 text-red-400 px-3 py-1.5 rounded-lg">{t('payouts.reject')}</button>
                   </div>
                 </div>
               ))
