@@ -37,7 +37,7 @@ export default function PrivacyRequestsPage() {
     fetch('/api/privacy/requests', { cache: 'no-store' })
       .then(async (res) => {
         const data = await res.json()
-        if (!res.ok) throw new Error(data.error ?? t('user.fetchFailed'))
+        if (!res.ok) throw new Error(t('user.fetchFailed'))
         setRequests(data.requests ?? [])
       })
       .catch((cause) => setError(cause instanceof Error ? cause.message : t('user.fetchFailed')))
@@ -54,7 +54,7 @@ export default function PrivacyRequestsPage() {
         body: JSON.stringify({ request_type: type, details }),
       })
       const data = await res.json()
-      if (!res.ok) throw new Error(data.error ?? t('user.sendFailed'))
+      if (!res.ok) throw new Error(t('user.sendFailed'))
       setRequests((current) => [data.request, ...current])
       setDetails('')
       setMessage(t('user.accepted'))

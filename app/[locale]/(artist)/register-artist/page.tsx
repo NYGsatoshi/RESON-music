@@ -29,6 +29,27 @@ export default function RegisterArtistPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
+  function artistErrorMessage(code?: string) {
+    switch (code) {
+      case 'authentication_required':
+        return t('validation.authRequired')
+      case 'artist_name_required':
+        return t('validation.artistNameRequired')
+      case 'artist_name_too_long':
+        return t('validation.artistNameTooLong')
+      case 'rights_required':
+        return t('validation.rightsRequired')
+      case 'bank_required':
+        return t('validation.bankRequired')
+      case 'guardian_required':
+        return t('validation.parentRequired')
+      case 'artist_already_registered':
+        return t('validation.alreadyRegistered')
+      default:
+        return t('validation.artistFailed')
+    }
+  }
+
   function nextFromArtist(e: React.FormEvent) {
     e.preventDefault()
     setError('')
@@ -74,7 +95,7 @@ export default function RegisterArtistPage() {
     })
     const data = await res.json()
     setLoading(false)
-    if (!res.ok) { setError(data.error); return }
+    if (!res.ok) { setError(artistErrorMessage(data.code)); return }
     setStep('done')
   }
 

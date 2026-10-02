@@ -50,7 +50,7 @@ export default function ProfilePage() {
     try {
       const response = await fetch('/api/profile')
       const data = await response.json()
-      if (!response.ok) throw new Error(data.error ?? t('loadFailed'))
+      if (!response.ok) throw new Error(t('loadFailed'))
       if (data.profile) {
         setDisplayName(data.profile.display_name ?? '')
         setBio(data.profile.bio ?? '')
@@ -121,8 +121,7 @@ export default function ProfilePage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ track_ids: bestTracks.map((b) => b.track_id) }),
     })
-    const data = await res.json()
-    if (!res.ok) { setBestTracksError(data.error); return }
+    if (!res.ok) { setBestTracksError(t('rankingSaveFailed')); return }
     setBestTracksSaved(true)
     loadBestTracks()
   }
@@ -142,9 +141,8 @@ export default function ProfilePage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ display_name: displayName, bio, persona_tags: tags }),
     })
-    const data = await res.json()
     setSaving(false)
-    if (!res.ok) { setError(data.error); return }
+    if (!res.ok) { setError(t('saveFailed')); return }
     setSaved(true)
   }
 

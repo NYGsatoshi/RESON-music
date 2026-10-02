@@ -316,7 +316,8 @@
       "closeDialog": "Close tip dialog",
       "preparing": "Preparing…",
       "sendAmount": "Send ¥{amount}",
-      "paymentTitle": "Tip (¥{amount})"
+      "paymentTitle": "Tip (¥{amount})",
+      "failed": "Could not complete the support action. Please try again."
     },
     "boost": {
       "title": "Boost heart (show strong support for this track)",
@@ -630,7 +631,9 @@
       "codePlaceholder": "6-digit code",
       "checking": "Checking…",
       "confirm": "Verify and continue",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "requestFailed": "Could not send the verification code. Check the school email address and try again.",
+      "confirmFailed": "Could not verify the code. Check the code and try again."
     },
     "manage": "Change or cancel your plan",
     "parental": "For minors: link billing to a parent or guardian",
@@ -657,7 +660,8 @@
       "standardPool": "¥562/month",
       "studentPool": "¥200/month",
       "freePool": "¥42/month (ad revenue)"
-    }
+    },
+    "requestFailed": "The request failed. Please try again."
   },
   "TrackDetail": {
     "loading": "Loading…",
@@ -705,7 +709,9 @@
     "searchPlaceholder": "Search tracks to add…",
     "separator": "·",
     "emptyRanking": "No ranked tracks yet",
-    "saveRanking": "Save ranking"
+    "saveRanking": "Save ranking",
+    "saveFailed": "Could not save your profile.",
+    "rankingSaveFailed": "Could not save your best-track ranking."
   },
   "PrivacyPage": {
     "metadataTitle": "Personal data handling | RESON",
@@ -954,7 +960,8 @@
       "imageFormat": "Cover images must be JPEG, PNG, or WebP",
       "imageSize": "Cover images must be {size} MB or less",
       "duration": "Could not read the track duration",
-      "uploadFailed": "File upload failed"
+      "uploadFailed": "File upload failed",
+      "requestFailed": "The request failed. Please try again."
     },
     "status": {
       "file": "Uploading audio file…",

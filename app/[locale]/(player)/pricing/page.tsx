@@ -64,7 +64,7 @@ function PricingContent() {
     const data = await res.json()
     setLoading(null)
     if (!res.ok) {
-      alert(data.error)
+      alert(t('requestFailed'))
       return
     }
     router.push(data.url)
@@ -78,9 +78,8 @@ function PricingContent() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ school_email: schoolEmail }),
     })
-    const data = await res.json()
     setStudentBusy(false)
-    if (!res.ok) { setStudentError(data.error); return }
+    if (!res.ok) { setStudentError(t('student.requestFailed')); return }
     setStudentStep('code')
   }
 
@@ -92,10 +91,9 @@ function PricingContent() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ code: verifyCode }),
     })
-    const data = await res.json()
     if (!res.ok) {
       setStudentBusy(false)
-      setStudentError(data.error)
+      setStudentError(t('student.confirmFailed'))
       return
     }
     setStudentStep('closed')
@@ -110,14 +108,14 @@ function PricingContent() {
     })
     const data = await res.json()
     setStudentBusy(false)
-    if (!res.ok) { alert(data.error); return }
+    if (!res.ok) { alert(t('requestFailed')); return }
     router.push(data.url)
   }
 
   async function openPortal() {
     const res = await fetch('/api/stripe/portal', { method: 'POST' })
     const data = await res.json()
-    if (!res.ok) { alert(data.error); return }
+    if (!res.ok) { alert(t('requestFailed')); return }
     router.push(data.url)
   }
 

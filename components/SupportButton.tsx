@@ -67,8 +67,7 @@ export function SupportButton({ trackId }: { trackId: string }) {
       body: JSON.stringify({ track_id: trackId }),
     })
     if (!res.ok) {
-      const data = await res.json()
-      setError(data.error)
+      setError(t('failed'))
       return
     }
     setHearted(true)
@@ -85,7 +84,7 @@ export function SupportButton({ trackId }: { trackId: string }) {
     })
     const data = await res.json()
     setLoading(false)
-    if (!res.ok) { setError(data.error); return }
+    if (!res.ok) { setError(t('failed')); return }
 
     if (data.type === 'tip_deferred') {
       // Support+ は月末蓄積精算のため即時決済不要

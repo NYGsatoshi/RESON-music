@@ -75,7 +75,7 @@ export default function UploadPage() {
     })
     const data = await res.json()
     setCreatingAlbum(false)
-    if (!res.ok) { setError(data.error); return }
+    if (!res.ok) { setError(t('validation.requestFailed')); return }
     setNewAlbumTitle('')
     loadAlbums()
     setAlbumId(data.album.id)
@@ -131,7 +131,7 @@ export default function UploadPage() {
     const meta = await metaRes.json()
     if (!metaRes.ok) {
       setAlbumCoverUploading(false)
-      setError(meta.error)
+      setError(t('validation.requestFailed'))
       return
     }
     await fetch(meta.upload_url, {
@@ -203,7 +203,7 @@ export default function UploadPage() {
     })
     const meta = await metaRes.json()
     if (!metaRes.ok) {
-      setError(meta.error)
+      setError(t('validation.requestFailed'))
       setLoading(false)
       return
     }
