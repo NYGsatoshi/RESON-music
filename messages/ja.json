@@ -396,7 +396,8 @@
     "dashboard": "ダッシュボードへ",
     "loading": "読み込み中…",
     "empty": "まだ支援者はいません。楽曲を届け続けましょう。",
-    "anonymous": "名無しのリスナー"
+    "anonymous": "名無しのリスナー",
+    "loadFailed": "支援者を取得できませんでした。"
   },
   "ArtistReport": {
     "loading": "読み込み中…",
@@ -601,7 +602,8 @@
     "empty": "まだ曲がありません",
     "unknownArtist": "不明",
     "addQueueTitle": "キューへ追加",
-    "addQueue": "+キュー"
+    "addQueue": "+キュー",
+    "addFailed": "プレイリストに楽曲を追加できませんでした。もう一度お試しください。"
   },
   "Messages": {
     "title": "メッセージ",
@@ -897,7 +899,8 @@
       "warning": "⚠️ 残高が50,000円を超えています。出金申請を行ってください。",
       "pending": "出金申請受付済み（処理中）",
       "requesting": "申請中…",
-      "request": "出金申請"
+      "request": "出金申請",
+      "requestFailed": "出金申請を送信できませんでした。もう一度お試しください。"
     },
     "payoutStatus": {
       "pending": "処理中",
@@ -929,7 +932,8 @@
       "save": "保存する",
       "close": "閉じる",
       "lyricsPlaceholder": "歌詞を入力…",
-      "isrcPlaceholder": "例: US-RC1-76-07839"
+      "isrcPlaceholder": "例: US-RC1-76-07839",
+      "isrcSaveFailed": "ISRCを保存できませんでした。もう一度お試しください。"
     },
     "bank": {
       "title": "出金先銀行口座",
@@ -945,7 +949,8 @@
       "accountNumber": "口座番号",
       "holderName": "口座名義",
       "holderPlaceholder": "口座名義（カナ）",
-      "saved": "保存しました"
+      "saved": "保存しました",
+      "saveFailed": "銀行口座を保存できませんでした。もう一度お試しください。"
     },
     "albums": {
       "title": "アルバム",

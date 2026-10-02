@@ -103,7 +103,7 @@ function ConfirmForm({ onSuccess, onClose }: { onSuccess: () => void; onClose: (
     })
     setSubmitting(false)
     if (confirmError) {
-      setError(confirmError.message ?? t('failed'))
+      setError(t('failed'))
       return
     }
     onSuccess()

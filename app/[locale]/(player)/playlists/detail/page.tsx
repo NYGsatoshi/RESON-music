@@ -78,7 +78,7 @@ function PlaylistDetailContent() {
       body: JSON.stringify({ track_id: trackId }),
     })
     const body = await res.json()
-    if (!res.ok) { setError(body.error); return }
+    if (!res.ok) { setError(t('addFailed')); return }
     setSearchQuery('')
     setSearchResults([])
     load()

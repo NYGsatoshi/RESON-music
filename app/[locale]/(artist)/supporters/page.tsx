@@ -22,7 +22,7 @@ export default function SupportersPage() {
     fetch('/api/artist/supporters')
       .then((r) => r.json())
       .then((d) => {
-        if (d.error) { setError(d.error); setLoading(false); return }
+        if (d.error) { setError(t('loadFailed')); setLoading(false); return }
         setSupporters(d.supporters ?? [])
         setLoading(false)
       })

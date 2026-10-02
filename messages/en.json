@@ -396,7 +396,8 @@
     "dashboard": "Dashboard",
     "loading": "Loading…",
     "empty": "You do not have any supporters yet. Keep sharing your music.",
-    "anonymous": "Anonymous listener"
+    "anonymous": "Anonymous listener",
+    "loadFailed": "Could not load supporters."
   },
   "ArtistReport": {
     "loading": "Loading…",
@@ -601,7 +602,8 @@
     "empty": "No tracks yet",
     "unknownArtist": "Unknown",
     "addQueueTitle": "Add to queue",
-    "addQueue": "+ Queue"
+    "addQueue": "+ Queue",
+    "addFailed": "Could not add the track to the playlist. Please try again."
   },
   "Messages": {
     "title": "Messages",
@@ -897,7 +899,8 @@
       "warning": "⚠️ Your balance exceeds ¥50,000. Please submit a payout request.",
       "pending": "Payout request received (processing)",
       "requesting": "Requesting…",
-      "request": "Request payout"
+      "request": "Request payout",
+      "requestFailed": "Could not submit the payout request. Please try again."
     },
     "payoutStatus": {
       "pending": "Processing",
@@ -929,7 +932,8 @@
       "save": "Save",
       "close": "Close",
       "lyricsPlaceholder": "Enter lyrics…",
-      "isrcPlaceholder": "e.g. US-RC1-76-07839"
+      "isrcPlaceholder": "e.g. US-RC1-76-07839",
+      "isrcSaveFailed": "Could not save the ISRC. Please try again."
     },
     "bank": {
       "title": "Payout bank account",
@@ -945,7 +949,8 @@
       "accountNumber": "Account number",
       "holderName": "Account holder",
       "holderPlaceholder": "Account holder name",
-      "saved": "Saved"
+      "saved": "Saved",
+      "saveFailed": "Could not save the bank account. Please try again."
     },
     "albums": {
       "title": "Albums",

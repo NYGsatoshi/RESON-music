@@ -103,7 +103,7 @@ export default function DashboardPage() {
       body: JSON.stringify(bankForm),
     })
     const body = await res.json()
-    if (!res.ok) { setBankError(body.error); return }
+    if (!res.ok) { setBankError(t('bank.saveFailed')); return }
     setEditingBank(false)
     setBankSaved(true)
     setTimeout(() => setBankSaved(false), 2000)
@@ -155,7 +155,7 @@ export default function DashboardPage() {
     })
     const body = await res.json()
     setIsrcSaving(false)
-    if (!res.ok) { setIsrcError(body.error); return }
+    if (!res.ok) { setIsrcError(t('tracks.isrcSaveFailed')); return }
     setIsrcEditingId(null)
     fetch('/api/artist/report').then((r) => r.json()).then((d) => setData(d))
   }
@@ -167,7 +167,7 @@ export default function DashboardPage() {
     const body = await res.json()
     setPayoutLoading(false)
     if (!res.ok) {
-      setPayoutError(body.error)
+      setPayoutError(t('balance.requestFailed'))
       return
     }
     setPayoutRequests((prev) => [body.request, ...prev])
