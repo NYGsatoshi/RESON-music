@@ -24,7 +24,7 @@ export default function ResetPasswordRequestPage() {
       redirectTo: `${window.location.origin}${getPathname({ locale, href: '/reset-password/confirm' })}`,
     })
     setLoading(false)
-    if (error) { setError(error.message); return }
+    if (error) { setError(t('failed')); return }
     setSent(true)
   }
 

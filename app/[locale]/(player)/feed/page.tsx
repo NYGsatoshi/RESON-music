@@ -89,7 +89,7 @@ function FeedPageInner() {
     })
     const data = await res.json()
     setPosting(false)
-    if (!res.ok) { setError(data.error); return }
+    if (!res.ok) { setError(tr('postFailed')); return }
     setBody('')
     setAttachedTrack(null)
     setTrackQuery('')

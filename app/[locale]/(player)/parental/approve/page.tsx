@@ -22,7 +22,7 @@ function ApproveContent() {
     })
     const data = await res.json()
     setBusy(false)
-    if (!res.ok) { setError(data.error); return }
+    if (!res.ok) { setError(t('failed')); return }
     setResult(action)
   }
 

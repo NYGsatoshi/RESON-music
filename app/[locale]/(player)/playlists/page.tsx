@@ -41,7 +41,7 @@ export default function PlaylistsPage() {
     })
     const data = await res.json()
     setCreating(false)
-    if (!res.ok) { setError(data.error); return }
+    if (!res.ok) { setError(t('createFailed')); return }
     setNewTitle('')
     load()
   }
