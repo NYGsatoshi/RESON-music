@@ -56,8 +56,8 @@ export default function ProfilePage() {
         setBio(data.profile.bio ?? '')
         setPersonaTags((data.profile.persona_tags ?? []).join(', '))
       }
-    } catch (cause) {
-      setLoadError(cause instanceof Error ? cause.message : t('loadFailed'))
+    } catch {
+      setLoadError(t('loadFailed'))
     } finally {
       setLoading(false)
     }

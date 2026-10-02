@@ -35,7 +35,7 @@ export function BoostButton({ trackId }: { trackId: string }) {
     })
     const data = await res.json()
     setBoosting(false)
-    if (!res.ok) { setError(data.error); return }
+    if (!res.ok) { setError(t('failed')); return }
 
     if (data.type === 'free') {
       setJustBoosted(true)

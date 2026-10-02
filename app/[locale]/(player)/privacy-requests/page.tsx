@@ -40,7 +40,7 @@ export default function PrivacyRequestsPage() {
         if (!res.ok) throw new Error(t('user.fetchFailed'))
         setRequests(data.requests ?? [])
       })
-      .catch((cause) => setError(cause instanceof Error ? cause.message : t('user.fetchFailed')))
+      .catch(() => setError(t('user.fetchFailed')))
   }, [])
 
   async function submit(event: React.FormEvent) {
@@ -58,8 +58,8 @@ export default function PrivacyRequestsPage() {
       setRequests((current) => [data.request, ...current])
       setDetails('')
       setMessage(t('user.accepted'))
-    } catch (cause) {
-      setError(cause instanceof Error ? cause.message : t('user.sendFailed'))
+    } catch {
+      setError(t('user.sendFailed'))
     } finally {
       setBusy(false)
     }
