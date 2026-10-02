@@ -17,12 +17,28 @@ const ALLOWED_SOURCE_CONTENT = [
 
 const JAPANESE = /[\u3040-\u30ff\u3400-\u9fff]/
 
+const RAW_ERROR_SINKS = [
+  /\bset[A-Za-z]*Error\([^)]*\b[A-Za-z_$][\w$]*\.(?:error|message)\b/,
+  /\b(?:window\.)?alert\([^)]*\b[A-Za-z_$][\w$]*\.(?:error|message)\b/,
+  /throw new Error\([^)]*\b[A-Za-z_$][\w$]*\.(?:error|message)\b/,
+]
+
 function collectTsxFiles(root: string): string[] {
   return fs.readdirSync(root, { withFileTypes: true }).flatMap((entry) => {
     const fullPath = path.join(root, entry.name)
     if (entry.isDirectory()) return collectTsxFiles(fullPath)
     return entry.isFile() && entry.name.endsWith('.tsx') ? [fullPath] : []
   })
+}
+
+function findRawErrorSinks(filePath: string): string[] {
+  const source = fs.readFileSync(filePath, 'utf8')
+
+  return source
+    .split('\n')
+    .map((line, index) => ({ line, lineNumber: index + 1 }))
+    .filter(({ line }) => RAW_ERROR_SINKS.some((pattern) => pattern.test(line)))
+    .map(({ line, lineNumber }) => `${lineNumber}: ${line.trim()}`)
 }
 
 function findHardcodedJapanese(filePath: string): string[] {
@@ -45,6 +61,18 @@ function findHardcodedJapanese(filePath: string): string[] {
 }
 
 describe('localized UI source', () => {
+  it('does not surface raw backend or SDK error messages', () => {
+    const failures = ROOTS.flatMap((root) =>
+      collectTsxFiles(root).flatMap((filePath) =>
+        findRawErrorSinks(filePath).map(
+          (match) => `${path.relative(process.cwd(), filePath)}:${match}`
+        )
+      )
+    )
+
+    expect(failures).toEqual([])
+  })
+
   it('does not hard-code Japanese UI copy in locale pages or shared components', () => {
     const failures = ROOTS.flatMap((root) =>
       collectTsxFiles(root).flatMap((filePath) =>
