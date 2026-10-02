@@ -41,10 +41,10 @@ export default function AdminPrivacyRequestsPage() {
     fetch('/api/admin/privacy-requests', { cache: 'no-store' })
       .then(async (response) => {
         const data = await response.json()
-        if (!response.ok) throw new Error(data.error ?? t('admin.fetchFailed'))
+        if (!response.ok) throw new Error(t('admin.fetchFailed'))
         setRequests(data.requests ?? [])
       })
-      .catch((cause) => setError(cause instanceof Error ? cause.message : t('admin.fetchFailed')))
+      .catch(() => setError(t('admin.fetchFailed')))
   }, [])
 
   async function update(request: Request, status: string) {
@@ -60,11 +60,11 @@ export default function AdminPrivacyRequestsPage() {
         body: JSON.stringify({ id: request.id, status, response: drafts[request.id] ?? '' }),
       })
       const data = await response.json()
-      if (!response.ok) throw new Error(data.error ?? t('admin.updateFailed'))
+      if (!response.ok) throw new Error(t('admin.updateFailed'))
       setRequests((current) => current.map((item) => item.id === request.id
         ? { ...item, ...data.request } : item))
-    } catch (cause) {
-      setError(cause instanceof Error ? cause.message : t('admin.updateFailed'))
+    } catch {
+      setError(t('admin.updateFailed'))
     } finally {
       setBusyId('')
     }

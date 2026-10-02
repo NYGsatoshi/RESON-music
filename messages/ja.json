@@ -106,7 +106,8 @@
       "submit": "ログイン",
       "forgot": "パスワードを忘れた場合",
       "noAccount": "アカウントをお持ちでない方は",
-      "register": "新規登録"
+      "register": "新規登録",
+      "failed": "ログインに失敗しました。メールアドレスとパスワードを確認してください。"
     },
     "register": {
       "title": "新規登録",
@@ -199,7 +200,8 @@
       "back": "ログインへ戻る",
       "helper": "登録済みのメールアドレスに再設定用のリンクを送信します",
       "sending": "送信中…",
-      "send": "再設定リンクを送信"
+      "send": "再設定リンクを送信",
+      "failed": "再設定リンクを送信できませんでした。メールアドレスを確認してもう一度お試しください。"
     },
     "resetConfirm": {
       "title": "新しいパスワードの設定",
@@ -211,13 +213,15 @@
       "newPassword": "新しいパスワード",
       "newPasswordConfirm": "新しいパスワード（確認）",
       "updating": "更新中…",
-      "update": "パスワードを更新する"
+      "update": "パスワードを更新する",
+      "failed": "パスワードを更新できませんでした。もう一度お試しください。"
     },
     "devLogin": {
       "title": "開発者用ログイン（電話番号認証なし）",
       "loggingIn": "ログイン中…",
       "login": "ログイン",
-      "notice": "このページは開発・検証専用です。アカウントは /api/dev/seed-account（CRON_SECRET認証）で作成します。"
+      "notice": "このページは開発・検証専用です。アカウントは /api/dev/seed-account（CRON_SECRET認証）で作成します。",
+      "failed": "開発者ログインに失敗しました。認証情報を確認してもう一度お試しください。"
     }
   },
   "Metadata": {
@@ -324,7 +328,8 @@
       "boosted": "ブースト済み",
       "boost": "ブースト",
       "remaining": "今月残り{remaining}回（無料{freeRemaining}回・追加分は次回請求と合算）",
-      "paymentTitle": "追加ブースト（¥{amount}）"
+      "paymentTitle": "追加ブースト（¥{amount}）",
+      "failed": "ブーストできませんでした。もう一度お試しください。"
     },
     "supportGraph": {
       "anonymous": "名無しのリスナー",
@@ -382,7 +387,8 @@
     "comments": "💬 コメント",
     "commentLabel": "コメント本文",
     "commentPlaceholder": "コメントする…",
-    "send": "送信"
+    "send": "送信",
+    "postFailed": "投稿できませんでした。もう一度お試しください。"
   },
   "ArtistSupporters": {
     "title": "支援者への感謝",
@@ -569,7 +575,8 @@
       "rejected": "申請を却下しました。",
       "description": "このリンクを開いたご本人（保護者）のアカウントに、未成年のアカウントの月額決済を紐付けます。以後、月額プランの支払いはこのアカウントのカードで行われます。",
       "decline": "却下する",
-      "approve": "承認する"
+      "approve": "承認する",
+      "failed": "承認申請を更新できませんでした。もう一度お試しください。"
     }
   },
   "Playlists": {
@@ -580,7 +587,8 @@
     "create": "作成",
     "loading": "読み込み中…",
     "empty": "まだプレイリストがありません",
-    "private": "非公開"
+    "private": "非公開",
+    "createFailed": "プレイリストを作成できませんでした。もう一度お試しください。"
   },
   "PlaylistDetail": {
     "loading": "読み込み中…",

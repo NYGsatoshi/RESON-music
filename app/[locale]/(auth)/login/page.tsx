@@ -26,7 +26,7 @@ export default function LoginPage() {
     setLoading(true)
     const supabase = createClient()
     const { error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) { setLoading(false); setError(error.message); return }
+    if (error) { setLoading(false); setError(t('failed')); return }
 
     // アーティスト登録済みか判定してリダイレクト先を分岐する
     // （同一アカウントがリスナー/アーティストの両方を兼ねられる想定のため、

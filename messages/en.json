@@ -106,7 +106,8 @@
       "submit": "Log in",
       "forgot": "Forgot your password?",
       "noAccount": "Don't have an account?",
-      "register": "Sign up"
+      "register": "Sign up",
+      "failed": "Sign-in failed. Check your email address and password."
     },
     "register": {
       "title": "Create an account",
@@ -199,7 +200,8 @@
       "back": "Back to login",
       "helper": "We'll send a reset link to your registered email address.",
       "sending": "Sending…",
-      "send": "Send reset link"
+      "send": "Send reset link",
+      "failed": "Could not send the reset link. Check the email address and try again."
     },
     "resetConfirm": {
       "title": "Set a new password",
@@ -211,13 +213,15 @@
       "newPassword": "New password",
       "newPasswordConfirm": "Confirm new password",
       "updating": "Updating…",
-      "update": "Update password"
+      "update": "Update password",
+      "failed": "Could not update your password. Please try again."
     },
     "devLogin": {
       "title": "Developer login (no phone verification)",
       "loggingIn": "Logging in…",
       "login": "Log in",
-      "notice": "This page is for development and testing only. Create accounts through /api/dev/seed-account using CRON_SECRET authentication."
+      "notice": "This page is for development and testing only. Create accounts through /api/dev/seed-account using CRON_SECRET authentication.",
+      "failed": "Developer sign-in failed. Check the credentials and try again."
     }
   },
   "Metadata": {
@@ -324,7 +328,8 @@
       "boosted": "Boosted",
       "boost": "Boost",
       "remaining": "{remaining} boosts left this month ({freeRemaining} free; paid extras are added to your next bill)",
-      "paymentTitle": "Extra boost (¥{amount})"
+      "paymentTitle": "Extra boost (¥{amount})",
+      "failed": "Could not apply the boost. Please try again."
     },
     "supportGraph": {
       "anonymous": "Anonymous listener",
@@ -382,7 +387,8 @@
     "comments": "💬 Comments",
     "commentLabel": "Comment",
     "commentPlaceholder": "Write a comment…",
-    "send": "Send"
+    "send": "Send",
+    "postFailed": "Could not publish the post. Please try again."
   },
   "ArtistSupporters": {
     "title": "Thank your supporters",
@@ -569,7 +575,8 @@
       "rejected": "The request was declined.",
       "description": "This links the minor's subscription billing to the account of the parent or guardian who opened this page. Future subscription charges will use the card on this account.",
       "decline": "Decline",
-      "approve": "Approve"
+      "approve": "Approve",
+      "failed": "Could not update the approval request. Please try again."
     }
   },
   "Playlists": {
@@ -580,7 +587,8 @@
     "create": "Create",
     "loading": "Loading…",
     "empty": "No playlists yet",
-    "private": "Private"
+    "private": "Private",
+    "createFailed": "Could not create the playlist. Please try again."
   },
   "PlaylistDetail": {
     "loading": "Loading…",
