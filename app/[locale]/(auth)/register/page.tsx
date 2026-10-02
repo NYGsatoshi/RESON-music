@@ -8,7 +8,7 @@ import { LocaleSwitcher } from '@/components/LocaleSwitcher'
 type Step = 'account' | 'role' | 'confirm-email' | 'artist' | 'bank' | 'rights' | 'done'
 type Role = 'listener' | 'artist'
 
-async function readJson(response: Response): Promise<{ error?: string; needs_email_confirmation?: boolean }> {
+async function readJson(response: Response): Promise<{ code?: string; needs_email_confirmation?: boolean }> {
   try {
     return await response.json()
   } catch {
@@ -45,6 +45,38 @@ export default function RegisterPage() {
     if (ref) sessionStorage.setItem('reson_ref', ref)
   }, [])
 
+  function accountErrorMessage(code?: string) {
+    switch (code) {
+      case 'invalid_email':
+        return t('validation.invalidEmail')
+      case 'password_too_short':
+        return t('validation.passwordMin')
+      default:
+        return t('validation.accountFailed')
+    }
+  }
+
+  function artistErrorMessage(code?: string) {
+    switch (code) {
+      case 'authentication_required':
+        return t('validation.authRequired')
+      case 'artist_name_required':
+        return t('validation.artistNameRequired')
+      case 'artist_name_too_long':
+        return t('validation.artistNameTooLong')
+      case 'rights_required':
+        return t('validation.rightsRequired')
+      case 'bank_required':
+        return t('validation.bankRequired')
+      case 'guardian_required':
+        return t('validation.parentRequired')
+      case 'artist_already_registered':
+        return t('validation.alreadyRegistered')
+      default:
+        return t('validation.artistFailed')
+    }
+  }
+
   async function createAccount(e: React.FormEvent) {
     e.preventDefault()
     setError('')
@@ -66,7 +98,7 @@ export default function RegisterPage() {
       })
       const data = await readJson(res)
       if (!res.ok) {
-        setError(data.error ?? t('validation.accountFailed'))
+        setError(accountErrorMessage(data.code))
         return
       }
       sessionStorage.removeItem('reson_ref')
@@ -138,7 +170,7 @@ export default function RegisterPage() {
       })
       const data = await readJson(res)
       if (!res.ok) {
-        setError(data.error ?? t('validation.artistFailed'))
+        setError(artistErrorMessage(data.code))
         return
       }
       setStep('done')

@@ -117,7 +117,13 @@
         "artistFailed": "登録申請を完了できませんでした。時間をおいて再試行してください。",
         "network": "通信に失敗しました。接続を確認してもう一度お試しください。",
         "rightsRequired": "権利確認への同意が必要です",
-        "parentRequired": "未成年の場合は保護者の氏名・連絡先が必要です"
+        "parentRequired": "未成年の場合は保護者の氏名・連絡先が必要です",
+        "invalidEmail": "メールアドレスの形式が正しくありません",
+        "authRequired": "アーティスト登録にはログインが必要です",
+        "artistNameRequired": "アーティスト名は必須です",
+        "artistNameTooLong": "アーティスト名は100文字以内です",
+        "bankRequired": "出金先の銀行口座情報は必須です",
+        "alreadyRegistered": "すでにアーティスト登録済みです"
       },
       "account": {
         "creating": "登録中…",

@@ -117,7 +117,13 @@
         "artistFailed": "We couldn't submit your artist registration. Please try again later.",
         "network": "The request failed. Check your connection and try again.",
         "rightsRequired": "You must agree to the rights confirmation.",
-        "parentRequired": "Minors must provide a parent or guardian's name and contact information."
+        "parentRequired": "Minors must provide a parent or guardian's name and contact information.",
+        "invalidEmail": "Enter a valid email address.",
+        "authRequired": "Please sign in before registering as an artist.",
+        "artistNameRequired": "Artist name is required.",
+        "artistNameTooLong": "Artist name must be 100 characters or fewer.",
+        "bankRequired": "Bank account information is required for payouts.",
+        "alreadyRegistered": "This account is already registered as an artist."
       },
       "account": {
         "creating": "Creating account…",
