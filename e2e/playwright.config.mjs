@@ -3,8 +3,8 @@ import { defineConfig, devices } from '@playwright/test'
 const desktopChrome = { ...devices['Desktop Chrome'] }
 const crossBrowser = process.env.E2E_CROSS_BROWSER === 'true'
 const webServerCommand = process.env.CI
-  ? 'npm run start -- --hostname 127.0.0.1'
-  : 'npm run dev -- --hostname 127.0.0.1'
+  ? 'npm run start -- --hostname localhost'
+  : 'npm run dev -- --hostname localhost'
 
 const crossBrowserProjects = crossBrowser
   ? [
@@ -60,7 +60,7 @@ export default defineConfig({
     ? [['github'], ['html', { open: 'never' }]]
     : [['list'], ['html', { open: 'never' }]],
   use: {
-    baseURL: 'http://127.0.0.1:3000',
+    baseURL: 'http://localhost:3000',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
