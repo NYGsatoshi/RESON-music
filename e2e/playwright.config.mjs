@@ -100,7 +100,7 @@ export default defineConfig({
   webServer: {
     command: webServerCommand,
     cwd: '..',
-    url: 'http://127.0.0.1:3000',
+    url: 'http://127.0.0.1:3000/login',
     reuseExistingServer: !process.env.CI,
     stdout: 'pipe',
     timeout: 120_000,
