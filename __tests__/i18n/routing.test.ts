@@ -1,13 +1,13 @@
 import {
   defaultLocale,
   getLocalePathname,
+  localeDetection,
   localizePathname,
 } from '@/i18n/locales'
 
 describe('i18n routing helpers', () => {
-  it('disables browser locale detection so prefixless URLs stay Japanese', async () => {
-    const { routing } = await import('@/i18n/routing')
-    expect(routing.localeDetection).toBe(false)
+  it('disables browser locale detection so prefixless URLs stay Japanese', () => {
+    expect(localeDetection).toBe(false)
   })
 
   it('keeps prefixless paths in the default locale', () => {
